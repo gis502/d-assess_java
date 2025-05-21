@@ -7,6 +7,18 @@
         <groupId>com.ruoyi</groupId>
         <version>3.8.9</version>
     </parent>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>9</source>
+                    <target>9</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>ruoyi-common</artifactId>
@@ -35,6 +47,12 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.postgis</groupId>
+            <artifactId>postgis-jdbc</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+
         <!-- pagehelper 分页插件 -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
@@ -52,13 +70,13 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-  
+
         <!-- JSON工具类 -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-        
+
         <!-- 阿里JSON解析器 -->
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
@@ -101,6 +119,11 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.postgis</groupId>
+            <artifactId>postgis-geometry</artifactId>
+            <version>2.5.0</version>
+        </dependency>
         <!-- pool 对象池 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -117,6 +140,62 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+
+        <!--lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--七牛存储服务-->
+        <dependency>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+        </dependency>
+
+        <!--gson-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-lite</artifactId>
+            <version>5.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.supermap</groupId>
+            <artifactId>analyst-spatialanalyst</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.supermap</groupId>
+            <artifactId>data</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.supermap</groupId>
+            <artifactId>layout</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.supermap</groupId>
+            <artifactId>mapping</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.supermap</groupId>
+            <artifactId>ui-controls</artifactId>
         </dependency>
 
     </dependencies>
