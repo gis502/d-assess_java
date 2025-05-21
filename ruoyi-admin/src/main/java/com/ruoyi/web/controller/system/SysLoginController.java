@@ -2,6 +2,10 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import com.ruoyi.common.core.domain.model.AuthBody;
+import com.ruoyi.common.core.redis.RedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +25,11 @@ import com.ruoyi.system.service.ISysMenuService;
 
 /**
  * 登录验证
- * 
+ *
  * @author ruoyi
  */
 @RestController
-public class SysLoginController
-{
+public class SysLoginController {
     @Autowired
     private SysLoginService loginService;
 
@@ -39,15 +42,38 @@ public class SysLoginController
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private RedisCache redisCache;
+
+    // 开放给第三方用户，需要进行授权才能调用灾损评估接口
+    @PostMapping("/api/open/auth")
+    public AjaxResult auth(@RequestBody AuthBody authBody) {
+
+        AjaxResult ajax = AjaxResult.success();
+
+        // 查看redis中有无该用户信息，如果没有则再创建生成token，若有则使用redis中的token信息
+        if (redisCache.hasKey(authBody.getUsername())) {
+            Object token = redisCache.getCacheObject(authBody.getUsername());
+            ajax.put("token", token);
+            return ajax;
+        }
+
+        // 创建 token
+        String token = loginService.authenticate(authBody.getUsername(), authBody.getPassword());
+        ajax.put(Constants.TOKEN, token);
+        // 存入 redis
+        redisCache.setCacheObject(authBody.getUsername(), token, Constants.TOKEN_EXPIRED, TimeUnit.MINUTES);
+        return ajax;
+    }
+
     /**
      * 登录方法
-     * 
+     *
      * @param loginBody 登录信息
      * @return 结果
      */
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody LoginBody loginBody)
-    {
+    public AjaxResult login(@RequestBody LoginBody loginBody) {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
@@ -58,20 +84,18 @@ public class SysLoginController
 
     /**
      * 获取用户信息
-     * 
+     *
      * @return 用户信息
      */
     @GetMapping("getInfo")
-    public AjaxResult getInfo()
-    {
+    public AjaxResult getInfo() {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         SysUser user = loginUser.getUser();
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(user);
         // 权限集合
         Set<String> permissions = permissionService.getMenuPermission(user);
-        if (!loginUser.getPermissions().equals(permissions))
-        {
+        if (!loginUser.getPermissions().equals(permissions)) {
             loginUser.setPermissions(permissions);
             tokenService.refreshToken(loginUser);
         }
@@ -84,12 +108,11 @@ public class SysLoginController
 
     /**
      * 获取路由信息
-     * 
+     *
      * @return 路由信息
      */
     @GetMapping("getRouters")
-    public AjaxResult getRouters()
-    {
+    public AjaxResult getRouters() {
         Long userId = SecurityUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
         return AjaxResult.success(menuService.buildMenus(menus));
