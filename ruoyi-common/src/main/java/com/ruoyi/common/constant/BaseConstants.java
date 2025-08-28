@@ -49,10 +49,36 @@ public class BaseConstants {
 
     public static final String PARSE_ERROR = "解析失败";
 
-    public static final String DATASETS_NAME = "测试数据源";
+    public static final String DATASETS_NAME = "西安测试数据源";
     public static final String WORKSPACE_PATH = "E:/GIS小组专题图产出/专题图模板/专题图.smwu";
+
+
+    public static final String XI_AN_WORKSPACE_PATH = "E:/GIS小组专题图产出/专题图模板/WorkSpace.smwu";
+
+
     public static final String UPLOAD_FAILED = "文件上传失败";
     public static final String FILE_NOT_FOUND_ERROR = "文件不存在";
     public static final String HTTP_PREFIX = ""; // http://
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

@@ -7,6 +7,7 @@ import com.ruoyi.system.domain.EqList;
 import com.ruoyi.system.domain.dto.EqInfoDTO;
 import com.ruoyi.system.domain.dto.ReassessmentDTO;
 import com.ruoyi.system.domain.dto.TriggerDTO;
+import com.ruoyi.system.domain.params.EqParams;
 import com.ruoyi.system.service.IEqListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,9 +37,9 @@ public class EqListController {
 
         log.info("触发参数：{}", triggerDTO);
         try {
-            eqListService.trigger(triggerDTO);
+            EqParams trigger = eqListService.trigger(triggerDTO);
             // 触发成功
-            return Result.success(BaseConstants.TRIGGER_SUCCESS);
+            return Result.success(trigger);
         } catch (EqTriggerException e) {
             e.printStackTrace();
             // 触发异常

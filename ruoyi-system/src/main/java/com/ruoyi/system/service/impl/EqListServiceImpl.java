@@ -13,6 +13,7 @@ import com.ruoyi.system.domain.dto.AssessmentDTO;
 import com.ruoyi.system.domain.dto.EqInfoDTO;
 import com.ruoyi.system.domain.dto.ReassessmentDTO;
 import com.ruoyi.system.domain.dto.TriggerDTO;
+import com.ruoyi.system.domain.params.EqParams;
 import com.ruoyi.system.mapper.EqListMapper;
 import com.ruoyi.system.service.IAssessmentBatchService;
 import com.ruoyi.system.service.IEqListService;
@@ -46,9 +47,9 @@ public class EqListServiceImpl implements IEqListService {
     private IAssessmentBatchService assessmentBatchService;
 
     // 启动地震
-    @Async("taskExecutor")
+    // @Async("taskExecutor")
     @Override
-    public void trigger(TriggerDTO triggerDTO) {
+    public EqParams trigger(TriggerDTO triggerDTO) {
 
         // 抛出异常
         if (triggerDTO == null) {
@@ -95,6 +96,8 @@ public class EqListServiceImpl implements IEqListService {
             // 开始进行评估
             assessmentBatchService.assessment(assessmentDTO);
         }
+
+        return new EqParams(eqId, eqqueueId);
     }
 
     // 重新评估

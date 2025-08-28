@@ -44,6 +44,34 @@ public class MapConstants {
     // public static final String SEISMIC_POSITION_LAND = "震中位置分布图（地形图底图）";
     public static final String SEISMIC_POSITION_ADMINISTRATIVE = "震中位置分布图（行政区划底图）";
 
+
+
+
+    // 西安专题图
+    public static final String XIAN_SEISMIC_DISTRIBUTION = "影响估计范围分布图";
+    public static final String XIAN_SEISMIC_TRAFFIC = "震区交通图";
+    public static final String XIAN_SEISMIC_SAFE_PLACE = "震区避难场所分布图";
+    public static final String XIAN_SEISMIC_PUBLIC_PLACE = "震区附近公共场所分布图";
+    public static final String XIAN_SEISMIC_RESCUE_MATERIAL = "震区附近救灾物资分布图";
+    public static final String XIAN_SEISMIC_TOURIST_SPOT = "震区旅游景区分布图";
+    public static final String XIAN_SEISMIC_RESCUE_TEAM = "震区附近救援队伍分布图";
+    public static final String XIAN_SEISMIC_DANGER_SOURCE = "震区附近危险源分布图";
+    public static final String XIAN_SEISMIC_SCHOOL = "震区附近学校分布图";
+    public static final String XIAN_SEISMIC_HOSPITAL = "震区附近医疗机构分布图";
+    public static final String XIAN_SEISMIC_RESERVOIR = "震区水库水闸分布图";
+    public static final String XIAN_SEISMIC_HIDE_POINT = "震区附近地质灾害隐患点灾害分布图";
+    public static final String XIAN_SEISMIC_RUPTURE = "震区附近断层分布图";
+    public static final String XIAN_SEISMIC_RISK_AREA = "震区附近灾害风险区分布图";
+
+
+
+
+
+
+
+
+
+
     public static final String[] SEISMIC_MAPS = {
             // SEISMIC_DISTRIBUTION,
             SEISMIC_TRAFFIC,    // 交通
@@ -65,4 +93,21 @@ public class MapConstants {
     };
 
 
+
+    public static final String[] XIAN_SEISMIC_MAPS = {
+            // XIAN_SEISMIC_DISTRIBUTION,
+            XIAN_SEISMIC_TRAFFIC,   // 交通
+            XIAN_SEISMIC_SAFE_PLACE,    // 避难场所
+            XIAN_SEISMIC_PUBLIC_PLACE,  // 公共场所
+            XIAN_SEISMIC_RESCUE_MATERIAL,   // 救援物资
+            XIAN_SEISMIC_TOURIST_SPOT,  // 旅游景点
+            XIAN_SEISMIC_RESCUE_TEAM,   // 救援队伍
+            XIAN_SEISMIC_DANGER_SOURCE, // 危险源
+            XIAN_SEISMIC_SCHOOL,    // 学校
+            XIAN_SEISMIC_HOSPITAL,   // 医院
+            XIAN_SEISMIC_RESERVOIR, // 水库
+            XIAN_SEISMIC_HIDE_POINT,    // 隐患点
+            XIAN_SEISMIC_RUPTURE,   // 断裂带
+            XIAN_SEISMIC_RISK_AREA  // 风险区域
+    };
 }

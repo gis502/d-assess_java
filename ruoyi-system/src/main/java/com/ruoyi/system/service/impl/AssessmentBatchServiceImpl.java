@@ -43,6 +43,8 @@ public class AssessmentBatchServiceImpl implements IAssessmentBatchService {
      * @description: 进行多个类型的数据评估
      * @return: 返回评估完成状态
      */
+
+    @Async("taskExecutor")
     @Override
     public void assessment(AssessmentDTO assessmentDTO) {
         log.info("地震数据开始评估...", assessmentDTO);

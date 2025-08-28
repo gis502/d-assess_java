@@ -1,6 +1,8 @@
 package com.ruoyi.system.domain.params;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: xiaodemos
@@ -9,6 +11,8 @@ import lombok.Data;
  */
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EqParams {
 
     private String eqId;    // 地震事件编码

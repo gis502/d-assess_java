@@ -6,9 +6,9 @@ spring:
     druid:
       # 主库数据源
       master:
-        url: jdbc:postgresql://39.106.228.188:5432/disaster_assessment?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+        url: jdbc:postgresql://81.70.200.28:5432/assess_disaster?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
         username: postgres
-        password: gisGIS502gis502502
+        password: postgres
       # 从库数据源
       slave:
         # 从数据源开关/默认关闭
@@ -62,7 +62,7 @@ spring:
 
 # 七牛云配置
 qiniu:
-  bucket: thematic-picture
-  url: http://sv25gsrnh.hb-bkt.clouddn.com
+  bucket: xi-an-thematic
+  url: http://t1arte4v9.hb-bkt.clouddn.com
   access-key: mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF
   secret-key: XEbOv-KOyYiNsXKzkLUFsU96h0BZYaQ-AdNYOp8H

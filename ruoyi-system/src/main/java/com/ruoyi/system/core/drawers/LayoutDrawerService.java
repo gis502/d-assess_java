@@ -66,7 +66,7 @@ public class LayoutDrawerService {
     }
 
     private void init() {
-        this.workspace = WorkSpaceUtils.open(BaseConstants.WORKSPACE_PATH);
+        this.workspace = WorkSpaceUtils.open(BaseConstants.XI_AN_WORKSPACE_PATH);
         this.mapLayoutControl.getMapLayout().setWorkspace(workspace);
         this.map.setWorkspace(workspace);
     }
@@ -121,16 +121,16 @@ public class LayoutDrawerService {
         log.info("震中、烈度圈数据集正在被加载到地图...");
         int index = 0;
         // 记录下每个图的名称
-        for (; index < MapConstants.SEISMIC_MAPS.length; index++) {
+        for (; index < MapConstants.XIAN_SEISMIC_MAPS.length; index++) {
             // 打开地图
-            map.open(MapConstants.SEISMIC_MAPS[index]);
+            map.open(MapConstants.XIAN_SEISMIC_MAPS[index]);
             // 获取地图图层
             Layers layers = map.getLayers();
             // 添加震中点
             layers.add(datasetVector, true);
 
             // 对影响场烈度圈做额外图层加载
-            if (MapConstants.SEISMIC_MAPS[index].equals(MapConstants.SEISMIC_DISTRIBUTION)) {
+            if (MapConstants.XIAN_SEISMIC_MAPS[index].equals(MapConstants.SEISMIC_DISTRIBUTION)) {
                 // 添加地震影响场
                 layers.add(intensityAffectedArea, true);
             } else {
@@ -153,12 +153,13 @@ public class LayoutDrawerService {
             // 设置布局信息
             DrawersInfoBO info = new DrawersInfoBO();
             // 设置标题、地震时间、地震地址、地震级别、制作时间
-            String title = dto.getEqAddr() + dto.getMagnitude() + MapConstants.GRADE + MapConstants.SEISMIC_MAPS[index];
+            String title = dto.getEqAddr() + dto.getMagnitude() + MapConstants.GRADE + ""+ MapConstants.XIAN_SEISMIC_MAPS[index];
             String makeTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
             String eqTime = dto.getEqTime().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH时mm分"));
-            info.setPicName(MapConstants.SEISMIC_MAPS[index]);
+            info.setPicName(MapConstants.XIAN_SEISMIC_MAPS[index]);
             info.setTitle(title);
             info.setMagnitude(dto.getMagnitude());
+            info.setEqAddr(dto.getEqAddr());
             info.setEqTime(eqTime);
             info.setMakeTime(makeTime);
             info.setLayoutId(index);    // 设置布局Id
@@ -187,10 +188,15 @@ public class LayoutDrawerService {
         mapLayout.open(layoutName);
         // 获取所有布局对象
         LayoutElements elements = mapLayoutControl.getMapLayout().getElements();
+
+        double pageWidth = mapLayoutControl.getMapLayout().getBounds().getWidth();   // 页面宽度（mm）
+        double pageHeight = mapLayoutControl.getMapLayout().getBounds().getHeight(); // 页面高度（mm）
+
         // 更换地图
         layoutsDrawer.gridDrawer(elements, map);
         // 创建一个标题对象
-        layoutsDrawer.seismicTitleTextDrawer(elements, info.getTitle());
+        layoutsDrawer.seismicTitleTextDrawer(elements, info.getTitle(),pageWidth,pageHeight);
+
         combineElem(elements, info);
 
         CompletableFuture<String> future = outputImages(info); // 出图
@@ -219,12 +225,16 @@ public class LayoutDrawerService {
     }
 
     public void combineElem(LayoutElements elements, DrawersInfoBO info) {
+
+        double pageWidth = mapLayoutControl.getMapLayout().getBounds().getWidth();   // 页面宽度（mm）
         // 创建地震三要素文本对象（面对象）
         layoutsDrawer.seismicThreeElementDrawer(elements, info.getEqTime(), info.getEqAddr(), info.getMagnitude());
+        // 设置比例尺对象
+        layoutsDrawer.madeScaleDrawer(elements,pageWidth);
         // 创建制图单位对象
-        layoutsDrawer.madeUnitDrawer(elements);
+        layoutsDrawer.madeUnitDrawer(elements,pageWidth);
         // 创建制图时间对象
-        layoutsDrawer.madeTimeDrawer(elements, info.getMakeTime());
+        layoutsDrawer.madeTimeDrawer(elements, info.getMakeTime(),pageWidth);
     }
 
     @Async("taskExecutor")

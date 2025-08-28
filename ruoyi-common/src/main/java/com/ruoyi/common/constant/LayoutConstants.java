@@ -25,7 +25,7 @@ public class LayoutConstants {
 
     public static final String OUTPUT_FILED = "图件下载失败";
 
-    public static final String UNIT = "雅安市应急管理局";
+    public static final String UNIT = "西安市应急管理局";
 
 
     public static final String SEISMIC_DISTRIBUTION = "影响震区估计范围分布图";

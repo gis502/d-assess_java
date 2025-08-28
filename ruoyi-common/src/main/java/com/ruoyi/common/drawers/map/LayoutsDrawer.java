@@ -7,6 +7,7 @@ import com.supermap.data.*;
 import com.supermap.layout.LayoutElements;
 import com.supermap.mapping.Map;
 import org.springframework.stereotype.Component;
+
 import java.awt.*;
 
 /**
@@ -22,7 +23,7 @@ public class LayoutsDrawer {
         // 震中点数据集
         Recordset center = datasetVector.getRecordset(false, CursorType.DYNAMIC);
         // 断裂带数据集
-        DatasetVector datasource = WorkSpaceUtils.getDatasource(workspace, "专题图数据源", "雅安断裂带数据");
+        DatasetVector datasource = WorkSpaceUtils.getDatasource(workspace, "西安智慧应急多灾害链平台", "西安市断层");
         Recordset fault = datasource.getRecordset(false, CursorType.DYNAMIC);
 
         // 使用同样的坐标系
@@ -110,58 +111,72 @@ public class LayoutsDrawer {
 
     }
 
-    public void madeUnitDrawer(LayoutElements elements) {
+    public void madeUnitDrawer(LayoutElements elements,double pageWidth) {
+
+        double segmentWidth = pageWidth / 3;
+        double baseY = -50;
+
         // 创建文本对象
         TextPart unitText = new TextPart();
         unitText.setText("制图单位：" + LayoutConstants.UNIT);
-        unitText.offset(1200, -20);
 
-        GeoText unitGeoText = new GeoText(unitText);
-
-        // 创建文本格式
         TextStyle unitTextStyle = new TextStyle();
         unitTextStyle.setFontName("宋体");
         unitTextStyle.setForeColor(new Color(0, 0, 0));
-        unitTextStyle.setFontHeight(3.5);
+        unitTextStyle.setFontHeight(5);
+
+        GeoText unitGeoText = new GeoText(unitText);
         unitGeoText.setTextStyle(unitTextStyle);
 
-        // 添加到布局中
+        // 计算文本宽度，在第二部分居中
+        double unitTextWidth = getTextWidth(unitText.getText(), unitTextStyle);
+        double secondPartCenterX = segmentWidth + segmentWidth / 4;
+        unitGeoText.offset(secondPartCenterX - unitTextWidth / 2, baseY);
+
         elements.addNew(unitGeoText);
 
     }
 
-    public void madeTimeDrawer(LayoutElements elements, String makeTime) {
+    public void madeTimeDrawer(LayoutElements elements, String makeTime,double pageWidth) {
+
+        double segmentWidth = pageWidth / 3;
+        double baseY = -50;
         // 创建文本对象
         TextPart makeTimeText = new TextPart();
         makeTimeText.setText("制图时间：" + makeTime);
-        makeTimeText.offset(2200, -20);
-
-        GeoText makeTimeGeoText = new GeoText(makeTimeText);
 
         TextStyle makeTimeTextStyle = new TextStyle();
         makeTimeTextStyle.setFontName("宋体");
         makeTimeTextStyle.setForeColor(new Color(0, 0, 0));
-        makeTimeTextStyle.setFontHeight(3.5);
+        makeTimeTextStyle.setFontHeight(5);
+
+        GeoText makeTimeGeoText = new GeoText(makeTimeText);
         makeTimeGeoText.setTextStyle(makeTimeTextStyle);
 
-        // 添加到布局
+        // 计算文本宽度，在第三部分居中
+        double timeTextWidth = getTextWidth(makeTimeText.getText(), makeTimeTextStyle);
+        double thirdPartCenterX = segmentWidth * 2 + segmentWidth / 4;
+        makeTimeGeoText.offset(thirdPartCenterX - timeTextWidth / 2, baseY);
+
         elements.addNew(makeTimeGeoText);
     }
 
-    public void seismicTitleTextDrawer(LayoutElements elements, String title) {
-        // 设置文本位置
-        Point2D textPosition = new Point2D(600.0, 1900.0);
+    // 标题
+    public void seismicTitleTextDrawer(LayoutElements elements, String title, double width, double height) {
+        // 设置文本风格
+        TextStyle textStyle = new TextStyle();
+        textStyle.setFontName("微软雅黑");
+        textStyle.setFontHeight(13);
+        textStyle.setForeColor(new Color(0, 0, 0));
+        textStyle.setAlignment(TextAlignment.TOPCENTER);
+
+        double textWidth = title.length() * textStyle.getFontHeight() * 0.5;
+
+        Point2D textPosition = new Point2D((width - textWidth) / 2, height - 380);
         TextPart textPart = new TextPart(title, textPosition);
 
         // 创建一个文本对象
         GeoText titleGeoText = new GeoText(textPart);
-
-        // 设置文本风格
-        TextStyle textStyle = new TextStyle();
-        textStyle.setFontName("微软雅黑");
-        textStyle.setFontHeight(9);
-        textStyle.setForeColor(new Color(0, 0, 0));
-
         titleGeoText.setTextStyle(textStyle);
 
         // 将元素加入到当前的布局中
@@ -169,12 +184,14 @@ public class LayoutsDrawer {
     }
 
     public void seismicThreeElementDrawer(LayoutElements elements, String time, String addr, double intensity) {
+
         // 创建矩形面对象
         GeoRectangle rectangle = new GeoRectangle();
         // 设置矩形的位置和大小，这里以左上角坐标和宽高为例
-        rectangle.setWidth(550);
-        rectangle.setHeight(200);
-        rectangle.offset(377, 1663);
+        rectangle.setWidth(700);
+        rectangle.setHeight(300);
+
+        rectangle.offset(404, 2248);
 
         // 设置矩形框背景、线条颜色
         GeoStyle style = new GeoStyle();
@@ -182,44 +199,102 @@ public class LayoutsDrawer {
         style.setFillForeColor(new Color(251, 213, 181));
 
         rectangle.setStyle(style);
-
         elements.addNew(rectangle);
 
         // 设置地震三要素文本对象
         TextPart timeText = new TextPart();
         timeText.setText("时间：" + time);
-        timeText.offset(120, 1750);
+        timeText.offset(100, 2365);
+
         GeoText timeGeoText = new GeoText(timeText);
+
         TextStyle timeTextStyle = new TextStyle();
         timeTextStyle.setFontName("微软雅黑");
         timeTextStyle.setForeColor(new Color(0, 0, 0));
-        timeTextStyle.setFontHeight(4);
+        timeTextStyle.setFontHeight(5);
         timeGeoText.setTextStyle(timeTextStyle);
+
         elements.addNew(timeGeoText);
 
         TextPart addrText = new TextPart();
         addrText.setText("震级：" + intensity + "级");
-        addrText.offset(120, 1680);
+        addrText.offset(100, 2265);
+
         GeoText addrGeoText = new GeoText(addrText);
+
         TextStyle addrTextStyle = new TextStyle();
         addrTextStyle.setFontName("微软雅黑");
         addrTextStyle.setForeColor(new Color(0, 0, 0));
-        addrTextStyle.setFontHeight(4);
+        addrTextStyle.setFontHeight(5);
         addrGeoText.setTextStyle(addrTextStyle);
+
         elements.addNew(addrGeoText);
 
         // 震级文本对象
         TextPart intensityText = new TextPart();
         intensityText.setText("位置：" + addr);
-        intensityText.offset(120, 1610);
+        intensityText.offset(100, 2165);
+
         GeoText intensityGeoText = new GeoText(intensityText);
+
         TextStyle intensityTextStyle = new TextStyle();
         intensityTextStyle.setFontName("微软雅黑");
         intensityTextStyle.setForeColor(new Color(0, 0, 0));
-        intensityTextStyle.setFontHeight(4);
+        intensityTextStyle.setFontHeight(5);
         intensityGeoText.setTextStyle(intensityTextStyle);
+
         elements.addNew(intensityGeoText);
 
     }
 
+    // 计算文本宽度
+    private static double getTextWidth(String text, TextStyle style) {
+        // 根据字体大小和字符数估算文本宽度
+        return text.length() * style.getFontHeight() * 0.5;
+    }
+
+    public void madeScaleDrawer(LayoutElements elements,double pageWidth) {
+
+        // 计算每个部分的宽度（总宽度分为3等份）
+        double segmentWidth = pageWidth / 3;
+        // 底部元素的Y坐标（统一设置，确保在同一水平线上）
+        double baseY = -50;
+
+        // 比例尺文本
+        TextPart scaleText = new TextPart();
+        scaleText.setText("比例尺：");
+
+        TextStyle scaleTextStyle = new TextStyle();
+        scaleTextStyle.setFontName("宋体");
+        scaleTextStyle.setForeColor(new Color(0, 0, 0));
+        scaleTextStyle.setFontHeight(5);
+
+        GeoText scaleGeoText = new GeoText(scaleText);
+        scaleGeoText.setTextStyle(scaleTextStyle);
+
+        // 计算比例尺文本的宽度，用于定位
+        double scaleTextWidth = getTextWidth(scaleText.getText(), scaleTextStyle);
+        // 第一部分的中心位置
+        double firstPartCenterX = segmentWidth / 10;
+        // 文本放在比例尺左侧，整体在第一部分居中
+        scaleGeoText.offset(firstPartCenterX - scaleTextWidth, baseY);  // 50是比例尺宽度的大致偏移
+
+        // 比例尺几何对象
+        GeoMapScale geoMapScale = new GeoMapScale(new Point2D(), 1000, 70);
+//        geoMapScale.setScale(0.00001);
+        geoMapScale.setScaleShowUnit(Unit.KILOMETER);
+        geoMapScale.setScaleType(GeoMapScaleType.RAILWAY);
+        geoMapScale.setSegmentCount(2);
+        geoMapScale.setLeftDivisionCount(0);  // 取消0之前的主刻度
+        geoMapScale.setDivisions(1);
+        geoMapScale.setDivisionDisplayType(GeoMapScaleDisplayType.MAIN_DIVISON);
+        geoMapScale.setNumberDisplayType(GeoMapScaleDisplayType.MAIN_DIVISON);
+        // 比例尺放在文本右侧，整体在第一部分居中
+        geoMapScale.offset(firstPartCenterX + 300, baseY - 50);
+
+        // 添加比例尺文本和比例尺
+        elements.addNew(scaleGeoText);
+        elements.addNew(geoMapScale);
+
+    }
 }
