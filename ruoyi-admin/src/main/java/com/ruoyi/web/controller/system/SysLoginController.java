@@ -63,6 +63,9 @@ public class SysLoginController {
         ajax.put(Constants.TOKEN, token);
         // 存入 redis
         redisCache.setCacheObject(authBody.getUsername(), token, Constants.TOKEN_EXPIRED, TimeUnit.MINUTES);
+
+        System.out.println("token: " + token);
+
         return ajax;
     }
 
@@ -79,6 +82,9 @@ public class SysLoginController {
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
+
+        System.out.println("token: " + token);
+
         return ajax;
     }
 
