@@ -7,6 +7,7 @@ import com.ruoyi.common.enums.ImageTypeEnum;
 import com.ruoyi.common.utils.file.DocumentUtils;
 import com.ruoyi.system.domain.EarthQuakeReportEntity;
 import com.ruoyi.system.domain.dto.TriggerDTO;
+import com.ruoyi.system.domain.getEarthquake;
 import com.ruoyi.system.service.IEarthQuakeService;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
@@ -14,6 +15,7 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +29,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
+@Service
 public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
 
     // word保存路径
@@ -36,8 +39,9 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
     //生成报告
     @Override
     public R<String> generateEarthQuakeReport(TriggerDTO triggerDTO) throws IOException {
+        getEarthquake info = new getEarthquake();
         // 获取报告数据
-        EarthQuakeReportEntity earthQuakeReportEntity = new EarthQuakeReportEntity();
+        EarthQuakeReportEntity earthQuakeReportEntity = info.getEarthquake(triggerDTO);
 
         // 生成 Word 路径
         Path wordDir = Paths.get(wordPath);

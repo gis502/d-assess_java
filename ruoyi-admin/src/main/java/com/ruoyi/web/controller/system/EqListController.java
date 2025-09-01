@@ -8,13 +8,16 @@ import com.ruoyi.system.domain.dto.EqInfoDTO;
 import com.ruoyi.system.domain.dto.ReassessmentDTO;
 import com.ruoyi.system.domain.dto.TriggerDTO;
 import com.ruoyi.system.domain.params.EqParams;
+import com.ruoyi.system.service.IEarthQuakeService;
 import com.ruoyi.system.service.IEqListService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 /**
  * @author: xiaodemos
@@ -30,6 +33,9 @@ public class EqListController {
 
     @Resource
     private IEqListService eqListService;
+
+    @Resource
+    private IEarthQuakeService earthQuakeService;
 
     @ApiOperation("启动地震接口")
     @PostMapping("trigger")
@@ -74,6 +80,18 @@ public class EqListController {
             e.printStackTrace();
             // 获取数据异常
             return Result.error("获取最新地震失败");
+        }
+    }
+
+    @ApiOperation("获取评估报告")
+    @PostMapping("/report")
+    public Result getReport(@RequestBody TriggerDTO triggerDTO) {
+        try {
+            return Result.success(earthQuakeService.generateEarthQuakeReport(triggerDTO));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidFormatException e) {
+            throw new RuntimeException(e);
         }
     }
 }

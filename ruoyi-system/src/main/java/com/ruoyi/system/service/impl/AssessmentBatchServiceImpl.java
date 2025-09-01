@@ -76,6 +76,8 @@ public class AssessmentBatchServiceImpl implements IAssessmentBatchService {
                 // 进行图片产出
                 assessmentOutputService.outputMaps(assessmentDTO);
                 // TODO 进行报告产出
+                
+
 
                 // TODO 进行经济损失评估
 

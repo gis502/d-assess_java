@@ -237,7 +237,7 @@
                 <artifactId>analyst-spatialanalyst</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>H:/supermap/com.supermap.analyst.spatialanalyst.jar</systemPath>
+                <systemPath>D:/超图jar包/com.supermap.analyst.spatialanalyst.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -245,7 +245,7 @@
                 <artifactId>data</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>H:/supermap/com.supermap.data.jar</systemPath>
+                <systemPath>D:/超图jar包/com.supermap.data.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -253,7 +253,7 @@
                 <artifactId>layout</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>H:/supermap/com.supermap.layout.jar</systemPath>
+                <systemPath>D:/超图jar包/com.supermap.layout.jar</systemPath>
 
             </dependency>
 
@@ -262,7 +262,7 @@
                 <artifactId>mapping</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>H:/supermap/com.supermap.mapping.jar</systemPath>
+                <systemPath>D:/超图jar包/com.supermap.mapping.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -270,7 +270,7 @@
                 <artifactId>ui-controls</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>H:/supermap/com.supermap.ui.controls.jar</systemPath>
+                <systemPath>D:/超图jar包/com.supermap.ui.controls.jar</systemPath>
             </dependency>
 
 
@@ -279,7 +279,7 @@
 <!--                <artifactId>supermap-analyst</artifactId>-->
 <!--                <version>11.3.0</version>-->
 <!--                <scope>system</scope>-->
-<!--                <systemPath>E:/GIS小组专题图产出/超图jar包/com.supermap.analyst.spatialanalyst.jar</systemPath>-->
+<!--                <systemPath>D:/超图jar包//com.supermap.analyst.spatialanalyst.jar</systemPath>-->
 <!--            </dependency>-->
 
             <dependency>

@@ -2,6 +2,7 @@ package com.ruoyi.system.domain;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,22 +14,22 @@ public class EarthQuakeReportEntity {
     /*
      * 表头时间
      */
-    private String reportTime;                              // 报告时间
+    private LocalDateTime reportTime;                              // 报告时间
 
     /*
      * 地震概况部分
      */
-    private String earthQuakeTime;//地震时间
+    private LocalDateTime earthQuakeTime;//地震时间
     private String earthQuakePosition;//地震位置
-    private String earthQuakeLon;//震源经度
-    private String earthQuakeLat;//震源纬度
+    private double earthQuakeLon;//震源经度
+    private double earthQuakeLat;//震源纬度
     private String earthQuakeMagnitude;//震级
     private String earthQuakeSourceDepth;//震源深度
 
     /*
      * 风险评估部分
      */
-    private String earthQuakeCountry;//所在地区乡/街道
+    private String[] earthQuakeCountry;//所在地区乡/街道
     private String earthQuakePopulationDensity;//所在地区乡/街道人口密度
     private String earthQuakeIntensity;//重灾区烈度
     private String earthQuakeDisasterArea;//重灾区面积(km2)
