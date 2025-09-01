@@ -252,8 +252,8 @@ class CreateEarthQuakeReport {
 
         DocumentUtils.addRegularRun(paragraph1, content1);
         DocumentUtils.insertImageWithCaption(doc,
-//                earthQuakeReportEntity.getEarthQuakeInfluenceGraph(),
-                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
+                earthQuakeReportEntity.getEarthQuakeInfluenceGraph(),
+//                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
                 ImageTypeEnum.JPG ,null, null, "图1", ImagePositionEnum.AFTER);
 
         XWPFParagraph xwpfParagraph = DocumentUtils.addRegularParagraph(doc, null);
@@ -267,8 +267,8 @@ class CreateEarthQuakeReport {
         xwpfParagraph.setIndentationFirstLine(0);
 
         DocumentUtils.insertImageWithCaption(doc,
-//                earthQuakeReportEntity.getEarthQuakeFaultZoneGraph(),
-                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
+                earthQuakeReportEntity.getEarthQuakeFaultZoneGraph(),
+//                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
                 ImageTypeEnum.JPG, null, null, "图2", ImagePositionEnum.AFTER);
 
         XWPFParagraph xwpfParagraph1 = DocumentUtils.addRegularParagraph(doc, null);
@@ -277,8 +277,8 @@ class CreateEarthQuakeReport {
         run1.setBold(true);
 
         DocumentUtils.insertImageWithCaption(doc,
-//                earthQuakeReportEntity.getEarthQuakeHospitalGraph(),
-                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
+                earthQuakeReportEntity.getEarthQuakeHospitalGraph(),
+//                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
                 ImageTypeEnum.JPG, null, null, "图3", ImagePositionEnum.AFTER);
 
 
