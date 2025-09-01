@@ -37,9 +37,9 @@ public class EarthQuakeReportEntity {
     private String earthQuakeDeath;//地震预计伤亡人数
     private String earthQuakeFaultZone;//震中最近断裂带
     private List<Hospital> earthQuakeHospital;//震中附近50km内的医院列表(名称/总床位)
-    private Object earthQuakeInfluenceGraph;//地震影响估计范围分布图（未知类型所以用object
-    private Object earthQuakeFaultZoneGraph;//地震震中附近断裂带图
-    private Object earthQuakeHospitalGraph;//地震震中附近医院分布图
+    private String earthQuakeInfluenceGraph;//地震影响估计范围分布图路径
+    private String earthQuakeFaultZoneGraph;//地震震中附近断裂带图路径
+    private String earthQuakeHospitalGraph;//地震震中附近医院分布图路径
 
     @Data
     public class Hospital {

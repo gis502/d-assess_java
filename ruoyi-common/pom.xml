@@ -198,6 +198,12 @@
             <artifactId>ui-controls</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>3.1.0</version> <!-- 这个版本与 POI 4.1.2 兼容 -->
+        </dependency>
+
     </dependencies>
 
 </project>
