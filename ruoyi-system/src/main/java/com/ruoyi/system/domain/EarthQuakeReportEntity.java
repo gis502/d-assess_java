@@ -23,8 +23,8 @@ public class EarthQuakeReportEntity {
     private String earthQuakePosition;//地震位置
     private double earthQuakeLon;//震源经度
     private double earthQuakeLat;//震源纬度
-    private String earthQuakeMagnitude;//震级
-    private String earthQuakeSourceDepth;//震源深度
+    private double earthQuakeMagnitude;//震级
+    private double earthQuakeSourceDepth;//震源深度
 
     /*
      * 风险评估部分

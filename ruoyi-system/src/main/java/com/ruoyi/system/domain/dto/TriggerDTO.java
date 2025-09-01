@@ -36,5 +36,6 @@ public class TriggerDTO {
     private String densityPop; //人口密度
     private String[] country; // 影响街道
     private String intensity; // 震区烈度
+    private String sumGdp; // 灾区GDP
 
 }

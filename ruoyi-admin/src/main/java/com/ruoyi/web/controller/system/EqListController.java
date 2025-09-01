@@ -34,11 +34,9 @@ public class EqListController {
     @Resource
     private IEqListService eqListService;
 
-    @Resource
-    private IEarthQuakeService earthQuakeService;
 
     @ApiOperation("启动地震接口")
-    @PostMapping("trigger")
+    @PostMapping("/trigger")
     public Result trigger(@RequestBody TriggerDTO triggerDTO) {
 
         log.info("触发参数：{}", triggerDTO);
@@ -83,15 +81,4 @@ public class EqListController {
         }
     }
 
-    @ApiOperation("获取评估报告")
-    @PostMapping("/report")
-    public Result getReport(@RequestBody TriggerDTO triggerDTO) {
-        try {
-            return Result.success(earthQuakeService.generateEarthQuakeReport(triggerDTO));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidFormatException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
