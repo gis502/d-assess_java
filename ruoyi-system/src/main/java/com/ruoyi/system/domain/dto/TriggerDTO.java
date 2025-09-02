@@ -39,4 +39,5 @@ public class TriggerDTO {
     private String intensity; // 震区烈度
     private String sumGdp; // 灾区GDP
 
+
 }
