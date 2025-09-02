@@ -1,23 +1,40 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.config.DocumentConfig;
+import com.ruoyi.common.constant.BaseConstants;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.enums.ImagePositionEnum;
 import com.ruoyi.common.enums.ImageTypeEnum;
+import com.ruoyi.common.exception.ThematicReceiveException;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.file.DocumentUtils;
+import com.ruoyi.system.domain.AssessmentOutput;
 import com.ruoyi.system.domain.EarthQuakeReportEntity;
+import com.ruoyi.system.domain.dto.AssessmentOutputDTO;
+import com.ruoyi.system.mapper.AssessmentOutputMapper;
 import com.ruoyi.system.service.IEarthQuakeService;
 import org.apache.poi.xwpf.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
@@ -25,6 +42,9 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
     // word保存路径
     @Value("${document.path.rain.report}")
     private String wordPath;
+
+    @Resource
+    private AssessmentOutputMapper assessmentOutputMapper;
 
     //生成报告
     @Override
@@ -46,27 +66,64 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
             e.printStackTrace();
         }
 
+        saveEarthQuakeReport(wordPath, wordName, earthQuakeReportEntity.getEqId(), earthQuakeReportEntity.getEqqueueId());
+
         return R.ok(wordName);
     }
 
+    public void saveEarthQuakeReport(String wordPath, String wordName, String eqId, String eqqueueId){
+        try {
+            // 设置图件产出信息
+            AssessmentOutput assessmentOutput = new AssessmentOutput();
+            assessmentOutput.setEqId(eqId);
+            assessmentOutput.setEqqueueId(eqqueueId);
+            assessmentOutput.setIsDeleted(0);    // 逻辑删除
+            assessmentOutput.setId(UUID.randomUUID().toString());    // 生成uuid
+            assessmentOutput.setCreateTime(LocalDateTime.now());     // 创建时间
+            assessmentOutput.setUpdateTime(LocalDateTime.now());     // 修改时间
+            assessmentOutput.setFileName(wordName);
+            assessmentOutput.setFileType("报告");
+            assessmentOutput.setFileExtension(".docx");
+            assessmentOutput.setType(2);
+
+            File originFile = new File(wordPath);
+
+            if (!originFile.exists()) {
+                throw new ThematicReceiveException(BaseConstants.FILE_NOT_FOUND_ERROR);
+            }else{
+                assessmentOutput.setLocalSourceFile(wordPath);
+                assessmentOutput.setSourceFile(wordPath);
+            }
+            // 将图件信息插入到结果表中
+            assessmentOutputMapper.insert(assessmentOutput);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // 抛出异常
+            throw new ThematicReceiveException(BaseConstants.THEMATIC_MAP_ERROR);
+        }
+    }
+
 //    public static void main(String[] args) {
+//        // 启动 Spring 容器
+//        ApplicationContext context = new AnnotationConfigApplicationContext("com.ruoyi.system");
+//
+//        // 获取服务实例
+//        EarthQuakeReportServiceImpl service = context.getBean(EarthQuakeReportServiceImpl.class);
+//
 //        try {
 //            EarthQuakeReportEntity earthQuakeReportEntity = new EarthQuakeReportEntity();
-//            earthQuakeReportEntity.setReportTime("08月30日16时24分");
-//            earthQuakeReportEntity.setEarthQuakeTime("2025年08月30日17时20分");
-//            earthQuakeReportEntity.setEarthQuakeLat("99");
-//            earthQuakeReportEntity.setEarthQuakeLon("109");
-//            earthQuakeReportEntity.setEarthQuakeMagnitude("7");
+//            earthQuakeReportEntity.setReportTime(LocalDateTime.now());
+//            earthQuakeReportEntity.setEarthQuakeTime(LocalDateTime.now());
+//            earthQuakeReportEntity.setEarthQuakeLat(99);
+//            earthQuakeReportEntity.setEarthQuakeLon(109);
+//            earthQuakeReportEntity.setEarthQuakeMagnitude(7);
 //            earthQuakeReportEntity.setEarthQuakePosition("陕西省西安市长安区");
-//            earthQuakeReportEntity.setEarthQuakeSourceDepth("10km");
+//            earthQuakeReportEntity.setEarthQuakeSourceDepth(10);
 //
 //            double flg = Math.random() * 50000;
 //
-//            earthQuakeReportEntity.setEarthQuakeCountry("长安区");
-//            earthQuakeReportEntity.setEarthQuakePopulationDensity(flg + "");
 //            earthQuakeReportEntity.setEarthQuakeIntensity("9");
 //            earthQuakeReportEntity.setEarthQuakeDisasterArea("50");
-//            earthQuakeReportEntity.setEarthQuakeSumGDP("4");
 //            earthQuakeReportEntity.setEarthQuakeInfluencePopulation(flg * 0.8 + "");
 //            earthQuakeReportEntity.setEarthQuakeDeath(flg * 0.4 + "");
 //            earthQuakeReportEntity.setEarthQuakeFaultZone("饶峰-麻柳坝断裂");
@@ -84,42 +141,12 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
 //            }
 //
 //            new CreateEarthQuakeReport().createEarthQuakeReport("H:/test.docx", earthQuakeReportEntity);
+//
+//            service.saveEarthQuakeReport("H:/test.docx", "test.docx", "T20240601171641511800", "T20240601171641511801");
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
 //    }
-
-    //下载报告
-    @Override
-    public void downloadReport(String fileName, HttpServletResponse resp) throws IOException {
-        Path file = Paths.get(wordPath).resolve(fileName).normalize();
-
-        System.out.println("尝试下载文件: {}" + file.toString());
-        System.out.println("文件是否存在: {}" + Files.exists(file));
-
-        if (!Files.exists(file)) {
-            System.out.println("文件不存在: {}" + file.toString());
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            resp.getWriter().write("文件不存在: " + fileName);
-            return;
-        }
-
-        // 添加CORS响应头
-        resp.setHeader("Access-Control-Allow-Origin", "*");
-        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        resp.setHeader("Access-Control-Allow-Headers", "*");
-        resp.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
-
-        resp.setContentType("application/octet-stream");
-        resp.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + URLEncoder.encode(fileName, "UTF-8"));
-
-        try {
-            Files.copy(file, resp.getOutputStream());
-            resp.flushBuffer();
-        } catch (IOException e) {
-            throw e;
-        }
-    }
 }
 
 /**
@@ -236,7 +263,6 @@ class CreateEarthQuakeReport {
                 earthQuakeReportEntity.getEarthQuakePopulationDensity(),
                 earthQuakeReportEntity.getEarthQuakeIntensity(),
                 earthQuakeReportEntity.getEarthQuakeDisasterArea(),
-                earthQuakeReportEntity.getEarthQuakeSumGDP(),
                 earthQuakeReportEntity.getEarthQuakeInfluencePopulation(),
                 earthQuakeReportEntity.getEarthQuakeDeath()
         );

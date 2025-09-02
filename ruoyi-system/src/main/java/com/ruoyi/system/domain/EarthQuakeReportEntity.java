@@ -11,6 +11,8 @@ import java.util.List;
  */
 @Data
 public class EarthQuakeReportEntity {
+    private String eqId;
+    private String eqqueueId;
     /*
      * 表头时间
      */
@@ -25,19 +27,15 @@ public class EarthQuakeReportEntity {
     private double earthQuakeLat;//震源纬度
     private double earthQuakeMagnitude;//震级
     private double earthQuakeSourceDepth;//震源深度
-
     /*
      * 风险评估部分
      */
-    private List<String> earthQuakeCountry;//所在地区乡/街道
-    private String earthQuakePopulationDensity;//所在地区乡/街道人口密度
     private String earthQuakeIntensity;//重灾区烈度
     private String earthQuakeDisasterArea;//重灾区面积(km2)
-    private String earthQuakeSumGDP;//灾区GDP(亿元)
     private String earthQuakeInfluencePopulation;//地震影响人口
     private String earthQuakeDeath;//地震预计伤亡人数
     private String earthQuakeFaultZone;//震中最近断裂带
-    private List<Hospital> earthQuakeHospital;//震中附近50km内的医院列表(名称/总床位)
+    private List<Hospital> earthQuakeHospital;//震中附近5km内的医院列表(名称/总床位)
     private String earthQuakeInfluenceGraph;//地震影响估计范围分布图路径
     private String earthQuakeFaultZoneGraph;//地震震中附近断裂带图路径
     private String earthQuakeHospitalGraph;//地震震中附近医院分布图路径

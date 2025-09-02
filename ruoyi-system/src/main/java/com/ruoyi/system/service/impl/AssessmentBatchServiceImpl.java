@@ -196,6 +196,8 @@ public class AssessmentBatchServiceImpl implements IAssessmentBatchService {
 
     private EarthQuakeReportEntity getEarthquakeEntity(AssessmentDTO assessmentDTO) {
         EarthQuakeReportEntity reportEntity = new EarthQuakeReportEntity();
+        reportEntity.setEqId(assessmentDTO.getEqId());
+        reportEntity.setEqqueueId(assessmentDTO.getEqqueueId());
         /*
          *地震概况部分
          */
@@ -209,14 +211,8 @@ public class AssessmentBatchServiceImpl implements IAssessmentBatchService {
         /*
          * 风险评估部分
          */
-        // 获取原country数组
-        List<String> originalCountries = assessmentDTO.getCountry();
-        reportEntity.setEarthQuakeCountry(originalCountries);
-
-        reportEntity.setEarthQuakePopulationDensity(assessmentDTO.getDensityPop());//所在地区乡/街道人口密度
         reportEntity.setEarthQuakeIntensity(assessmentDTO.getIntensity());//重灾区烈度
-        reportEntity.setEarthQuakeDisasterArea(assessmentDTO.getCircleArea());//重灾区面积(km2)
-        reportEntity.setEarthQuakeSumGDP(assessmentDTO.getSumGdp());//灾区GDP(亿元)
+        reportEntity.setEarthQuakeDisasterArea(assessmentDTO.getCircleArea());//重灾区面积
         reportEntity.setEarthQuakeInfluencePopulation(assessmentDTO.getAffectPop());//地震影响人口
         reportEntity.setEarthQuakeDeath(assessmentDTO.getDiePop());//地震预计伤亡人数
         reportEntity.setEarthQuakeFaultZone(assessmentDTO.getFaultZone());//震中最近断裂带
