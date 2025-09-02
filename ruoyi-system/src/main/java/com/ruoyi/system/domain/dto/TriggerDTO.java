@@ -7,6 +7,7 @@ import org.springframework.cglib.core.Local;
 import org.springframework.scheduling.quartz.LocalDataSourceJobStore;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author: xiaodemos
@@ -34,8 +35,9 @@ public class TriggerDTO {
     private String affectPop; // 影响人数
     private String diePop; // 可能死亡人数
     private String densityPop; //人口密度
-    private String[] country; // 影响街道
+    private List<String> country; // 影响街道
     private String intensity; // 震区烈度
     private String sumGdp; // 灾区GDP
+
 
 }

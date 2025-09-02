@@ -153,7 +153,7 @@ class CreateEarthQuakeReport {
             // 一个空行
             DocumentUtils.createBlankLine(document, 1);
             // 创建部门信息
-            createDept(document, "西安市应急管理局               " + earthQuakeReportEntity.getReportTime());
+            createDept(document, "西安市应急管理局               " + earthQuakeReportEntity.getReportTime().toString().replace("T", " "));
             // 两个空行
             DocumentUtils.createBlankLine(document, 2);
             // 第一部分，地震概况
@@ -208,7 +208,7 @@ class CreateEarthQuakeReport {
         XWPFParagraph paragraph = DocumentUtils.addRegularParagraph(doc, null);
 
         String content = String.format("据地震台网测定，%s（北京时间）在%s（北纬%s，东经%s）发生%s级地震, 震源深度%s千米。",
-                earthQuakeReportEntity.getEarthQuakeTime(),
+                earthQuakeReportEntity.getEarthQuakeTime().toString().replace("T", " "),
                 earthQuakeReportEntity.getEarthQuakePosition(),
                 earthQuakeReportEntity.getEarthQuakeLon(),
                 earthQuakeReportEntity.getEarthQuakeLat(),
@@ -231,8 +231,8 @@ class CreateEarthQuakeReport {
         XWPFParagraph paragraph1 = DocumentUtils.addRegularParagraph(doc, null);
 
         String content1 = String.format("本次地震震中所在地区%s，人口密度为%s每平方公里。" +
-                        "本次地震重灾区烈度预计达到%s度，重灾区面积为%s平方米，灾区总GDP为%s亿元；地震影响人口约%s人，预计伤亡人数%s人。",
-                earthQuakeReportEntity.getEarthQuakeCountry(),
+                        "本次地震重灾区烈度预计达到%s度，重灾区面积为%s平方公里，灾区总GDP为%s亿元；地震影响人口约%s万人，预计伤亡人数%s人。",
+                DocumentUtils.list2Str(earthQuakeReportEntity.getEarthQuakeCountry(), null),
                 earthQuakeReportEntity.getEarthQuakePopulationDensity(),
                 earthQuakeReportEntity.getEarthQuakeIntensity(),
                 earthQuakeReportEntity.getEarthQuakeDisasterArea(),
@@ -253,7 +253,9 @@ class CreateEarthQuakeReport {
         run.setBold(true);
 
         String cotent2 = String.format("震中距离震中最近的断裂是%s，震中附近活动断裂分布如图所示。",
-                earthQuakeReportEntity.getEarthQuakeFaultZone());
+                (earthQuakeReportEntity.getEarthQuakeFaultZone() == null || earthQuakeReportEntity.getEarthQuakeFaultZone().trim().isEmpty())
+                        ? "临潼-长安断裂带"
+                        : earthQuakeReportEntity.getEarthQuakeFaultZone());
         xwpfParagraph = DocumentUtils.addRegularParagraph(doc, cotent2);
         xwpfParagraph.setIndentationFirstLine(0);
 
@@ -278,7 +280,7 @@ class CreateEarthQuakeReport {
         tableTitleParagraph.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun tableTitleRun = tableTitleParagraph.createRun();
 
-        tableTitleRun.setText("20公里内医院统计表");
+        tableTitleRun.setText("5公里内医院统计表");
         tableTitleRun.setFontFamily(FONT_FANG_SONG);
         tableTitleRun.setFontSize(DocumentConfig.FONT_SIZE_SMALL_FOUR);
 

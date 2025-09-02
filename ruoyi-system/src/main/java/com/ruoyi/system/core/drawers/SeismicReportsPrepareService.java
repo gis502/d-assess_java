@@ -34,7 +34,7 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class ReportsPrepareService {
+public class SeismicReportsPrepareService {
 
     @Resource
     private YaResidentPopulationDensityMapper yaResidentPopulationDensityMapper;
