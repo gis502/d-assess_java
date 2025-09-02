@@ -29,7 +29,7 @@ public class EarthQuakeReportEntity {
     /*
      * 风险评估部分
      */
-    private String[] earthQuakeCountry;//所在地区乡/街道
+    private List<String> earthQuakeCountry;//所在地区乡/街道
     private String earthQuakePopulationDensity;//所在地区乡/街道人口密度
     private String earthQuakeIntensity;//重灾区烈度
     private String earthQuakeDisasterArea;//重灾区面积(km2)
