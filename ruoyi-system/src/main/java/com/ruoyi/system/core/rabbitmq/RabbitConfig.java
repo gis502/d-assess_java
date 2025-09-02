@@ -24,6 +24,11 @@ public class RabbitConfig {
     public final static String DISASTER_REPORT = "disaster.report";     // 灾情报告队列
     public final static String SEISMIC_AFFECTED = "seismic.affected";   // 地震影响场队列
 
+
+    public final static String RAIN_MAP = "rain.map";
+    public final static String RAIN_REPORT = "rain.report";
+
+
     // 定义交换机名称
     public final static String DISASTER_EXCHANGE = "disasterAssessment";
 
@@ -41,6 +46,16 @@ public class RabbitConfig {
     @Bean
     public Queue seismicAffectedQueue() {
         return new Queue(SEISMIC_AFFECTED, true);
+    }
+
+    @Bean
+    public Queue rainMapQueue() {
+        return new Queue(RAIN_MAP, true);
+    }
+
+    @Bean
+    public Queue rainReportQueue() {
+        return new Queue(RAIN_REPORT, true);
     }
 
     // 定义交换机
@@ -67,6 +82,17 @@ public class RabbitConfig {
         return BindingBuilder.bind(seismicAffectedQueue()).to(exchange()).with(DISASTER_REPORT);
     }
 
+    @Bean
+    public Binding bindingExchangeMessageOfRainMap() {
+        return BindingBuilder.bind(rainMapQueue()).to(exchange()).with(RAIN_MAP);
+    }
+
+    @Bean
+    public Binding bindingExchangeMessageOfRainReport() {
+        return BindingBuilder.bind(rainReportQueue()).to(exchange()).with(RAIN_REPORT);
+    }
+
+
     // 设置消息回调函数 自动确认消息 ack
     @Bean
     public RabbitTemplate createRabbitTemplate(ConnectionFactory connectionFactory) {
@@ -78,20 +104,14 @@ public class RabbitConfig {
         rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
             @Override
             public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-                log.info("ConfirmCallback -> 相关数据：" + correlationData);
-                log.info("ConfirmCallback -> 确认情况：" + ack);
-                log.info("ConfirmCallback -> 原因：" + cause);
+                log.info("confirm call back：correlationData-{}，ack-{}，cause-{}" ,correlationData, ack, cause);
             }
         });
 
         rabbitTemplate.setReturnCallback(new RabbitTemplate.ReturnCallback() {
             @Override
             public void returnedMessage(Message message, int replyCode, String replyText, String exchange, String routingKey) {
-                log.info("ReturnCallback -> 消息：" + message);
-                log.info("ReturnCallback -> 回应码：" + replyCode);
-                log.info("ReturnCallback -> 回应信息：" + replyText);
-                log.info("ReturnCallback -> 交换机：" + exchange);
-                log.info("ReturnCallback -> 路由键：" + routingKey);
+                log.info("return call back：message-{}，replyCode-{}，replyText-{}，exchange-{}，routingKey-{}" + message, replyCode, replyText, exchange, routingKey);
             }
         });
 

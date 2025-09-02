@@ -1,7 +1,6 @@
 package com.ruoyi.common.drawers.report;
 
-import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.constant.LayoutConstants;
+import com.ruoyi.common.constant.BaseConstants;
 import com.ruoyi.common.core.domain.AssessmentBTO;
 import com.ruoyi.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -537,7 +536,7 @@ public class GenerateReportFiles {
     private static String writeToDocument(XWPFDocument document, String eqId) {
         // int version = Integer.parseInt(StringUtils.substring(infoBO.getEqqueueId(), infoBO.getEqqueueId().length() - 2));
         // 路径格式：E:/upload/灾情报告/eqId/批次/ 辅助决策信息二 +".docx"
-        String filePath = LayoutConstants.REPORTS_PREFIX + eqId + "/1" + "/" + "（辅助决策信息二）.docx";
+        String filePath = BaseConstants.REPORTS_PREFIX + eqId + "/1" + "/" + "（辅助决策信息二）.docx";
 
         try {
             // 创建父目录

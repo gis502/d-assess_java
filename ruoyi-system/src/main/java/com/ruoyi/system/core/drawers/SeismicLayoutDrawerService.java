@@ -1,8 +1,7 @@
 package com.ruoyi.system.core.drawers;
 
 import com.ruoyi.common.constant.BaseConstants;
-import com.ruoyi.common.constant.LayoutConstants;
-import com.ruoyi.common.constant.MapConstants;
+import com.ruoyi.common.constant.BaseConstants;
 import com.ruoyi.common.drawers.map.LayoutsDrawer;
 import com.ruoyi.common.drawers.map.MapDrawer;
 import com.ruoyi.common.drawers.map.WorkSpaceUtils;
@@ -46,7 +45,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
-public class LayoutDrawerService {
+public class SeismicLayoutDrawerService {
 
     @Resource
     private RabbitTemplate rabbitTemplate;
@@ -58,7 +57,7 @@ public class LayoutDrawerService {
     private Workspace workspace;
     private MapLayoutControl mapLayoutControl;
 
-    public LayoutDrawerService(MapDrawer mapDrawer) {
+    public SeismicLayoutDrawerService(MapDrawer mapDrawer) {
         this.mapDrawer = mapDrawer;
         this.map = new Map();
         this.mapLayoutControl = new MapLayoutControl();
@@ -80,15 +79,15 @@ public class LayoutDrawerService {
         String mag = String.valueOf(dto.getMagnitude()).replace(".", "_");
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
         // 创建震中点名称
-        String seismicPointName = "T" + eqTime + dto.getEqAddr() + mag + MapConstants.SEISMIC_POINT + now;
+        String seismicPointName = "T" + eqTime + dto.getEqAddr() + mag + BaseConstants.SEISMIC_POINT + now;
         // 创建烈度圈名称
-        String seismicIntensityName = "T" + eqTime + dto.getEqAddr() + mag + MapConstants.SEISMIC_INTENSITY + now;
+        String seismicIntensityName = "T" + eqTime + dto.getEqAddr() + mag + BaseConstants.SEISMIC_INTENSITY + now;
         // 创建烈度圈影响范围名称
-        String seismicIntensityAffectedAreaName = "T" + eqTime + dto.getEqAddr() + mag + MapConstants.SEISMIC_INTENSITY_AFFECTED_AREA + now;
+        String seismicIntensityAffectedAreaName = "T" + eqTime + dto.getEqAddr() + mag + BaseConstants.SEISMIC_INTENSITY_AFFECTED_AREA + now;
         // 创建烈度圈文本名称
-        String seismicIntensityTextName = "T" + eqTime + dto.getEqAddr() + mag + MapConstants.SEISMIC_INTENSITY_TEXT + now;
+        String seismicIntensityTextName = "T" + eqTime + dto.getEqAddr() + mag + BaseConstants.SEISMIC_INTENSITY_TEXT + now;
         // 设置保存的数据集
-        String datasetsName = BaseConstants.DATASETS_NAME;
+        String datasetsName = BaseConstants.XI_AN_SEISMIC_DATASETS_NAME;
         // 设置震中位置
         Point2D center = new Point2D(dto.getLongitude(), dto.getLatitude());
         // 地震震级
@@ -121,16 +120,16 @@ public class LayoutDrawerService {
         log.info("震中、烈度圈数据集正在被加载到地图...");
         int index = 0;
         // 记录下每个图的名称
-        for (; index < MapConstants.XIAN_SEISMIC_MAPS.length; index++) {
+        for (; index < BaseConstants.XIAN_SEISMIC_MAPS.length; index++) {
             // 打开地图
-            map.open(MapConstants.XIAN_SEISMIC_MAPS[index]);
+            map.open(BaseConstants.XIAN_SEISMIC_MAPS[index]);
             // 获取地图图层
             Layers layers = map.getLayers();
             // 添加震中点
             layers.add(datasetVector, true);
 
             // 对影响场烈度圈做额外图层加载
-            if (MapConstants.XIAN_SEISMIC_MAPS[index].equals(MapConstants.SEISMIC_DISTRIBUTION)) {
+            if (BaseConstants.XIAN_SEISMIC_MAPS[index].equals(BaseConstants.XIAN_SEISMIC_DISTRIBUTION)) {
                 // 添加地震影响场
                 layers.add(intensityAffectedArea, true);
             } else {
@@ -140,7 +139,7 @@ public class LayoutDrawerService {
             // 添加烈度圈文本
             layers.add(intensityTextInfo, true);
             // 获取最新的数据集图层
-            Layer layer = layers.get(seismicPointName + "@" + BaseConstants.DATASETS_NAME);
+            Layer layer = layers.get(seismicPointName + "@" + BaseConstants.XI_AN_SEISMIC_DATASETS_NAME);
             // 设置图层的样式
             LayerSettingVector vector = mapDrawer.drawerCenterPointStyle();
             // 将样式添加到图层中
@@ -153,10 +152,10 @@ public class LayoutDrawerService {
             // 设置布局信息
             DrawersInfoBO info = new DrawersInfoBO();
             // 设置标题、地震时间、地震地址、地震级别、制作时间
-            String title = dto.getEqAddr() + dto.getMagnitude() + MapConstants.GRADE + ""+ MapConstants.XIAN_SEISMIC_MAPS[index];
+            String title = dto.getEqAddr() + dto.getMagnitude() + BaseConstants.GRADE + "" + BaseConstants.XIAN_SEISMIC_MAPS[index];
             String makeTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
             String eqTime = dto.getEqTime().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH时mm分"));
-            info.setPicName(MapConstants.XIAN_SEISMIC_MAPS[index]);
+            info.setPicName(BaseConstants.XIAN_SEISMIC_MAPS[index]);
             info.setTitle(title);
             info.setMagnitude(dto.getMagnitude());
             info.setEqAddr(dto.getEqAddr());
@@ -166,18 +165,18 @@ public class LayoutDrawerService {
             info.setEqqueueId(dto.getEqqueueId());
 
             // 获取出图信息
-            AssessmentOutputDTO outputDTO = initLayouts(map, info);
+            AssessmentOutputDTO outputDTO = initLayouts(map, info, BaseConstants.XIAN_SEISMIC_MAPS[index]);
             outputDTO.setEqId(dto.getEqId());
             outputDTO.setEqqueueId(dto.getEqqueueId());
 
             // 送入专题图队列
             rabbitTemplate.convertAndSend(RabbitConfig.DISASTER_EXCHANGE, RabbitConfig.THEMATIC_MAP, outputDTO);
-            log.info("专题图 {} 已放入消息队列...", outputDTO.getFileName());
+            log.info("{} 已放入消息队列...", outputDTO.getFileName());
         }
     }
 
     // 初始化布局
-    public AssessmentOutputDTO initLayouts(Map map, DrawersInfoBO info) {
+    public AssessmentOutputDTO initLayouts(Map map, DrawersInfoBO info, String mapName) {
         // 获取布局元素对象
         MapLayout mapLayout = mapLayoutControl.getMapLayout();
         Layouts layouts = workspace.getLayouts();
@@ -189,15 +188,16 @@ public class LayoutDrawerService {
         // 获取所有布局对象
         LayoutElements elements = mapLayoutControl.getMapLayout().getElements();
 
+
         double pageWidth = mapLayoutControl.getMapLayout().getBounds().getWidth();   // 页面宽度（mm）
         double pageHeight = mapLayoutControl.getMapLayout().getBounds().getHeight(); // 页面高度（mm）
 
         // 更换地图
         layoutsDrawer.gridDrawer(elements, map);
         // 创建一个标题对象
-        layoutsDrawer.seismicTitleTextDrawer(elements, info.getTitle(),pageWidth,pageHeight);
+        layoutsDrawer.thematicTitleTextDrawer(elements, info.getTitle(), pageWidth, pageHeight);
 
-        combineElem(elements, info);
+        combineElem(elements, info, mapName);
 
         CompletableFuture<String> future = outputImages(info); // 出图
         String outputImagePath = future.join(); // 使用 join 不抛出异常
@@ -207,34 +207,34 @@ public class LayoutDrawerService {
         // TODO 创建专题图产品编码 (需要根据专题图国家标准文件)
 
         // 计算图片尺寸
-        Double v = ImageSizeCalculator(LayoutConstants.DPI);
+        Double v = ImageSizeCalculator(BaseConstants.DPI);
         // 设置出图信息
         AssessmentOutputDTO output = AssessmentOutputDTO.builder()
                 .code(null)
-                .fileType(LayoutConstants.IMAGE_TYPE)
+                .fileType(BaseConstants.IMAGE_TYPE)
                 .fileName(info.getPicName())
-                .fileExtension(LayoutConstants.EXTENSION_TYPE)
+                .fileExtension(BaseConstants.EXTENSION_TYPE)
                 .fileSize(v)
                 .sourceFile("")
                 .localSourceFile(outputImagePath)
                 .remark("")
-                .size(LayoutConstants.SIZE)
-                .type(LayoutConstants.THEMATIC_TYPE).build();
+                .size(BaseConstants.SIZE)
+                .type(BaseConstants.THEMATIC_TYPE).build();
 
         return output;
     }
 
-    public void combineElem(LayoutElements elements, DrawersInfoBO info) {
+    public void combineElem(LayoutElements elements, DrawersInfoBO info, String mapName) {
 
         double pageWidth = mapLayoutControl.getMapLayout().getBounds().getWidth();   // 页面宽度（mm）
         // 创建地震三要素文本对象（面对象）
         layoutsDrawer.seismicThreeElementDrawer(elements, info.getEqTime(), info.getEqAddr(), info.getMagnitude());
         // 设置比例尺对象
-        layoutsDrawer.madeScaleDrawer(elements,pageWidth);
+        layoutsDrawer.madeScaleDrawer(elements, pageWidth, mapName);
         // 创建制图单位对象
-        layoutsDrawer.madeUnitDrawer(elements,pageWidth);
+        layoutsDrawer.madeUnitDrawer(elements, pageWidth);
         // 创建制图时间对象
-        layoutsDrawer.madeTimeDrawer(elements, info.getMakeTime(),pageWidth);
+        layoutsDrawer.madeTimeDrawer(elements, info.getMakeTime(), pageWidth);
     }
 
     @Async("taskExecutor")
@@ -244,8 +244,8 @@ public class LayoutDrawerService {
         int version = Integer.parseInt(StringUtils.substring(infoBO.getEqqueueId(), infoBO.getEqqueueId().length() - 2));
         String eqId = StringUtils.substring(infoBO.getEqqueueId(), 0, infoBO.getEqqueueId().length() - 2);
         // 路径格式：/upload/专题图/eqId/批次/ XX图 +".jpg"
-        String folderPath = LayoutConstants.PICTURE_PREFIX + eqId + "/" + version + "/";
-        String filePath = folderPath + infoBO.getPicName() + LayoutConstants.EXTENSION_TYPE;
+        String folderPath = BaseConstants.PICTURE_PREFIX + eqId + "/" + version + "/";
+        String filePath = folderPath + infoBO.getPicName() + BaseConstants.EXTENSION_TYPE;
         // 创建文件夹路径（如果不存在的话）
         Path path = Paths.get(folderPath);
         if (!Files.exists(path)) {
@@ -256,10 +256,10 @@ public class LayoutDrawerService {
                 throw new FileCreateException(BaseConstants.FILE_CREATE_FILED);
             }
         }
-        boolean layoutToJPG = mapLayoutControl.getMapLayout().outputLayoutToJPG(filePath, LayoutConstants.DPI, LayoutConstants.COMPRESS);
+        boolean layoutToJPG = mapLayoutControl.getMapLayout().outputLayoutToJPG(filePath, BaseConstants.DPI, BaseConstants.COMPRESS);
         // 图件下载失败 抛出异常
         if (!layoutToJPG) {
-            String reason = infoBO.getPicName() + LayoutConstants.OUTPUT_FILED;
+            String reason = infoBO.getPicName() + BaseConstants.OUTPUT_FILED;
             throw new DownLoadException(reason);
         }
 

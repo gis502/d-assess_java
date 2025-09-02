@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ruoyi</groupId>
     <artifactId>ruoyi</artifactId>
@@ -273,19 +273,10 @@
                 <systemPath>E:/GIS小组专题图产出/超图jar包/com.supermap.ui.controls.jar</systemPath>
             </dependency>
 
-
-<!--            <dependency>-->
-<!--                <groupId>com.supermap.analyst</groupId>-->
-<!--                <artifactId>supermap-analyst</artifactId>-->
-<!--                <version>11.3.0</version>-->
-<!--                <scope>system</scope>-->
-<!--                <systemPath>E:/GIS小组专题图产出/超图jar包/com.supermap.analyst.spatialanalyst.jar</systemPath>-->
-<!--            </dependency>-->
-
             <dependency>
                 <groupId>com.qiniu</groupId>
                 <artifactId>qiniu-java-sdk</artifactId>
-                <version>[7.13.0, 7.13.99]</version>
+                <version>7.13.0</version>
             </dependency>
 
         </dependencies>
@@ -303,6 +294,16 @@
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!--打包本地依赖jar，2.必须包含系统引用-->
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -317,41 +318,42 @@
         </plugins>
     </build>
 
-    <repositories>
+<!--    <repositories>-->
 
-        <repository>
-            <id>xiaodemos-local-repo</id>
-            <url>file:E:/Environment/apache-maven-3.9.1-bin/conf/repository</url> <!-- 指向本地仓库 -->
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
+<!--        <repository>-->
+<!--            <id>xiaodemos-local-repo</id>-->
+<!--            <url>file:E:/Environment/apache-maven-3.9.1-bin/conf/repository</url> &lt;!&ndash; 指向本地仓库 &ndash;&gt;-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>false</enabled>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
 
-        <repository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>https://maven.aliyun.com/repository/public</url>   <!--阿里云仓库-->
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
+<!--        <repository>-->
+<!--            <id>public</id>-->
+<!--            <name>aliyun nexus</name>-->
+<!--            <url>https://maven.aliyun.com/repository/public</url>   &lt;!&ndash;阿里云仓库&ndash;&gt;-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--        </repository>-->
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <name>aliyun nexus</name>
-            <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+<!--    </repositories>-->
+
+<!--    <pluginRepositories>-->
+<!--        <pluginRepository>-->
+<!--            <id>public</id>-->
+<!--            <name>aliyun nexus</name>-->
+<!--            <url>https://maven.aliyun.com/repository/public</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>false</enabled>-->
+<!--            </snapshots>-->
+<!--        </pluginRepository>-->
+<!--    </pluginRepositories>-->
 
 </project>

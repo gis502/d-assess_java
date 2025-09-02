@@ -27,4 +27,5 @@ public class TriggerDTO {
     private double magnitude;   // 震级
     private String eqType;  // 地震类型
 
+
 }

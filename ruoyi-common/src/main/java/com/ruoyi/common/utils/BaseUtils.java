@@ -15,14 +15,26 @@ import java.time.format.DateTimeFormatter;
 
 public class BaseUtils {
 
-    // 生成一个带时间戳的编码
+    // 生成一个带时间戳的地震编码
     public static String generationCode(LocalDateTime time) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         String timestamp = time.format(formatter);
-        String code = "T" + timestamp + BaseConstants.YA_AN_AREA_CODE;
+        String code = "T" + timestamp + BaseConstants.XI_AN_AREA_CODE;
 
         return code;
     }
+
+    // 生成一个带时间戳的暴雨编码
+    public static String generationRainCode(LocalDateTime time) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String timestamp = time.format(formatter);
+        String code = "R" + timestamp + BaseConstants.XI_AN_AREA_CODE;
+
+        return code;
+    }
+
+
 
 }

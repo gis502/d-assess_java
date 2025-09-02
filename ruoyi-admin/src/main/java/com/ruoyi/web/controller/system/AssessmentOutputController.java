@@ -2,10 +2,12 @@ package com.ruoyi.web.controller.system;
 
 import com.ruoyi.common.constant.BaseConstants;
 import com.ruoyi.common.utils.Result;
-import com.ruoyi.system.core.drawers.ReportsPrepareService;
+import com.ruoyi.system.core.drawers.SeismicReportsPrepareService;
 import com.ruoyi.system.domain.dto.AssessmentDTO;
 import com.ruoyi.system.domain.dto.AssessmentOutputDTO;
+import com.ruoyi.system.domain.dto.RainAssessmentOutputDTO;
 import com.ruoyi.system.domain.params.EqParams;
+import com.ruoyi.system.domain.params.RainParams;
 import com.ruoyi.system.service.IAssessmentOutputService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,24 +26,23 @@ import java.util.List;
 @Slf4j
 @RestController
 @Api(tags = "产出结果控制类")
-@RequestMapping("/api/open/eq")
+@RequestMapping("/api/open")
 public class AssessmentOutputController {
 
     @Resource
     private IAssessmentOutputService assessmentOutputService;
     @Resource
-    private ReportsPrepareService reportsPrepareService;
+    private SeismicReportsPrepareService seismicReportsPrepareService;
 
 
     @ApiOperation("获取地震专题图接口")
-    @PostMapping("getMap")
+    @PostMapping("/eq/getMap")
     public Result<List<AssessmentOutputDTO>> getMap(@RequestBody EqParams eqParams) {
 
         log.info("获取地震专题图参数{}", eqParams);
         try {
-            List<AssessmentOutputDTO> mapList = assessmentOutputService.getMap(eqParams.getEqId(), eqParams.getEqqueueId());
             // 返回图件集合
-            return Result.success(mapList);
+            return Result.success(assessmentOutputService.getMap(eqParams));
         } catch (Exception e) {
             e.printStackTrace();
             // 获取图件异常
@@ -50,10 +51,25 @@ public class AssessmentOutputController {
     }
 
     @ApiOperation("获取地震报告接口")
-    @PostMapping("test")
+    @PostMapping("/eq/test")
     public String test(@RequestBody AssessmentDTO params){
-        reportsPrepareService.seismicEmergencyAssistDecisionInfo2(params);
+        seismicReportsPrepareService.seismicEmergencyAssistDecisionInfo2(params);
         return "ok";
+    }
+
+    @ApiOperation("获取地震专题图接口")
+    @PostMapping("/rain/getMap")
+    public Result<List<RainAssessmentOutputDTO>> getMap(@RequestBody RainParams eqParams) {
+
+        log.info("获取地震专题图参数{}", eqParams);
+        try {
+            // 返回图件集合
+            return Result.success(assessmentOutputService.getMap(eqParams));
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 获取图件异常
+            return Result.error(BaseConstants.THEMATIC_MAP_ERROR);
+        }
     }
 
 

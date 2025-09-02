@@ -20,9 +20,13 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class AsyncConfig {
 
-    private static final int CORE_POOL_SIZE = 100;
-    private static final int MAX_POOL_SIZE = 100;
-    private static final int QUEUE_CAPACITY = 100;
+
+
+    private static final int CPU_CORES = Runtime.getRuntime().availableProcessors(); // 获取CPU核心数
+    private static final int CORE_POOL_SIZE = CPU_CORES * 2; // 如16核→32
+    private static final int MAX_POOL_SIZE = CORE_POOL_SIZE * 2; // 如64
+    private static final int QUEUE_CAPACITY = 1000;
+    private static final long KEEP_ALIVE_SECONDS = 60; // 空闲线程存活时间
     private static final String THREAD_NAME_PREFIX = "Async-";
 
     @Bean(name = "taskExecutor")
@@ -37,6 +41,10 @@ public class AsyncConfig {
         executor.setQueueCapacity(QUEUE_CAPACITY);
         //线程池中线程的名称前缀
         executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
+        //空闲核心线程超时回收（仅当核心线程数 < 最大线程数时生效）
+        executor.setKeepAliveSeconds((int) KEEP_ALIVE_SECONDS);
+        //允许核心线程超时回收（默认false，核心线程不回收）
+        executor.setAllowCoreThreadTimeOut(true);
         //设置自定义的拒绝策略
         executor.setRejectedExecutionHandler((r, e) -> {
             try {
