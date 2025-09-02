@@ -6,27 +6,20 @@ import com.ruoyi.common.enums.ImagePositionEnum;
 import com.ruoyi.common.enums.ImageTypeEnum;
 import com.ruoyi.common.utils.file.DocumentUtils;
 import com.ruoyi.system.domain.EarthQuakeReportEntity;
-import com.ruoyi.system.domain.dto.TriggerDTO;
 import com.ruoyi.system.service.IEarthQuakeService;
 import org.apache.poi.xwpf.usermodel.*;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTBorder;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTP;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTPPr;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.STBorder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
 
+@Service
 public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
 
     // word保存路径
@@ -35,9 +28,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
 
     //生成报告
     @Override
-    public R<String> generateEarthQuakeReport(TriggerDTO triggerDTO) throws IOException {
-        // 获取报告数据
-        EarthQuakeReportEntity earthQuakeReportEntity = new EarthQuakeReportEntity();
+    public R<String> generateEarthQuakeReport(EarthQuakeReportEntity earthQuakeReportEntity) throws IOException {
 
         // 生成 Word 路径
         Path wordDir = Paths.get(wordPath);
@@ -254,7 +245,7 @@ class CreateEarthQuakeReport {
         DocumentUtils.insertImageWithCaption(doc,
 //                earthQuakeReportEntity.getEarthQuakeInfluenceGraph(),
                 "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
-                ImageTypeEnum.JPG ,null, null, "图1 地震影响范围分布图", ImagePositionEnum.AFTER);
+                ImageTypeEnum.JPG ,null, null, "图1", ImagePositionEnum.AFTER);
 
         XWPFParagraph xwpfParagraph = DocumentUtils.addRegularParagraph(doc, null);
         XWPFRun run = DocumentUtils.addRegularRun(xwpfParagraph, "1.震中附近活动断裂分布");
@@ -269,7 +260,7 @@ class CreateEarthQuakeReport {
         DocumentUtils.insertImageWithCaption(doc,
 //                earthQuakeReportEntity.getEarthQuakeFaultZoneGraph(),
                 "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
-                ImageTypeEnum.JPG, null, null, "图2 震中附近断裂带分布图", ImagePositionEnum.AFTER);
+                ImageTypeEnum.JPG, null, null, "图2", ImagePositionEnum.AFTER);
 
         XWPFParagraph xwpfParagraph1 = DocumentUtils.addRegularParagraph(doc, null);
         XWPFRun run1 = DocumentUtils.addRegularRun(xwpfParagraph1, "2.震中附近医院分布");
@@ -279,7 +270,7 @@ class CreateEarthQuakeReport {
         DocumentUtils.insertImageWithCaption(doc,
 //                earthQuakeReportEntity.getEarthQuakeHospitalGraph(),
                 "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
-                ImageTypeEnum.JPG, null, null, "图3 震中附近医院分布图", ImagePositionEnum.AFTER);
+                ImageTypeEnum.JPG, null, null, "图3", ImagePositionEnum.AFTER);
 
 
         // 设置表格标题

@@ -17,6 +17,7 @@ ruoyi:
 server:
   # 服务器的HTTP端口，默认为8080
   port: 18008
+#  port: 8080
   servlet:
     # 应用的访问路径
     context-path: /
@@ -154,3 +155,7 @@ supermap:
 #  workspace-path: E:/GIS小组专题图产出/专题图模板/专题图.smwu
   workspace-path: /home/env/supermap-iobjectsjava-11.3.0/专题图.smwu
 
+document:
+  path:
+    rain:
+      report: /data/documents/rain
