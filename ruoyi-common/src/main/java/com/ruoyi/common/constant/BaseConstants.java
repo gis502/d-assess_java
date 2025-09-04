@@ -62,20 +62,12 @@ public class BaseConstants {
     public static final String OUTPUT_FILED = "图件下载失败";
     public static final String UNIT = "西安市应急管理局";
 
-    public static final String[] INTENSITY_LEVEL = new String[]{  // 烈度罗马数值
-            "Ⅰ度", "Ⅱ度", "Ⅲ度", "Ⅳ度", "Ⅴ度", "Ⅵ度", "Ⅶ度", "Ⅷ度", "Ⅸ度", "Ⅹ度", "Ⅺ度", "Ⅻ度"
-    };
-    public static final Integer[] INTENSITY_LEVEL_FIGURE = new Integer[]{ // 烈度数值
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12
-    };
-
     public static final Double SEISMIC_6_GRADE = 6.0;   // 六级地震
     public static final String SEISMIC_POINT = "震中";
     public static final String SEISMIC_INTENSITY = "烈度圈";
     public static final String SEISMIC_INTENSITY_AFFECTED_AREA = "影响场";
     public static final String SEISMIC_INTENSITY_TEXT = "烈度文本";
     public static final String GRADE = "级";
-
 
     // 西安地震专题图
     public static final String XIAN_SEISMIC_DISTRIBUTION = "影响估计范围分布图";
@@ -188,5 +180,14 @@ public class BaseConstants {
         put(XIAN_STORM_RESCUE_TEAMS, 1 / 400000.0); // 暴雨附近救援队伍分布图
     }};
 
-
+    // 烈度映射
+    public static final Map<Integer, String> SEISMIC_INTENSITY_MAPPING = new HashMap<Integer, String>(){{
+        put(6, "Ⅵ度");
+        put(7, "Ⅶ度");
+        put(8, "Ⅷ度");
+        put(9, "Ⅸ度");
+        put(10, "Ⅹ度");
+        put(11, "Ⅺ度");
+        put(12, "Ⅻ度");
+    }};
 }

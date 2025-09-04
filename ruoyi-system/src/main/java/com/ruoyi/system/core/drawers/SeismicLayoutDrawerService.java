@@ -35,6 +35,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -53,26 +55,28 @@ public class SeismicLayoutDrawerService {
     private LayoutsDrawer layoutsDrawer;
     @Resource
     private MapDrawer mapDrawer;
-    private Map map;
-    private Workspace workspace;
-    private MapLayoutControl mapLayoutControl;
+//    private Map map;
+//    private Workspace workspace;
+//    private MapLayoutControl mapLayoutControl;
 
-    public SeismicLayoutDrawerService(MapDrawer mapDrawer) {
-        this.mapDrawer = mapDrawer;
-        this.map = new Map();
-        this.mapLayoutControl = new MapLayoutControl();
-        init();
-    }
+//    public SeismicLayoutDrawerService(MapDrawer mapDrawer) {
+//        this.mapDrawer = mapDrawer;
+//        this.map = new Map();
+//        this.mapLayoutControl = new MapLayoutControl();
+//        init();
+//    }
 
-    private void init() {
-        this.workspace = WorkSpaceUtils.open(BaseConstants.XI_AN_SEISMIC_WORKSPACE_PATH);
-        this.mapLayoutControl.getMapLayout().setWorkspace(workspace);
-        this.map.setWorkspace(workspace);
-    }
+//    private void init() {
+//        this.workspace = WorkSpaceUtils.open(BaseConstants.XI_AN_SEISMIC_WORKSPACE_PATH);
+//        this.mapLayoutControl.getMapLayout().setWorkspace(workspace);
+//        this.map.setWorkspace(workspace);
+//    }
 
     // 创建震中点、烈度圈、烈度圈文本数据集
     public void createSeismicPictureInit(AssessmentDTO dto) {
         log.info("开始创建震中、烈度圈数据集...");
+
+        Workspace workspace = null;
 
         // 处理超图中命名格式问题
         String eqTime = dto.getEqTime().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -94,6 +98,8 @@ public class SeismicLayoutDrawerService {
         double magnitude = dto.getMagnitude();
 
         try {
+            // 打开工作空间
+            workspace = WorkSpaceUtils.open(BaseConstants.XI_AN_SEISMIC_WORKSPACE_PATH);
             // 创建震中点
             DatasetVector datasetVector = mapDrawer.createCenterPoint(workspace, datasetsName, seismicPointName, center);
             // 计算离震中最近的断裂带的距离
@@ -105,78 +111,104 @@ public class SeismicLayoutDrawerService {
             // 生成烈度圈文本
             DatasetVector intensityTextInfo = mapDrawer.createIntensityTextInfo(workspace, seismicIntensityTextName, center, magnitude);
             // 出图
-            initMap(datasetVector, intensityCircle, intensityAffectedArea, intensityTextInfo, seismicPointName, center, dto);
+            initMap(workspace, datasetVector, intensityCircle, intensityAffectedArea, intensityTextInfo, seismicPointName, center, dto);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("创建震中、烈度圈数据集失败...", ex);
             Thread.currentThread().interrupt();
+        } finally {
+            // 关闭工作空间
+            if (workspace != null) {
+                // 关闭工作空间
+                workspace.close();
+                log.info("工作空间关闭成功...");
+            }
         }
     }
 
     @Async("taskExecutor")
     // 初始化每张地图
-    public void initMap(DatasetVector datasetVector, DatasetVector intensityCircle,
+    public void initMap(Workspace workspace, DatasetVector datasetVector, DatasetVector intensityCircle,
                         DatasetVector intensityAffectedArea, DatasetVector intensityTextInfo,
                         String seismicPointName, Point2D center, AssessmentDTO dto) {   // 添加震中、烈度圈、烈度圈文本
         log.info("震中、烈度圈数据集正在被加载到地图...");
         int index = 0;
-        // 记录下每个图的名称
-        for (; index < BaseConstants.XIAN_SEISMIC_MAPS.length; index++) {
-            // 打开地图
-            map.open(BaseConstants.XIAN_SEISMIC_MAPS[index]);
-            // 获取地图图层
-            Layers layers = map.getLayers();
-            // 添加震中点
-            layers.add(datasetVector, true);
+        Map map = null;
+        MapLayoutControl mapLayoutControl = null;
+        try {
+            // 操作地图对象
+            map = new Map();
+            map.setWorkspace(workspace);
+            mapLayoutControl = new MapLayoutControl();
+            mapLayoutControl.getMapLayout().setWorkspace(workspace);
+            // 记录每个图的名称
+            for (; index < BaseConstants.XIAN_SEISMIC_MAPS.length; index++) {
+                // 打开地图
+                map.open(BaseConstants.XIAN_SEISMIC_MAPS[index]);
+                // 获取地图图层
+                Layers layers = map.getLayers();
+                // 添加震中点
+                layers.add(datasetVector, true);
+                // 对影响场烈度圈做额外图层加载
+                if (BaseConstants.XIAN_SEISMIC_MAPS[index].equals(BaseConstants.XIAN_SEISMIC_DISTRIBUTION)) {
+                    // 添加地震影响场
+                    layers.add(intensityAffectedArea, true);
+                } else {
+                    // 添加烈度圈
+                    layers.add(intensityCircle, true);
+                }
+                // 添加烈度圈文本
+                layers.add(intensityTextInfo, true);
+                // 获取最新的数据集图层
+                Layer layer = layers.get(seismicPointName + "@" + BaseConstants.XI_AN_SEISMIC_DATASETS_NAME);
+                // 设置图层的样式
+                LayerSettingVector vector = mapDrawer.drawerCenterPointStyle();
+                // 将样式添加到图层中
+                layer.setAdditionalSetting(vector);
+                // 设置地图中心点
+                map.setCenter(center);
+                // 保存地图
+                workspace.getMaps().setMapXML(map.getName(), map.toXML());
 
-            // 对影响场烈度圈做额外图层加载
-            if (BaseConstants.XIAN_SEISMIC_MAPS[index].equals(BaseConstants.XIAN_SEISMIC_DISTRIBUTION)) {
-                // 添加地震影响场
-                layers.add(intensityAffectedArea, true);
-            } else {
-                // 添加烈度圈
-                layers.add(intensityCircle, true);
+                // 设置布局信息
+                DrawersInfoBO info = new DrawersInfoBO();
+                // 设置标题、地震时间、地震地址、地震级别、制作时间
+                String title = dto.getEqAddr() + dto.getMagnitude() + BaseConstants.GRADE + "" + BaseConstants.XIAN_SEISMIC_MAPS[index];
+                String makeTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
+                String eqTime = dto.getEqTime().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH时mm分"));
+                info.setPicName(BaseConstants.XIAN_SEISMIC_MAPS[index]);
+                info.setTitle(title);
+                info.setMagnitude(dto.getMagnitude());
+                info.setEqAddr(dto.getEqAddr());
+                info.setEqTime(eqTime);
+                info.setMakeTime(makeTime);
+                info.setLayoutId(index);    // 设置布局Id
+                info.setEqqueueId(dto.getEqqueueId());
+
+                // 获取出图信息
+                AssessmentOutputDTO outputDTO = initLayouts(workspace, mapLayoutControl, map, info, BaseConstants.XIAN_SEISMIC_MAPS[index]);
+                outputDTO.setEqId(dto.getEqId());
+                outputDTO.setEqqueueId(dto.getEqqueueId());
+
+                // 送入专题图队列
+                rabbitTemplate.convertAndSend(RabbitConfig.DISASTER_EXCHANGE, RabbitConfig.THEMATIC_MAP, outputDTO);
+                log.info("{} 已放入消息队列...", outputDTO.getFileName());
             }
-            // 添加烈度圈文本
-            layers.add(intensityTextInfo, true);
-            // 获取最新的数据集图层
-            Layer layer = layers.get(seismicPointName + "@" + BaseConstants.XI_AN_SEISMIC_DATASETS_NAME);
-            // 设置图层的样式
-            LayerSettingVector vector = mapDrawer.drawerCenterPointStyle();
-            // 将样式添加到图层中
-            layer.setAdditionalSetting(vector);
-            // 设置地图中心点
-            map.setCenter(center);
-            // 保存地图
-            workspace.getMaps().setMapXML(map.getName(), map.toXML());
 
-            // 设置布局信息
-            DrawersInfoBO info = new DrawersInfoBO();
-            // 设置标题、地震时间、地震地址、地震级别、制作时间
-            String title = dto.getEqAddr() + dto.getMagnitude() + BaseConstants.GRADE + "" + BaseConstants.XIAN_SEISMIC_MAPS[index];
-            String makeTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
-            String eqTime = dto.getEqTime().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH时mm分"));
-            info.setPicName(BaseConstants.XIAN_SEISMIC_MAPS[index]);
-            info.setTitle(title);
-            info.setMagnitude(dto.getMagnitude());
-            info.setEqAddr(dto.getEqAddr());
-            info.setEqTime(eqTime);
-            info.setMakeTime(makeTime);
-            info.setLayoutId(index);    // 设置布局Id
-            info.setEqqueueId(dto.getEqqueueId());
-
-            // 获取出图信息
-            AssessmentOutputDTO outputDTO = initLayouts(map, info, BaseConstants.XIAN_SEISMIC_MAPS[index]);
-            outputDTO.setEqId(dto.getEqId());
-            outputDTO.setEqqueueId(dto.getEqqueueId());
-
-            // 送入专题图队列
-            rabbitTemplate.convertAndSend(RabbitConfig.DISASTER_EXCHANGE, RabbitConfig.THEMATIC_MAP, outputDTO);
-            log.info("{} 已放入消息队列...", outputDTO.getFileName());
+        } catch (Exception ex) {
+            log.error("震中、烈度圈数据集加载到地图失败...", ex);
+            Thread.currentThread().interrupt();
+        } finally {
+            // 关闭地图
+            if (map != null) {
+                map.close();
+                log.info("地图关闭成功...");
+            }
         }
+
     }
 
     // 初始化布局
-    public AssessmentOutputDTO initLayouts(Map map, DrawersInfoBO info, String mapName) {
+    public AssessmentOutputDTO initLayouts(Workspace workspace, MapLayoutControl mapLayoutControl, Map map, DrawersInfoBO info, String mapName) {
         // 获取布局元素对象
         MapLayout mapLayout = mapLayoutControl.getMapLayout();
         Layouts layouts = workspace.getLayouts();
@@ -197,9 +229,9 @@ public class SeismicLayoutDrawerService {
         // 创建一个标题对象
         layoutsDrawer.thematicTitleTextDrawer(elements, info.getTitle(), pageWidth, pageHeight);
 
-        combineElem(elements, info, mapName);
+        combineElem(mapLayoutControl, elements, info, mapName);
 
-        CompletableFuture<String> future = outputImages(info); // 出图
+        CompletableFuture<String> future = outputImages(mapLayoutControl, info); // 出图
         String outputImagePath = future.join(); // 使用 join 不抛出异常
 
         elements.deleteAll();   // 每个布局制作完后都需要进行清理布局中的元素对象
@@ -224,7 +256,7 @@ public class SeismicLayoutDrawerService {
         return output;
     }
 
-    public void combineElem(LayoutElements elements, DrawersInfoBO info, String mapName) {
+    public void combineElem(MapLayoutControl mapLayoutControl, LayoutElements elements, DrawersInfoBO info, String mapName) {
 
         double pageWidth = mapLayoutControl.getMapLayout().getBounds().getWidth();   // 页面宽度（mm）
         // 创建地震三要素文本对象（面对象）
@@ -238,7 +270,7 @@ public class SeismicLayoutDrawerService {
     }
 
     @Async("taskExecutor")
-    public CompletableFuture<String> outputImages(DrawersInfoBO infoBO) {
+    public CompletableFuture<String> outputImages(MapLayoutControl mapLayoutControl, DrawersInfoBO infoBO) {
 
         // 处理多层级文件夹名称
         int version = Integer.parseInt(StringUtils.substring(infoBO.getEqqueueId(), infoBO.getEqqueueId().length() - 2));

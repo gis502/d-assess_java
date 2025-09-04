@@ -165,9 +165,8 @@ public class MapDrawer {
      * @return: 返回几何复合文本信息对象
      */
     public GeoCompound getIntensityTextInfo(Point2D center, double magnitude) {
-        // 定义烈度值
-        int[] intensityLevels = {8, 7, 6};
-        String[] intensityLevelsRoma = {"Ⅷ度", "Ⅶ度", "Ⅵ度"};
+        // 获取烈度值
+        int[] intensityLevels = gainIntensityLevels(magnitude);
 
         // 创建复合几何对象
         GeoCompound geoCompound = new GeoCompound();
@@ -178,7 +177,7 @@ public class MapDrawer {
             double Rb = calculateRb(magnitude, intensity);
             Point2D textPosition = new Point2D(center.getX(), center.getY() + Rb / 1.5);
 
-            TextPart textPart = new TextPart(intensityLevelsRoma[i] + "(" + intensity + "度)", textPosition);
+            TextPart textPart = new TextPart(BaseConstants.SEISMIC_INTENSITY_MAPPING.get(intensity) + "(" + intensity + "度)", textPosition);
             GeoText geoText = new GeoText(textPart);
 
             TextStyle textStyle = new TextStyle();
@@ -205,8 +204,8 @@ public class MapDrawer {
      * @return: 返回一个三层的椭圆复合对象
      */
     public GeoCompound getIntensityGeometry(Point2D center, double magnitude, int rotation) {
-        // 定义烈度值
-        int[] intensityLevels = {8, 7, 6};
+        // 获取烈度值
+        int[] intensityLevels = gainIntensityLevels(magnitude);
 
         // 创建复合几何对象
         GeoCompound geoCompound = new GeoCompound();
@@ -251,6 +250,7 @@ public class MapDrawer {
 
     /**
      * 根据震级获取对应的烈度值数组
+     *
      * @param magnitude 震级
      * @return 对应烈度值数组
      */
@@ -264,7 +264,7 @@ public class MapDrawer {
         } else if (magLevel == 7) {
             return new int[]{7, 8, 9};
         } else if (magLevel == 8) {
-            return new int[]{8, 9, 10, 11};
+            return new int[]{8, 9, 10};
         } else if (magLevel >= 9) {
             // 9级及以上都返回9-12级烈度
             return new int[]{9, 10, 11, 12};
@@ -288,6 +288,9 @@ public class MapDrawer {
         // 计算原始半径（km）
         double Ra = calculateRa(magnitude, intensity);
         double Rb = calculateRb(magnitude, intensity);
+
+        System.out.println("长轴：" + Ra + "\n短轴：" + Rb);
+
 
         GeoEllipse ellipse = new GeoEllipse(center, Ra, Rb, rotation);
 
@@ -447,7 +450,7 @@ public class MapDrawer {
      * @return: 返回长轴
      */
     private double calculateRa(double M, double Ia) {
-        return (Math.pow(10, (4.0293 + 1.3003 * M - Ia) / 3.6404) - 10) / 100;
+        return (Math.pow(10, (4.0293 + 1.3003 * M - Ia) / 3.6404) - 10) / 50;
     }
 
 
@@ -460,7 +463,7 @@ public class MapDrawer {
      * @return: 返回短轴
      */
     private double calculateRb(double M, double Ib) {
-        return (Math.pow(10, (2.3816 + 1.3003 * M - Ib) / 2.8573) - 5) / 100;
+        return (Math.pow(10, (2.3816 + 1.3003 * M - Ib) / 2.8573) - 5) / 50;
     }
 
 }

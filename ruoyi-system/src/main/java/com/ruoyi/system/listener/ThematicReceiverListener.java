@@ -45,6 +45,7 @@ public class ThematicReceiverListener {
     public void receive(AssessmentOutputDTO outputDTO) {
         // 打印日志
         log.info("rabbitmq 接收到 {} ...", outputDTO.getFileName());
+
         try {
             // 设置图件产出信息
             AssessmentOutput assessmentOutput = new AssessmentOutput();
