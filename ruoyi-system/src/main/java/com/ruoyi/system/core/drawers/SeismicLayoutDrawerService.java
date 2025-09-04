@@ -65,7 +65,7 @@ public class SeismicLayoutDrawerService {
     }
 
     private void init() {
-        this.workspace = WorkSpaceUtils.open(BaseConstants.XI_AN_WORKSPACE_PATH);
+        this.workspace = WorkSpaceUtils.open(BaseConstants.XI_AN_SEISMIC_WORKSPACE_PATH);
         this.mapLayoutControl.getMapLayout().setWorkspace(workspace);
         this.map.setWorkspace(workspace);
     }

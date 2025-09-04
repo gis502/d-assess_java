@@ -38,7 +38,8 @@ public class BaseConstants {
     public static final String RAIN_NAME_SUFFIX = "mm";
     public static final String PARAMETER_ERROR = "参数异常";
     public static final String PARSE_ERROR = "解析失败";
-    public static final String XI_AN_WORKSPACE_PATH = "E:/GIS小组专题图产出/专题图模板/西安项目.smwu";
+    public static final String XI_AN_SEISMIC_WORKSPACE_PATH = "E:/GIS小组专题图产出/专题图模板/地震专题图.smwu";
+    public static final String XI_AN_STORM_WORKSPACE_PATH = "E:/GIS小组专题图产出/专题图模板/暴雨专题图.smwu";
     public static final String XI_AN_MAP_DATASETS_NAME = "西安智慧应急多灾害链平台";
     public static final String XI_AN_RUPTURE_NAME = "西安市断层";
     public static final String XI_AN_SEISMIC_DATASETS_NAME = "西安项目地震数据源";   // 放置地震数据源
@@ -104,57 +105,56 @@ public class BaseConstants {
     public static final String XIAN_STORM_FLOWS_HIDE_PEOPLE = "暴雨泥石流潜在隐患点及人口分布图";
     public static final String XIAN_STORM_FLOWS_HIDE_CROPS = "暴雨泥石流潜在隐患点及农作物分布图";
     public static final String XIAN_STORM_CITY_LIFE_LINE = "暴雨城市生命线工程分布图";
-    public static final String XIAN_STORM_FLOOD_CONTROL_CROPS = "暴雨防汛物资分布图";
+    public static final String XIAN_STORM_FLOOD_CONTROL = "暴雨防汛物资分布图";
     public static final String XIAN_STORM_RESERVOIR = "暴雨附近水库分布图";
     public static final String XIAN_STORM_RISK_AREA = "暴雨地质灾害风险区分布图";
     public static final String XIAN_STORM_SAFE_PLACE = "暴雨避难场所分布图";
     public static final String XIAN_STORM_HOSPITAL = "暴雨附近医院分布图";
     public static final String XIAN_STORM_RESCUE_TEAMS = "暴雨附近救援队伍分布图";
 
-
     // 西安地震专题图名称
     public static final String[] XIAN_SEISMIC_MAPS = {
-            XIAN_SEISMIC_DISTRIBUTION,
-            XIAN_SEISMIC_TRAFFIC,   // 交通
-            XIAN_SEISMIC_RUPTURE,   // 断裂带
             XIAN_SEISMIC_IMPORTANT_OBJECTS, // 重要目标
-            XIAN_SEISMIC_DANGER_SOURCE, // 危险源
-            XIAN_SEISMIC_RESCUE_TEAM,   // 救援队伍
-            XIAN_SEISMIC_SAFE_PLACE,    // 避难场所
-            XIAN_SEISMIC_PUBLIC_PLACE,  // 公共场所
-            XIAN_SEISMIC_SCHOOL,    // 学校
-            XIAN_SEISMIC_HOSPITAL,   // 医院
-            XIAN_SEISMIC_RESCUE_MATERIAL,   // 救援物资
-            XIAN_SEISMIC_TOURIST_SPOT,  // 旅游景点
             XIAN_SEISMIC_RESERVOIR, // 水库
+            XIAN_SEISMIC_TOURIST_SPOT,  // 旅游景点
+            XIAN_SEISMIC_RUPTURE,   // 断裂带
+            XIAN_SEISMIC_RESCUE_TEAM,   // 救援队伍
+            XIAN_SEISMIC_RESCUE_MATERIAL,   // 救援物资
+            XIAN_SEISMIC_SCHOOL,    // 学校
+            XIAN_SEISMIC_DANGER_SOURCE, // 危险源
+            XIAN_SEISMIC_HOSPITAL,   // 医院
+            XIAN_SEISMIC_SAFE_PLACE,    // 避难场所
+            XIAN_SEISMIC_RISK_AREA,  // 风险区域
             XIAN_SEISMIC_HIDE_POINT,    // 隐患点
-            XIAN_SEISMIC_RISK_AREA  // 风险区域
+            XIAN_SEISMIC_PUBLIC_PLACE,  // 公共场所
+            XIAN_SEISMIC_TRAFFIC,   // 交通
+            XIAN_SEISMIC_DISTRIBUTION,
     };
 
     // 西安暴雨专题图名称
     public static final String[] XIAN_STORM_MAPS = new String[]{
-            XIAN_STORM_FLOOD_HIDE_PEOPLE,   // 暴雨山洪潜在隐患点及人口分布图
-            XIAN_STORM_FLOOD_HIDE_CROPS, // 暴雨内涝潜在隐患点及农作物分布图
-            XIAN_STORM_WATER_ACCUMULATE_HIDE_PEOPLE, // 暴雨内涝潜在隐患点及农作物分布图
-            XIAN_STORM_WATER_ACCUMULATE_HIDE_CROPS, // 暴雨内涝潜在隐患点及农作物分布图
-            XIAN_STORM_SLIDE_HIDE_PEOPLE, // 暴雨滑坡潜在隐患点及人口分布图
-            XIAN_STORM_SLIDE_HIDE_CROPS, // 暴雨滑坡潜在隐患点及农作物分布图
-            XIAN_STORM_FLOWS_HIDE_PEOPLE, // 暴雨泥石流潜在隐患点及人口分布图
-            XIAN_STORM_FLOWS_HIDE_CROPS, // 暴雨泥石流潜在隐患点及农作物分布图
-            XIAN_STORM_CITY_LIFE_LINE, // 暴雨城市生命线工程分布图
-            XIAN_STORM_FLOOD_CONTROL_CROPS, // 暴雨防汛物资分布图
-            XIAN_STORM_RESERVOIR, // 暴雨附近水库分布图
-            XIAN_STORM_RISK_AREA, // 暴雨地质灾害风险区分布图
-            XIAN_STORM_SAFE_PLACE, // 暴雨避难场所分布图
-            XIAN_STORM_HOSPITAL, // 暴雨附近医院分布图
-            XIAN_STORM_RESCUE_TEAMS // 暴雨附近救援队伍分布图
+            XIAN_STORM_RESERVOIR, // 暴雨附近水库
+            XIAN_STORM_RESCUE_TEAMS, // 暴雨附近救援队伍
+            XIAN_STORM_HOSPITAL, // 暴雨附近医院
+            XIAN_STORM_FLOOD_CONTROL, // 暴雨防汛物资
+            XIAN_STORM_SAFE_PLACE, // 暴雨避难场所
+            XIAN_STORM_SLIDE_HIDE_CROPS, // 暴雨滑坡潜在隐患点及农作物
+            XIAN_STORM_SLIDE_HIDE_PEOPLE, // 暴雨滑坡潜在隐患点及人口
+            XIAN_STORM_FLOWS_HIDE_CROPS, // 暴雨泥石流潜在隐患点及农作物
+            XIAN_STORM_FLOWS_HIDE_PEOPLE, // 暴雨泥石流潜在隐患点及人口
+            XIAN_STORM_FLOOD_HIDE_CROPS, // 暴雨山洪农作物
+            XIAN_STORM_FLOOD_HIDE_PEOPLE,   // 暴雨山洪人口
+            XIAN_STORM_CITY_LIFE_LINE, // 暴雨城市生命线工程
+            XIAN_STORM_RISK_AREA, // 暴雨地质灾害风险区
+            XIAN_STORM_WATER_ACCUMULATE_HIDE_CROPS, // 暴雨内涝潜在隐患点及农作物
+            XIAN_STORM_WATER_ACCUMULATE_HIDE_PEOPLE, // 暴雨内涝人口
     };
 
 
     // 设置专题图比例尺
     public static final Map<String, Double> MAP_SCALE = new HashMap<String, Double>() {{
         // 地震专题图比例尺
-        put(XIAN_SEISMIC_DISTRIBUTION, 1 / 800000.0);  // 地震影响范围分布图 1:800000
+        put(XIAN_SEISMIC_DISTRIBUTION, 1 / 600000.0);  // 地震影响范围分布图 1:600000
         put(XIAN_SEISMIC_TRAFFIC, 1 / 350000.0);       // 地震交通分布图
         put(XIAN_SEISMIC_RUPTURE, 1 / 700000.0);       // 地震断层分布图
         put(XIAN_SEISMIC_IMPORTANT_OBJECTS, 1 / 350000.0); // 地震重要目标分布图
@@ -180,7 +180,7 @@ public class BaseConstants {
         put(XIAN_STORM_FLOWS_HIDE_PEOPLE, 1 / 250000.0); // 暴雨泥石流潜在隐患点及人口分布图
         put(XIAN_STORM_FLOWS_HIDE_CROPS, 1 / 250000.0); // 暴雨泥石流潜在隐患点及农作物分布图
         put(XIAN_STORM_CITY_LIFE_LINE, 1 / 250000.0); // 暴雨城市生命线工程分布图
-        put(XIAN_STORM_FLOOD_CONTROL_CROPS, 1 / 400000.0); // 暴雨防汛物资分布图
+        put(XIAN_STORM_FLOOD_CONTROL, 1 / 400000.0); // 暴雨防汛物资分布图
         put(XIAN_STORM_RESERVOIR, 1 / 300000.0); // 暴雨附近水库分布图
         put(XIAN_STORM_RISK_AREA, 1 / 150000.0); // 暴雨地质灾害风险区分布图
         put(XIAN_STORM_SAFE_PLACE, 1 / 250000.0); // 暴雨避难场所分布图
