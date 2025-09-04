@@ -37,6 +37,8 @@ public class EarthQuakeReportEntity {
     private String earthQuakeDeathMax;//地震预计伤亡人数最大值
     private String earthQuakeDeathMin;//地震预计伤亡人数最小值
     private String earthQuakeFaultZone;//震中最近断裂带
+    private Integer earthQuakeHospitalNum;//5公里内的医院数量
+    private Integer earthQuakeOutHospitalNum;//5km重灾区外的医院数量
     private List<Hospital> earthQuakeHospital;//震中附近5km内的医院列表(名称/总床位)
     private String earthQuakeInfluenceGraph;//地震影响估计范围分布图路径
     private String earthQuakeFaultZoneGraph;//地震震中附近断裂带图路径
