@@ -47,9 +47,11 @@ public class EqListServiceImpl implements IEqListService {
     private IAssessmentBatchService assessmentBatchService;
 
     // 启动地震
-    // @Async("taskExecutor")
+//    @Async("taskExecutor")
     @Override
     public EqParams trigger(TriggerDTO triggerDTO) {
+
+        EqParams params = new EqParams();
 
         // 抛出异常
         if (triggerDTO == null) {
@@ -92,12 +94,16 @@ public class EqListServiceImpl implements IEqListService {
             // 设置ID
             assessmentDTO.setEqId(eqId);
             assessmentDTO.setEqqueueId(eqqueueId);
+            assessmentDTO.setMagnitude(Double.parseDouble(triggerDTO.getMagnitude()));
+            assessmentDTO.setEqDepth(Double.parseDouble(triggerDTO.getEqDepth()));
 
             // 开始进行评估
             assessmentBatchService.assessment(assessmentDTO);
         }
 
-        return new EqParams(eqId, eqqueueId);
+        params.setEqId(eqId);
+        params.setEqqueueId(eqqueueId);
+        return params;
     }
 
     // 重新评估

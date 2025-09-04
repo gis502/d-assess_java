@@ -32,8 +32,10 @@ public class EarthQuakeReportEntity {
      */
     private String earthQuakeIntensity;//重灾区烈度
     private String earthQuakeDisasterArea;//重灾区面积(km2)
-    private String earthQuakeInfluencePopulation;//地震影响人口
-    private String earthQuakeDeath;//地震预计伤亡人数
+    private String earthQuakeInfluencePopulationMax;//地震影响人口最大值
+    private String earthQuakeInfluencePopulationMin;//地震影响人口最小值
+    private String earthQuakeDeathMax;//地震预计伤亡人数最大值
+    private String earthQuakeDeathMin;//地震预计伤亡人数最小值
     private String earthQuakeFaultZone;//震中最近断裂带
     private List<Hospital> earthQuakeHospital;//震中附近5km内的医院列表(名称/总床位)
     private String earthQuakeInfluenceGraph;//地震影响估计范围分布图路径

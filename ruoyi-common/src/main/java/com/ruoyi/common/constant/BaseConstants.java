@@ -38,7 +38,7 @@ public class BaseConstants {
     public static final String RAIN_NAME_SUFFIX = "mm";
     public static final String PARAMETER_ERROR = "参数异常";
     public static final String PARSE_ERROR = "解析失败";
-    public static final String XI_AN_WORKSPACE_PATH = "E:/GIS小组专题图产出/专题图模板/西安项目.smwu";
+    public static final String XI_AN_WORKSPACE_PATH = "D:/专题图模板/地震专题图.smwu";
     public static final String XI_AN_MAP_DATASETS_NAME = "西安智慧应急多灾害链平台";
     public static final String XI_AN_RUPTURE_NAME = "西安市断层";
     public static final String XI_AN_SEISMIC_DATASETS_NAME = "西安项目地震数据源";   // 放置地震数据源

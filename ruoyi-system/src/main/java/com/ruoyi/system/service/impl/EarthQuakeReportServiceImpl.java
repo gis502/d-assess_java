@@ -1,8 +1,10 @@
 package com.ruoyi.system.service.impl;
 
+import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.config.DocumentConfig;
 import com.ruoyi.common.constant.BaseConstants;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.enums.ImagePositionEnum;
 import com.ruoyi.common.enums.ImageTypeEnum;
 import com.ruoyi.common.exception.ThematicReceiveException;
@@ -34,6 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Service
@@ -71,6 +74,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
         return R.ok(wordName);
     }
 
+    @DataSource(value = DataSourceType.MASTER)
     public void saveEarthQuakeReport(String wordPath, String wordName, String eqId, String eqqueueId){
         try {
             // 设置图件产出信息
@@ -180,7 +184,7 @@ class CreateEarthQuakeReport {
             // 一个空行
             DocumentUtils.createBlankLine(document, 1);
             // 创建部门信息
-            createDept(document, "西安市应急管理局               " + earthQuakeReportEntity.getReportTime().toString().replace("T", " "));
+            createDept(document, "西安市应急管理局               " + earthQuakeReportEntity.getEarthQuakeTime().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日")));
             // 两个空行
             DocumentUtils.createBlankLine(document, 2);
             // 第一部分，地震概况
@@ -234,8 +238,9 @@ class CreateEarthQuakeReport {
         // 内容
         XWPFParagraph paragraph = DocumentUtils.addRegularParagraph(doc, null);
 
-        String content = String.format("据地震台网测定，%s（北京时间）在%s（北纬%s，东经%s）发生%s级地震, 震源深度%s千米。",
-                earthQuakeReportEntity.getEarthQuakeTime().toString().replace("T", " "),
+
+        String content = String.format("据地震台网测定，%s（北京时间）在%s（北纬%s，东经%s）发生%.1f级地震, 震源深度%.1f千米。",
+                earthQuakeReportEntity.getEarthQuakeTime().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日")),
                 earthQuakeReportEntity.getEarthQuakePosition(),
                 earthQuakeReportEntity.getEarthQuakeLon(),
                 earthQuakeReportEntity.getEarthQuakeLat(),
@@ -257,20 +262,34 @@ class CreateEarthQuakeReport {
         // 内容
         XWPFParagraph paragraph1 = DocumentUtils.addRegularParagraph(doc, null);
 
-        String content1 = String.format("本次地震震中所在地区%s，人口密度为%s每平方公里。" +
-                        "本次地震重灾区烈度预计达到%s度，重灾区面积为%s平方公里，灾区总GDP为%s亿元；地震影响人口约%s万人，预计伤亡人数%s人。",
-                DocumentUtils.list2Str(earthQuakeReportEntity.getEarthQuakeCountry(), null),
-                earthQuakeReportEntity.getEarthQuakePopulationDensity(),
-                earthQuakeReportEntity.getEarthQuakeIntensity(),
-                earthQuakeReportEntity.getEarthQuakeDisasterArea(),
-                earthQuakeReportEntity.getEarthQuakeInfluencePopulation(),
-                earthQuakeReportEntity.getEarthQuakeDeath()
-        );
+        int roundedResult = (int) Math.round(Double.parseDouble(earthQuakeReportEntity.getEarthQuakeDisasterArea()) / 1000000.0);
 
-        DocumentUtils.addRegularRun(paragraph1, content1);
+        int deathMax = Integer.parseInt(earthQuakeReportEntity.getEarthQuakeDeathMax());
+        if (deathMax==0){
+            String content1 = String.format("本次地震震中所在地区%s。" + "地震影响人口约%s-%s人。",
+                    earthQuakeReportEntity.getEarthQuakePosition(),
+                    earthQuakeReportEntity.getEarthQuakeInfluencePopulationMin(),
+                    earthQuakeReportEntity.getEarthQuakeInfluencePopulationMax()
+            );
+            DocumentUtils.addRegularRun(paragraph1, content1);
+
+        }
+        else {
+            String content1 = String.format("本次地震震中所在地区%s。" +
+                            "本次地震重灾区烈度预计达到%s度，重灾区面积为%d平方公里；地震影响人口约%s-%s人，预计伤亡人数约%s-%s人。",
+                    earthQuakeReportEntity.getEarthQuakePosition(),
+                    earthQuakeReportEntity.getEarthQuakeIntensity(),
+                    roundedResult * ((int)earthQuakeReportEntity.getEarthQuakeSourceDepth()+3),
+                    earthQuakeReportEntity.getEarthQuakeInfluencePopulationMin(),
+                    earthQuakeReportEntity.getEarthQuakeInfluencePopulationMax(),
+                    earthQuakeReportEntity.getEarthQuakeDeathMin(),
+                    earthQuakeReportEntity.getEarthQuakeDeathMax()
+            );
+            DocumentUtils.addRegularRun(paragraph1, content1);
+        }
         DocumentUtils.insertImageWithCaption(doc,
-//                earthQuakeReportEntity.getEarthQuakeInfluenceGraph(),
-                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
+                earthQuakeReportEntity.getEarthQuakeInfluenceGraph(),
+//                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
                 ImageTypeEnum.JPG ,null, null, "图1", ImagePositionEnum.AFTER);
 
         XWPFParagraph xwpfParagraph = DocumentUtils.addRegularParagraph(doc, null);
@@ -286,8 +305,8 @@ class CreateEarthQuakeReport {
         xwpfParagraph.setIndentationFirstLine(0);
 
         DocumentUtils.insertImageWithCaption(doc,
-//                earthQuakeReportEntity.getEarthQuakeFaultZoneGraph(),
-                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
+                earthQuakeReportEntity.getEarthQuakeFaultZoneGraph(),
+//                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
                 ImageTypeEnum.JPG, null, null, "图2", ImagePositionEnum.AFTER);
 
         XWPFParagraph xwpfParagraph1 = DocumentUtils.addRegularParagraph(doc, null);
@@ -296,8 +315,8 @@ class CreateEarthQuakeReport {
         run1.setBold(true);
 
         DocumentUtils.insertImageWithCaption(doc,
-//                earthQuakeReportEntity.getEarthQuakeHospitalGraph(),
-                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
+                earthQuakeReportEntity.getEarthQuakeHospitalGraph(),
+//                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
                 ImageTypeEnum.JPG, null, null, "图3", ImagePositionEnum.AFTER);
 
 
