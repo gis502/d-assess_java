@@ -49,9 +49,9 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
     // 调用地震图件出图
     @Override
     public void outputMaps(AssessmentDTO assessmentDTO) {
-        log.info("开始创建地震专题图...");
         // 只对 6.0 级以上的地震做专题图
         if (assessmentDTO.getMagnitude() >= BaseConstants.SEISMIC_6_GRADE) {
+            log.info("开始创建地震专题图...");
             // 调用图件产出服务进行出图
             seismicLayoutDrawerService.createSeismicPictureInit(assessmentDTO);
             log.info("专题图创建完成...");
@@ -118,9 +118,12 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
     // 暴雨产出图件
     @Override
     public void outputMaps(RainAssessmentDTO assessmentDTO) {
-        log.info("开始创建暴雨专题图...");
-        rainLayoutDrawerService.createSeismicPictureInit(assessmentDTO);
-        log.info("专题图创建完成...");
+        // 累计降雨量高于 30mm 触发专题图
+        if (Integer.parseInt(assessmentDTO.getRainfall()) > 30) {
+            log.info("开始创建暴雨专题图...");
+            rainLayoutDrawerService.createSeismicPictureInit(assessmentDTO);
+            log.info("专题图创建完成...");
+        }
     }
     // 暴雨报告
     @Override
