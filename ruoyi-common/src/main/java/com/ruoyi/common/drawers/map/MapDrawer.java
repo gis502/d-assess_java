@@ -289,9 +289,6 @@ public class MapDrawer {
         double Ra = calculateRa(magnitude, intensity);
         double Rb = calculateRb(magnitude, intensity);
 
-        System.out.println("长轴：" + Ra + "\n短轴：" + Rb);
-
-
         GeoEllipse ellipse = new GeoEllipse(center, Ra, Rb, rotation);
 
         // 设置椭圆样式

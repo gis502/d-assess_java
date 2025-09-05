@@ -78,7 +78,6 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
         log.info("开始生成灾情报告...");
         // 6级及以上地震生成 灾情报告 和 辅助决策报告
         if (assessmentDTO.getMagnitude() >= BaseConstants.SEISMIC_6_GRADE) {
-            log.info("9632150444...");
             // TODO 灾情报告与辅助决策报告
             EarthQuakeReportEntity reportEntity = new EarthQuakeReportEntity();
             reportEntity = getEarthquakeEntity(assessmentDTO);
@@ -86,10 +85,8 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
             eqParams.setEqId(assessmentDTO.getEqId());
             eqParams.setEqqueueId(assessmentDTO.getEqqueueId());
             System.out.println(eqParams);
-            log.info("8787878787888545451211212145454 {}",eqParams);
             //获取图片
             List<AssessmentOutputDTO> earthquakeGraphs = getMap(eqParams);
-            log.info("32015645565 {}",earthquakeGraphs.size());
 
             while (earthquakeGraphs.size() >= 13 ) {
                 for (AssessmentOutputDTO earthquakeDTO : earthquakeGraphs) {
@@ -103,7 +100,6 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
                         reportEntity.setEarthQuakeFaultZoneGraph(earthquakeDTO.getSourceFile());
                     }
                 }
-                log.info("asssddhhffhfhfhfhhf {}",reportEntity);
                 try {
                     earthQuakeService.generateEarthQuakeReport(reportEntity);
                     log.info("报告生成完毕...");
@@ -120,13 +116,10 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
          log.info("灾情报告生成完成...");
     }
 
-
-
     // 获取地震专题图
     @Override
     public List<AssessmentOutputDTO> getMap(EqParams eqParams) {
 
-        log.info("9632103685556666 {}", eqParams);
         LambdaQueryWrapper<AssessmentOutput> wrapper = null;
         // 参数为空，抛出异常
         if (StringUtils.isEmpty(eqParams.getEqId()) && StringUtils.isEmpty(eqParams.getEqqueueId())) {
@@ -161,7 +154,7 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
             // 加入结果集
             assessmentOutputDTOS.add(outputDTO);
         }
-        log.info("02123456464132111 {}", assessmentOutputDTOS);
+
         return assessmentOutputDTOS;
     }
 

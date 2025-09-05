@@ -47,11 +47,6 @@ public class AssessmentBatchServiceImpl implements IAssessmentBatchService {
     private RainAssessmentBatchMapper rainAssessmentBatchMapper;
     @Resource
     private IAssessmentOutputService assessmentOutputService;
-    //测试完删除
-//    @Resource
-//    private HospitalMapper hospitalMapper;
-//    @Resource
-//    private IEarthQuakeService earthQuakeService;
 
     // 设置评估结束标志
     private Boolean isOutput = true, isReport = true, isAffected = true, isSeismic = true;
@@ -95,14 +90,7 @@ public class AssessmentBatchServiceImpl implements IAssessmentBatchService {
                 // 进行图片产出
                 assessmentOutputService.outputMaps(assessmentDTO);
                 // TODO 进行报告产出
-
-                //测试用
-//                EarthQuakeReportEntity reportEntity = new EarthQuakeReportEntity();
-//                reportEntity = getEarthquakeEntity(assessmentDTO);
-//                earthQuakeService.generateEarthQuakeReport(reportEntity);
-//                if (input){
                 assessmentOutputService.outputReports(assessmentDTO);
-//                }
 
                 // TODO 进行经济损失评估
 
@@ -125,7 +113,6 @@ public class AssessmentBatchServiceImpl implements IAssessmentBatchService {
             }
         }
     }
-
 
     // 暴雨评估
     @Async("taskExecutor")
@@ -166,8 +153,6 @@ public class AssessmentBatchServiceImpl implements IAssessmentBatchService {
 
                 // TODO 进行地震影响场评估
 
-
-
             } catch (AssessmentException e) {
                 // 如果出现错误则抛出异常 并设置异常结束状态
                 assessmentBatch.setState(BaseConstants.ASSESSMENT_STATE_ABNORMAL);
@@ -193,64 +178,4 @@ public class AssessmentBatchServiceImpl implements IAssessmentBatchService {
     private void reassessmentTry() {
 
     }
-
-
-    //测试完删除
-//    private EarthQuakeReportEntity getEarthquakeEntity(AssessmentDTO assessmentDTO) {
-//        EarthQuakeReportEntity reportEntity = new EarthQuakeReportEntity();
-//        reportEntity.setEqId(assessmentDTO.getEqId());
-//        reportEntity.setEqqueueId(assessmentDTO.getEqqueueId());
-//        /*
-//         *地震概况部分
-//         */
-//        reportEntity.setReportTime(assessmentDTO.getEqTime()); // 报告时间
-//        reportEntity.setEarthQuakeTime(assessmentDTO.getEqTime()); // 地震时间
-//        reportEntity.setEarthQuakePosition(assessmentDTO.getEqAddr()); // 地震位置
-//        reportEntity.setEarthQuakeLon(assessmentDTO.getLongitude()); //震源经度
-//        reportEntity.setEarthQuakeLat(assessmentDTO.getLatitude()); //震源纬度
-//        reportEntity.setEarthQuakeMagnitude(assessmentDTO.getMagnitude());//震级
-//        reportEntity.setEarthQuakeSourceDepth(assessmentDTO.getEqDepth());//震源深度
-//        /*
-//         * 风险评估部分
-//         */
-//        reportEntity.setEarthQuakeIntensity(assessmentDTO.getIntensity());//重灾区烈度
-//        reportEntity.setEarthQuakeDisasterArea(assessmentDTO.getCircleArea());//重灾区面积(km2)
-//        reportEntity.setEarthQuakeInfluencePopulationMax(assessmentDTO.getAffectPopMax());//地震影响人口最大值
-//        reportEntity.setEarthQuakeInfluencePopulationMin(assessmentDTO.getAffectPopMin());//地震影响人口最小值
-//        reportEntity.setEarthQuakeDeathMax(assessmentDTO.getDiePopMax());//地震预计伤亡人数最大值
-//        reportEntity.setEarthQuakeDeathMin(assessmentDTO.getDiePopMin());//地震预计伤亡人数最小值
-//        reportEntity.setEarthQuakeFaultZone(assessmentDTO.getFaultZone());//震中最近断裂带
-//
-//        List<com.ruoyi.system.domain.Hospital> dbHospitals = hospitalMapper.selectHospitAffectPoints(
-//                assessmentDTO.getLongitude(),
-//                assessmentDTO.getLatitude()
-//        );
-//        List<EarthQuakeReportEntity.Hospital> reportHospitals = new ArrayList<>();
-//        for (com.ruoyi.system.domain.Hospital dbHospital : dbHospitals) {
-//            // 创建报告内部类的Hospital对象（注意：必须通过外部类实例创建，因为是非静态内部类）
-//            EarthQuakeReportEntity.Hospital reportHospital = reportEntity.new Hospital();
-//
-//            // 赋值：数据库实体属性 -> 报告内部类属性（字段对应关系需根据实际需求调整）
-//            reportHospital.setHospitalName(dbHospital.getName()); // 医院名称
-//            reportHospital.setHospitalBeds(dbHospital.getBeds() != null ? dbHospital.getBeds().toString() : "0"); // 总床位（转String，匹配内部类字段类型）
-//            reportHospital.setHospitalAddress(dbHospital.getAddress()); // 医院地址
-//            reportHospital.setHospitalLevel(dbHospital.getLevel()); // 医院等级（如三级甲等）
-//
-//            // 将转换后的对象加入报告列表
-//            reportHospitals.add(reportHospital);
-//        }
-//        reportEntity.setEarthQuakeHospital(reportHospitals);
-//        if (reportEntity.getEarthQuakeMagnitude()>= 7.0){
-//            reportEntity.setEarthQuakeEmergencyLevel("一级");
-//        }else if (reportEntity.getEarthQuakeMagnitude()>= 6.0){
-//            reportEntity.setEarthQuakeEmergencyLevel("二级");
-//        }else if (reportEntity.getEarthQuakeMagnitude()>= 5.0){
-//            reportEntity.setEarthQuakeEmergencyLevel("三级");
-//        }else {
-//            reportEntity.setEarthQuakeEmergencyLevel("四级");
-//        }
-//        return reportEntity;
-//
-//    }
-
 }

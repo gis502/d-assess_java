@@ -21,7 +21,6 @@ public class BaseConstants {
     public static final String ASSESSMENT_STATE_ABNORMAL = "异常中断";
     public static final String ASSESSMENT_STATE_TIMEOUT = "超时结束";
     public static final Integer ASSESSMENT_INIT = 1;    // 评估批次初始化状态
-    public static final String YA_AN_AREA_CODE = "511800";  // 雅安市行政区划代码
     public static final String XI_AN_AREA_CODE = "610100";// 西安市行政区划代码
     public static final String FILE_CREATE_FILED = "文件夹创建失败";
     public static final String TRIGGER_FILED = "地震启动失败";
@@ -38,12 +37,15 @@ public class BaseConstants {
     public static final String RAIN_NAME_SUFFIX = "mm";
     public static final String PARAMETER_ERROR = "参数异常";
     public static final String PARSE_ERROR = "解析失败";
+
+    // TODO 需要改成Linux路径
     public static final String XI_AN_SEISMIC_WORKSPACE_PATH = "E:/GIS小组专题图产出/专题图模板/地震专题图.smwu";
     public static final String XI_AN_STORM_WORKSPACE_PATH = "E:/GIS小组专题图产出/专题图模板/暴雨专题图.smwu";
     public static final String XI_AN_MAP_DATASETS_NAME = "西安智慧应急多灾害链平台";
-    public static final String XI_AN_RUPTURE_NAME = "西安市断层";
     public static final String XI_AN_SEISMIC_DATASETS_NAME = "西安项目地震数据源";   // 放置地震数据源
     public static final String XI_AN_STORM_DATASETS_NAME = "西安项目暴雨数据源";     // 放置暴雨数据源
+    public static final String XI_AN_RUPTURE_NAME = "西安市断层";
+
     public static final String UPLOAD_FAILED = "文件上传失败";
     public static final String FILE_NOT_FOUND_ERROR = "文件不存在";
     public static final int DPI = 600;  // 出图分辨率
@@ -54,6 +56,7 @@ public class BaseConstants {
     public static final String SIZE = "A3"; // 专题图尺寸
     public static final Integer THEMATIC_TYPE = 1;
     public static final Integer DOCUMENT_TYPE = 2;
+    // TODO 需要改成Linux服务器路径
     public static final String PICTURE_PREFIX = "E:/upload/地震/专题图/";
     public static final String REPORTS_PREFIX = "E:/upload/地震/灾情报告/";
     public static final String AFFECTED_PREFIX = "E:/upload/地震/地震影响场/";
@@ -85,6 +88,8 @@ public class BaseConstants {
     public static final String XIAN_SEISMIC_RESERVOIR = "震区附近水库分布图";
     public static final String XIAN_SEISMIC_HIDE_POINT = "震区地质灾害隐患点分布图";
     public static final String XIAN_SEISMIC_RISK_AREA = "震区地质灾害风险区分布图";
+    public static final String XIAN_SEISMIC_PEOPLE = "震区附近人口密度分布图";
+    public static final String XIAN_SEISMIC_CROPS = "震区附近农作物密度分布图";
 
 
     // 西安暴雨专题图名称
@@ -120,11 +125,13 @@ public class BaseConstants {
             XIAN_SEISMIC_HIDE_POINT,    // 隐患点
             XIAN_SEISMIC_PUBLIC_PLACE,  // 公共场所
             XIAN_SEISMIC_TRAFFIC,   // 交通
-            XIAN_SEISMIC_DISTRIBUTION,
+            XIAN_SEISMIC_DISTRIBUTION, // 影响范围
+            XIAN_SEISMIC_PEOPLE,   // 人口
+            XIAN_SEISMIC_CROPS // 农作物
     };
 
     // 西安暴雨专题图名称
-    public static final String[] XIAN_STORM_MAPS = new String[]{
+    public static final String[] XIAN_STORM_MAPS = {
             XIAN_STORM_RESERVOIR, // 暴雨附近水库
             XIAN_STORM_RESCUE_TEAMS, // 暴雨附近救援队伍
             XIAN_STORM_HOSPITAL, // 暴雨附近医院
@@ -161,6 +168,9 @@ public class BaseConstants {
         put(XIAN_SEISMIC_RESERVOIR, 1 / 300000.0); // 地震水库分布图
         put(XIAN_SEISMIC_HIDE_POINT, 1 / 300000.0); // 地震隐患点分布图
         put(XIAN_SEISMIC_RISK_AREA, 1 / 150000.0); // 地震地质灾害风险区分布图
+        put(XIAN_SEISMIC_PEOPLE, 1 / 300000.0);     //地震人口分布图
+        put(XIAN_SEISMIC_CROPS, 1 / 300000.0);  // 地震农作物分布图
+
 
         // 暴雨专题图比例尺
         put(XIAN_STORM_FLOOD_HIDE_PEOPLE, 1 / 450000.0);   // 暴雨山洪潜在隐患点及人口分布图
