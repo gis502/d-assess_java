@@ -264,7 +264,7 @@ public class MapDrawer {
         } else if (magLevel == 7) {
             return new int[]{7, 8, 9};
         } else if (magLevel == 8) {
-            return new int[]{8, 9, 10, 11};
+            return new int[]{8, 9, 10};
         } else if (magLevel >= 9) {
             // 9级及以上都返回9-12级烈度
             return new int[]{9, 10, 11, 12};

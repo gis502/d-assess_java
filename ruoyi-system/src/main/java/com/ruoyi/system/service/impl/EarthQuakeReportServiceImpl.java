@@ -276,9 +276,9 @@ class CreateEarthQuakeReport {
         }
         else {
             String content1 = String.format("本次地震震中所在地区%s。" +
-                            "本次地震重灾区烈度预计达到%s度，重灾区面积为%d平方公里；地震影响人口约%s-%s人，预计伤亡人数约%s-%s人。",
+                            "本次地震重灾区烈度预计超过%d度，重灾区面积为%d平方公里；地震影响人口约%s-%s人，预计伤亡人数约%s-%s人。",
                     earthQuakeReportEntity.getEarthQuakePosition(),
-                    earthQuakeReportEntity.getEarthQuakeIntensity(),
+                    (int)(earthQuakeReportEntity.getEarthQuakeMagnitude() + 2),
                     roundedResult * ((int)earthQuakeReportEntity.getEarthQuakeSourceDepth()+3),
                     earthQuakeReportEntity.getEarthQuakeInfluencePopulationMin(),
                     earthQuakeReportEntity.getEarthQuakeInfluencePopulationMax(),
