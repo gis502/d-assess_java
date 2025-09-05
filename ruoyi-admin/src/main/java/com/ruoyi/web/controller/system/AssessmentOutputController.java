@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -71,6 +73,5 @@ public class AssessmentOutputController {
             return Result.error(BaseConstants.THEMATIC_MAP_ERROR);
         }
     }
-
 
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.HospitalMapper">
+
+    <select id="selectHospitAffectPoints" resultType="com.ruoyi.system.domain.Hospital">
+       <![CDATA[
+        SELECT
+            id,
+            name,
+            address,
+            type_code,
+            type,
+            level,
+            institution_nature,
+            devices,
+            workers,
+            sum_people,
+            beds,
+            province,
+            city,
+            county,
+            country,
+            unit_head,
+            telephone,
+            lon AS longitude,
+            lat AS latitude,
+            ST_AsText(point) AS geomText,
+            -- 计算距离（米）用于验证和排序
+            ST_Distance(
+                    ST_Transform(point, 3857),
+                    ST_Transform(ST_SetSRID(ST_MakePoint(#{longitude}, #{latitude}), 4490), 3857)
+            ) AS distance_meters
+        FROM xian_hospitals
+        WHERE
+            -- 使用3857坐标系计算圆形范围（单位：米）
+            ST_Distance(
+                    ST_Transform(point, 3857),
+                    ST_Transform(ST_SetSRID(ST_MakePoint(#{longitude}, #{latitude}), 4490), 3857)
+            ) <= 20000  -- 5000米（20公里）
+        ORDER BY distance_meters
+        ]]>
+    </select>
+
+</mapper>

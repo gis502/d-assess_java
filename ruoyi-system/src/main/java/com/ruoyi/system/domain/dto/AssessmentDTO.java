@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author: xiaodemos
@@ -27,5 +28,16 @@ public class AssessmentDTO implements Serializable {
     private double magnitude;   // 震级
     private String eqType;  // 地震类型
 
+    /**
+     *地震报告评估数据
+     */
+    private String faultZone; // 距离震中最近断裂带
+    private String circleArea; // 重灾区面积
+    private String affectPopMax; // 影响人数最大值
+    private String affectPopMin; // 影响人数最小值
+    private String diePopMax; // 死亡人数最大值
+    private String diePopMin; // 死亡人数最小值
+    private List<String> country; // 影响街道
+    private String intensity; // 震区烈度
 
 }
