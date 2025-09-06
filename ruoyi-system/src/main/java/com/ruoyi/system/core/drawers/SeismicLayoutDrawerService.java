@@ -55,22 +55,6 @@ public class SeismicLayoutDrawerService {
     private LayoutsDrawer layoutsDrawer;
     @Resource
     private MapDrawer mapDrawer;
-//    private Map map;
-//    private Workspace workspace;
-//    private MapLayoutControl mapLayoutControl;
-
-//    public SeismicLayoutDrawerService(MapDrawer mapDrawer) {
-//        this.mapDrawer = mapDrawer;
-//        this.map = new Map();
-//        this.mapLayoutControl = new MapLayoutControl();
-//        init();
-//    }
-
-//    private void init() {
-//        this.workspace = WorkSpaceUtils.open(BaseConstants.XI_AN_SEISMIC_WORKSPACE_PATH);
-//        this.mapLayoutControl.getMapLayout().setWorkspace(workspace);
-//        this.map.setWorkspace(workspace);
-//    }
 
     // 创建震中点、烈度圈、烈度圈文本数据集
     public void createSeismicPictureInit(AssessmentDTO dto) {
