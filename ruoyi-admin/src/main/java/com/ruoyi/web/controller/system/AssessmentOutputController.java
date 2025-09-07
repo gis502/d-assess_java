@@ -2,7 +2,6 @@ package com.ruoyi.web.controller.system;
 
 import com.ruoyi.common.constant.BaseConstants;
 import com.ruoyi.common.utils.Result;
-import com.ruoyi.system.core.drawers.SeismicReportsPrepareService;
 import com.ruoyi.system.domain.dto.AssessmentDTO;
 import com.ruoyi.system.domain.dto.AssessmentOutputDTO;
 import com.ruoyi.system.domain.dto.RainAssessmentOutputDTO;
@@ -15,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -33,9 +30,6 @@ public class AssessmentOutputController {
 
     @Resource
     private IAssessmentOutputService assessmentOutputService;
-    @Resource
-    private SeismicReportsPrepareService seismicReportsPrepareService;
-
 
     @ApiOperation("获取地震专题图接口")
     @PostMapping("/eq/getMap")
@@ -50,13 +44,6 @@ public class AssessmentOutputController {
             // 获取图件异常
             return Result.error(BaseConstants.THEMATIC_MAP_ERROR);
         }
-    }
-
-    @ApiOperation("获取地震报告接口")
-    @PostMapping("/eq/test")
-    public String test(@RequestBody AssessmentDTO params){
-        seismicReportsPrepareService.seismicEmergencyAssistDecisionInfo2(params);
-        return "ok";
     }
 
     @ApiOperation("获取地震专题图接口")

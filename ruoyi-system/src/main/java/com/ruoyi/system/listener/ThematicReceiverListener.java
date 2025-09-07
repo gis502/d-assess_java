@@ -2,8 +2,6 @@ package com.ruoyi.system.listener;
 
 import com.ruoyi.common.constant.BaseConstants;
 import com.ruoyi.common.exception.ThematicReceiveException;
-import com.ruoyi.common.utils.QiniuOssUtil;
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.AssessmentOutput;
 import com.ruoyi.system.domain.RainAssessmentOutput;
@@ -13,13 +11,9 @@ import com.ruoyi.system.mapper.AssessmentOutputMapper;
 import com.ruoyi.system.mapper.RainAssessmentOutputMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.Resource;
 import java.io.File;
-import java.io.FileInputStream;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
