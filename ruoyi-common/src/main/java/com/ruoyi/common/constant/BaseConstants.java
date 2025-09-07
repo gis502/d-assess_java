@@ -39,8 +39,8 @@ public class BaseConstants {
     public static final String PARSE_ERROR = "解析失败";
 
     // TODO 需要改成Linux路径
-    public static final String XI_AN_SEISMIC_WORKSPACE_PATH = "E:/GIS小组专题图产出/专题图模板/地震专题图.smwu";
-    public static final String XI_AN_STORM_WORKSPACE_PATH = "E:/GIS小组专题图产出/专题图模板/暴雨专题图.smwu";
+    public static final String XI_AN_SEISMIC_WORKSPACE_PATH = "D:/专题图模板/地震专题图.smwu";
+    public static final String XI_AN_STORM_WORKSPACE_PATH = "D:/专题图模板/暴雨专题图.smwu";
     public static final String XI_AN_MAP_DATASETS_NAME = "西安智慧应急多灾害链平台";
     public static final String XI_AN_SEISMIC_DATASETS_NAME = "西安项目地震数据源";   // 放置地震数据源
     public static final String XI_AN_STORM_DATASETS_NAME = "西安项目暴雨数据源";     // 放置暴雨数据源

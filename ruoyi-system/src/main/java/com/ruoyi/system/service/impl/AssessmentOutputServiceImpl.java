@@ -88,7 +88,8 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
             //获取图片
             List<AssessmentOutputDTO> earthquakeGraphs = getMap(eqParams);
 
-            while (earthquakeGraphs.size() >= 13 ) {
+            //获取图片达到15张时，进入循环，执行一次跳出循环（需要优化）
+            while (earthquakeGraphs.size()>=15) {
                 for (AssessmentOutputDTO earthquakeDTO : earthquakeGraphs) {
                     if (Objects.equals(earthquakeDTO.getFileName(), "震区附近医院分布图")){
                         reportEntity.setEarthQuakeHospitalGraph(earthquakeDTO.getSourceFile());
@@ -242,11 +243,23 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
         reportEntity.setEarthQuakeDeathMax(assessmentDTO.getDiePopMax());//地震预计伤亡人数最大值
         reportEntity.setEarthQuakeDeathMin(assessmentDTO.getDiePopMin());//地震预计伤亡人数最小值
         reportEntity.setEarthQuakeFaultZone(assessmentDTO.getFaultZone());//震中最近断裂带
+        //计算9级烈度区的长短轴
+        double magnitude = assessmentDTO.getMagnitude();
+        int intensity = Integer.parseInt(assessmentDTO.getIntensity());
+        double semiMajorAxis1 = (Math.exp((3.04+1.27*magnitude-intensity)/0.92)-8.65)*100;
+        double semiMinorAxis1 = (Math.exp((2.57+1.23*magnitude-intensity)/0.86)-4.86)*100;
+        double semiMajorAxis2 = (Math.exp((4.04+1.27*magnitude-intensity)/0.92)-8.65)*100;
+        double semiMinorAxis2 = (Math.exp((3.57+1.23*magnitude-intensity)/0.86)-4.86)*100;
 
         List<com.ruoyi.system.domain.Hospital> dbHospitals = hospitalMapper.selectHospitAffectPoints(
                 assessmentDTO.getLongitude(),
-                assessmentDTO.getLatitude()
+                assessmentDTO.getLatitude(),
+                semiMajorAxis1,
+                semiMinorAxis1,
+                semiMajorAxis2,
+                semiMinorAxis2
         );
+        log.info("454564{}",dbHospitals);
         List<EarthQuakeReportEntity.Hospital> reportHospitals = new ArrayList<>();
         for (com.ruoyi.system.domain.Hospital dbHospital : dbHospitals) {
             // 创建报告内部类的Hospital对象（注意：必须通过外部类实例创建，因为是非静态内部类）

@@ -3,7 +3,7 @@
 <mapper namespace="com.ruoyi.system.mapper.HospitalMapper">
 
     <select id="selectHospitAffectPoints" resultType="com.ruoyi.system.domain.Hospital">
-       <![CDATA[
+        <![CDATA[
         SELECT
             id,
             name,
@@ -25,18 +25,28 @@
             lon AS longitude,
             lat AS latitude,
             ST_AsText(point) AS geomText,
-            -- 计算距离（米）用于验证和排序
+            -- 计算到中心点的距离（米）
             ST_Distance(
                     ST_Transform(point, 3857),
                     ST_Transform(ST_SetSRID(ST_MakePoint(#{longitude}, #{latitude}), 4490), 3857)
             ) AS distance_meters
-        FROM xian_hospitals
+        FROM (
+                 -- 子查询：将医院点和中心点转换为3857平面坐标（x/y米）
+                 SELECT
+                     *,
+                     -- 医院点的平面坐标（x1,y1）
+                     ST_X(ST_Transform(point, 3857)) AS x1,
+                     ST_Y(ST_Transform(point, 3857)) AS y1,
+                     -- 中心点的平面坐标（x0,y0）
+                     ST_X(ST_Transform(ST_SetSRID(ST_MakePoint(#{longitude}, #{latitude}), 4490), 3857)) AS x0,
+                     ST_Y(ST_Transform(ST_SetSRID(ST_MakePoint(#{longitude}, #{latitude}), 4490), 3857)) AS y0
+                 FROM xian_hospitals
+             ) AS subquery
         WHERE
-            -- 使用3857坐标系计算圆形范围（单位：米）
-            ST_Distance(
-                    ST_Transform(point, 3857),
-                    ST_Transform(ST_SetSRID(ST_MakePoint(#{longitude}, #{latitude}), 4490), 3857)
-            ) <= 20000  -- 5000米（20公里）
+        -- 1. 点在外圈椭圆内（椭圆方程：(x-x0)²/a2² + (y-y0)²/b2² ≤ 1）
+            POWER((x1 - x0), 2) / POWER(#{semiMajorAxis2}, 2) + POWER((y1 - y0), 2) / POWER(#{semiMinorAxis2}, 2) <= 1
+            -- 2. 点不在内圈椭圆内（椭圆方程：(x-x0)²/a1² + (y-y0)²/b1² > 1）
+            AND POWER((x1 - x0), 2) / POWER(#{semiMajorAxis1}, 2) + POWER((y1 - y0), 2) / POWER(#{semiMinorAxis1}, 2) > 1
         ORDER BY distance_meters
         ]]>
     </select>
