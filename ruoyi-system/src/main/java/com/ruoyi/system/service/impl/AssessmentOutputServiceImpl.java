@@ -12,6 +12,7 @@ import com.ruoyi.system.core.drawers.RainLayoutDrawerService;
 import com.ruoyi.system.core.drawers.SeismicLayoutDrawerService;
 import com.ruoyi.system.domain.AssessmentOutput;
 import com.ruoyi.system.domain.EarthQuakeReportEntity;
+import com.ruoyi.system.domain.Hospital;
 import com.ruoyi.system.domain.RainAssessmentOutput;
 import com.ruoyi.system.domain.dto.AssessmentDTO;
 import com.ruoyi.system.domain.dto.AssessmentOutputDTO;
@@ -251,7 +252,7 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
         double semiMajorAxis2 = (Math.exp((4.04+1.27*magnitude-intensity)/0.92)-8.65)*100;
         double semiMinorAxis2 = (Math.exp((3.57+1.23*magnitude-intensity)/0.86)-4.86)*100;
 
-        List<com.ruoyi.system.domain.Hospital> dbHospitals = hospitalMapper.selectHospitAffectPoints(
+        List<Hospital> dbHospitals = hospitalMapper.selectHospitAffectPoints(
                 assessmentDTO.getLongitude(),
                 assessmentDTO.getLatitude(),
                 semiMajorAxis1,

@@ -79,7 +79,7 @@ public class SeismicLayoutDrawerService {
         Workspace workspace = null;
 
         // 处理超图中命名格式问题
-        String eqTime = dto.getEqTime().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String eqTime = dto.getEqTime().format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
         String mag = String.valueOf(dto.getMagnitude()).replace(".", "_");
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
         // 创建震中点名称
