@@ -89,7 +89,7 @@ public class AssessmentBatchServiceImpl implements IAssessmentBatchService {
                 assessmentBatchMapper.updateById(assessmentBatch);
                 // 进行图片产出
                 assessmentOutputService.outputMaps(assessmentDTO);
-                // TODO 进行报告产出
+                // 进行报告产出
                 assessmentOutputService.outputReports(assessmentDTO);
 
                 // TODO 进行经济损失评估

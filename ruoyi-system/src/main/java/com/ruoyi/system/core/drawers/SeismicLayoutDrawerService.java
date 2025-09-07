@@ -10,6 +10,7 @@ import com.ruoyi.common.exception.FileCreateException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.core.rabbitmq.RabbitConfig;
 import com.ruoyi.system.domain.bo.DrawersInfoBO;
+import com.ruoyi.system.domain.bo.DrawersRainInfoBO;
 import com.ruoyi.system.domain.dto.AssessmentDTO;
 import com.ruoyi.system.domain.dto.AssessmentOutputDTO;
 import com.supermap.data.DatasetVector;
@@ -154,19 +155,7 @@ public class SeismicLayoutDrawerService {
                 workspace.getMaps().setMapXML(map.getName(), map.toXML());
 
                 // 设置布局信息
-                DrawersInfoBO info = new DrawersInfoBO();
-                // 设置标题、地震时间、地震地址、地震级别、制作时间
-                String title = dto.getEqAddr() + dto.getMagnitude() + BaseConstants.GRADE + "" + BaseConstants.XIAN_SEISMIC_MAPS[index];
-                String makeTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
-                String eqTime = dto.getEqTime().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH时mm分"));
-                info.setPicName(BaseConstants.XIAN_SEISMIC_MAPS[index]);
-                info.setTitle(title);
-                info.setMagnitude(dto.getMagnitude());
-                info.setEqAddr(dto.getEqAddr());
-                info.setEqTime(eqTime);
-                info.setMakeTime(makeTime);
-                info.setLayoutId(index);    // 设置布局Id
-                info.setEqqueueId(dto.getEqqueueId());
+                DrawersInfoBO info = buildDrawersEqInfoBO(dto, index);
 
                 // 获取出图信息
                 AssessmentOutputDTO outputDTO = initLayouts(workspace, mapLayoutControl, map, info, BaseConstants.XIAN_SEISMIC_MAPS[index]);
@@ -300,4 +289,26 @@ public class SeismicLayoutDrawerService {
 
         return rawSizeMB;
     }
+
+
+    private DrawersInfoBO buildDrawersEqInfoBO(AssessmentDTO dto, int index) {
+
+        // 设置布局信息
+        DrawersInfoBO info = new DrawersInfoBO();
+        // 设置标题、地震时间、地震地址、地震级别、制作时间
+        String title = dto.getEqAddr() + dto.getMagnitude() + BaseConstants.GRADE + "" + BaseConstants.XIAN_SEISMIC_MAPS[index];
+        String makeTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
+        String eqTime = dto.getEqTime().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH时mm分"));
+        info.setPicName(BaseConstants.XIAN_SEISMIC_MAPS[index]);
+        info.setTitle(title);
+        info.setMagnitude(dto.getMagnitude());
+        info.setEqAddr(dto.getEqAddr());
+        info.setEqTime(eqTime);
+        info.setMakeTime(makeTime);
+        info.setLayoutId(index);    // 设置布局Id
+        info.setEqqueueId(dto.getEqqueueId());
+
+        return info;
+    }
+
 }

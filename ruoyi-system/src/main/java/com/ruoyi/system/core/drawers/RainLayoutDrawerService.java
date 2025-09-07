@@ -56,27 +56,13 @@ public class RainLayoutDrawerService {
     private LayoutsDrawer layoutsDrawer;
     @Resource
     private MapDrawer mapDrawer;
-    private Map map;
-    private Workspace workspace;
-    private MapLayoutControl mapLayoutControl;
 
-    public RainLayoutDrawerService(MapDrawer mapDrawer) {
-        this.mapDrawer = mapDrawer;
-        this.map = new Map();
-        this.mapLayoutControl = new MapLayoutControl();
-        init();
-    }
-
-    private void init() {
-        this.workspace = WorkSpaceUtils.open(BaseConstants.XI_AN_STORM_WORKSPACE_PATH);
-        this.mapLayoutControl.getMapLayout().setWorkspace(workspace);
-        this.map.setWorkspace(workspace);
-    }
 
     // 创建震中点、烈度圈、烈度圈文本数据集
     public void createSeismicPictureInit(RainAssessmentDTO dto) {
         log.info("开始创建暴雨数据集...");
 
+        Workspace workspace = null;
         // 处理超图中命名格式问题
         String rainTime = dto.getOccurrenceTime().format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
         // 持续时间
@@ -92,25 +78,42 @@ public class RainLayoutDrawerService {
         Point2D center = new Point2D(dto.getLongitude(), dto.getLatitude());
 
         try {
+            // 打开工作空间
+            workspace = WorkSpaceUtils.open(BaseConstants.XI_AN_STORM_WORKSPACE_PATH);
             // 创建暴雨中点
             DatasetVector datasetVector = mapDrawer.createCenterPoint(workspace, datasetsName, rainPointName, center);
             // 出图
-            initMap(datasetVector, rainPointName, center, dto);
+            initMap(workspace, datasetVector, rainPointName, center, dto);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("创建暴雨中心点数据集失败...", ex);
             Thread.currentThread().interrupt();
+        } finally {
+            // 关闭工作空间
+            if (workspace != null) {
+                // 关闭工作空间
+                workspace.close();
+                log.info("工作空间关闭成功...");
+            }
         }
     }
 
 
     @Async("taskExecutor")
     // 初始化每张地图
-    public void initMap(DatasetVector datasetVector, String rainPointName, Point2D center, RainAssessmentDTO dto) {
+    public void initMap(Workspace workspace, DatasetVector datasetVector, String rainPointName, Point2D center, RainAssessmentDTO dto) {
         log.info("暴雨数据集正在被加载到地图...");
+        int index = 0;
+        Map map = null;
+        MapLayoutControl mapLayoutControl = null;
+        try {
+            // 操作地图对象
+            map = new Map();
+            map.setWorkspace(workspace);
+            mapLayoutControl = new MapLayoutControl();
+            mapLayoutControl.getMapLayout().setWorkspace(workspace);
+            // 记录下每个图的名称
+            for (; index < BaseConstants.XIAN_STORM_MAPS.length; index++) {
 
-        // 记录下每个图的名称
-        for (int index = 0; index < BaseConstants.XIAN_STORM_MAPS.length; index++) {
-            try {
                 // 打开地图
                 map.open(BaseConstants.XIAN_STORM_MAPS[index]);
                 // 获取地图图层
@@ -130,7 +133,7 @@ public class RainLayoutDrawerService {
                 // 设置布局信息
                 DrawersRainInfoBO info = buildDrawersRainInfoBO(dto, index);
                 // 获取出图信息
-                RainAssessmentOutputDTO outputDTO = initLayouts(map, info, BaseConstants.XIAN_STORM_MAPS[index]);
+                RainAssessmentOutputDTO outputDTO = initLayouts(workspace, mapLayoutControl, map, info, BaseConstants.XIAN_STORM_MAPS[index]);
 
                 outputDTO.setRainId(dto.getRainId());
                 outputDTO.setRainQueueId(dto.getRainQueueId());
@@ -138,18 +141,22 @@ public class RainLayoutDrawerService {
                 // 送入专题图队列
                 rabbitTemplate.convertAndSend(RabbitConfig.DISASTER_EXCHANGE, RabbitConfig.RAIN_MAP, outputDTO);
                 log.info("{} 已放入消息队列...", outputDTO.getFileName());
+            }
 
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                Thread.currentThread().interrupt();
-            } finally {
+        } catch (Exception ex) {
+            log.error("震中、烈度圈数据集加载到地图失败...", ex);
+            Thread.currentThread().interrupt();
+        } finally {
+            // 关闭地图
+            if (map != null) {
                 map.close();
+                log.info("地图关闭成功...");
             }
         }
     }
 
     // 初始化布局
-    public RainAssessmentOutputDTO initLayouts(Map map, DrawersRainInfoBO info, String mapName) {
+    public RainAssessmentOutputDTO initLayouts(Workspace workspace, MapLayoutControl mapLayoutControl, Map map, DrawersRainInfoBO info, String mapName) {
         // 获取布局元素对象
         MapLayout mapLayout = mapLayoutControl.getMapLayout();
         Layouts layouts = workspace.getLayouts();
@@ -169,9 +176,9 @@ public class RainLayoutDrawerService {
         // 创建一个标题对象
         layoutsDrawer.thematicTitleTextDrawer(elements, info.getTitle(), pageWidth, pageHeight);
 
-        combineElem(elements, info, mapName);
+        combineElem(mapLayoutControl, elements, info, mapName);
 
-        CompletableFuture<String> future = outputImages(info); // 出图
+        CompletableFuture<String> future = outputImages(mapLayoutControl, info); // 出图
         String outputImagePath = future.join(); // 使用 join 不抛出异常
 
         elements.deleteAll();   // 每个布局制作完后都需要进行清理布局中的元素对象
@@ -187,7 +194,7 @@ public class RainLayoutDrawerService {
                 .fileName(info.getPicName())
                 .fileExtension(BaseConstants.EXTENSION_TYPE)
                 .fileSize(v)
-                .sourceFile("")
+                .sourceFile(BaseConstants.HTTP_NGINX_PREFIX + outputImagePath)
                 .localSourceFile(outputImagePath)
                 .remark("")
                 .size(BaseConstants.SIZE)
@@ -196,7 +203,7 @@ public class RainLayoutDrawerService {
         return output;
     }
 
-    public void combineElem(LayoutElements elements, DrawersRainInfoBO info, String mapName) {
+    public void combineElem(MapLayoutControl mapLayoutControl, LayoutElements elements, DrawersRainInfoBO info, String mapName) {
 
         double pageWidth = mapLayoutControl.getMapLayout().getBounds().getWidth();   // 页面宽度（mm）
         // 创建地震三要素文本对象（面对象）
@@ -210,7 +217,7 @@ public class RainLayoutDrawerService {
     }
 
     @Async("taskExecutor")
-    public CompletableFuture<String> outputImages(DrawersRainInfoBO infoBO) {
+    public CompletableFuture<String> outputImages(MapLayoutControl mapLayoutControl, DrawersRainInfoBO infoBO) {
 
         // 处理多层级文件夹名称
         int version = Integer.parseInt(StringUtils.substring(infoBO.getRainQueueId(), infoBO.getRainQueueId().length() - 2));

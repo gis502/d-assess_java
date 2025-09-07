@@ -16,6 +16,7 @@ import com.ruoyi.system.service.IEarthQuakeService;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,31 +31,31 @@ import java.util.UUID;
 @Service
 public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
 
-    // word保存路径
-    @Value("${document.path.rain.report}")
-    private String wordPath;
 
     @Resource
     private AssessmentOutputMapper assessmentOutputMapper;
+    private static final String FONT_FANG_SONG = "仿宋_GB2312";
+    private static final int TABLE_ROW_HEIGHT = 567;
+    private static final int TABLE_FONT_SIZE = 12;
 
     //生成报告
     @Override
     public R<String> generateEarthQuakeReport(EarthQuakeReportEntity earthQuakeReportEntity) throws IOException {
 
         // 生成 Word 路径
-        Path wordDir = Paths.get(wordPath);
+        Path wordDir = Paths.get(BaseConstants.REPORTS_PREFIX);
         if (!Files.exists(wordDir)) {
             Files.createDirectories(wordDir);
         }
         //earthQuakeReportEntity.getEarthQuakeTime().format(DateTimeFormatter.ofPattern("yyyyMMdd"))+"地震评估报告"
-        String wordName = earthQuakeReportEntity.getEarthQuakeTime().format(DateTimeFormatter.ofPattern("yyyyMMdd"))+"_"+System.currentTimeMillis()+"地震评估报告.docx";
+        String wordName = earthQuakeReportEntity.getEarthQuakeTime().format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "_" + System.currentTimeMillis() + "地震评估报告.docx";
         String wordPath = wordDir.resolve(wordName).toAbsolutePath().toString();
 
         // 表头宽度
         // int[] widths = {1500, 3000, 8000, 3000};
         try {
-            new CreateEarthQuakeReport().createEarthQuakeReport(wordPath, earthQuakeReportEntity);
-        }catch (IOException e) {
+            createEarthQuakeReport(wordPath, earthQuakeReportEntity);
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -64,7 +65,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
     }
 
     @DataSource(value = DataSourceType.MASTER)
-    public void saveEarthQuakeReport(String wordPath, String wordName, String eqId, String eqqueueId){
+    public void saveEarthQuakeReport(String wordPath, String wordName, String eqId, String eqqueueId) {
         try {
             // 设置图件产出信息
             AssessmentOutput assessmentOutput = new AssessmentOutput();
@@ -75,17 +76,17 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
             assessmentOutput.setCreateTime(LocalDateTime.now());     // 创建时间
             assessmentOutput.setUpdateTime(LocalDateTime.now());     // 修改时间
             assessmentOutput.setFileName(wordName);
-            assessmentOutput.setFileType("报告");
-            assessmentOutput.setFileExtension(".docx");
-            assessmentOutput.setType(2);
+            assessmentOutput.setFileType(BaseConstants.WORD_TYPE);
+            assessmentOutput.setFileExtension(BaseConstants.REPORTS_EXTENSION_TYPE);
+            assessmentOutput.setType(BaseConstants.DOCUMENT_TYPE);
 
             File originFile = new File(wordPath);
 
             if (!originFile.exists()) {
                 throw new ThematicReceiveException(BaseConstants.FILE_NOT_FOUND_ERROR);
-            }else{
+            } else {
                 assessmentOutput.setLocalSourceFile(wordPath);
-                assessmentOutput.setSourceFile(wordPath);
+                assessmentOutput.setSourceFile(BaseConstants.HTTP_NGINX_PREFIX + wordPath);
             }
             // 将图件信息插入到结果表中
             assessmentOutputMapper.insert(assessmentOutput);
@@ -96,66 +97,10 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
         }
     }
 
-//    public static void main(String[] args) {
-//        // 启动 Spring 容器
-//        ApplicationContext context = new AnnotationConfigApplicationContext("com.ruoyi.system");
-//
-//        // 获取服务实例
-//        EarthQuakeReportServiceImpl service = context.getBean(EarthQuakeReportServiceImpl.class);
-//
-//        try {
-//            EarthQuakeReportEntity earthQuakeReportEntity = new EarthQuakeReportEntity();
-//            earthQuakeReportEntity.setReportTime(LocalDateTime.now());
-//            earthQuakeReportEntity.setEarthQuakeTime(LocalDateTime.now());
-//            earthQuakeReportEntity.setEarthQuakeLat(99);
-//            earthQuakeReportEntity.setEarthQuakeLon(109);
-//            earthQuakeReportEntity.setEarthQuakeMagnitude(7);
-//            earthQuakeReportEntity.setEarthQuakePosition("陕西省西安市长安区");
-//            earthQuakeReportEntity.setEarthQuakeSourceDepth(10);
-//
-//            double flg = Math.random() * 50000;
-//
-//            earthQuakeReportEntity.setEarthQuakeIntensity("9");
-//            earthQuakeReportEntity.setEarthQuakeDisasterArea("50");
-//            earthQuakeReportEntity.setEarthQuakeInfluencePopulation(flg * 0.8 + "");
-//            earthQuakeReportEntity.setEarthQuakeDeath(flg * 0.4 + "");
-//            earthQuakeReportEntity.setEarthQuakeFaultZone("饶峰-麻柳坝断裂");
-//
-//            earthQuakeReportEntity.setEarthQuakeEmergencyLevel("一级");
-//
-//            // 创建表格数据
-//            for (int j = 0; j < 5; j++) {
-//                EarthQuakeReportEntity.Hospital hospital = new EarthQuakeReportEntity().new Hospital();
-//                hospital.setHospitalName("西安市第一医院");
-//                hospital.setHospitalBeds(Math.random() * 100 + "%");
-//                hospital.setHospitalAddress("陕西省西安市碑林区南院门街道南大街粉巷30号");
-//                hospital.setHospitalLevel("甲级");
-//                earthQuakeReportEntity.getEarthQuakeHospital().add(hospital);
-//            }
-//
-//            new CreateEarthQuakeReport().createEarthQuakeReport("H:/test.docx", earthQuakeReportEntity);
-//
-//            service.saveEarthQuakeReport("H:/test.docx", "test.docx", "T20240601171641511800", "T20240601171641511801");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-}
-
-/**
- * word文档生成
- */
-class CreateEarthQuakeReport {
-    private static final Integer TEXT_FONT_SIZE = 16;
-    private static final String TEXT_FONT_FAMILY = "黑体";
-    // 两个字符
-    private static final Integer INDENTATION_DISTANCE = 40 * TEXT_FONT_SIZE;
-    private static final String FONT_FANG_SONG = "仿宋_GB2312";
-    private static final int TABLE_ROW_HEIGHT = 567;
-    private static final int TABLE_FONT_SIZE = 12;
 
     /**
      * 创建word文件
+     *
      * @param filePath
      * @param earthQuakeReportEntity
      * @throws IOException
@@ -251,10 +196,10 @@ class CreateEarthQuakeReport {
         // 内容
         XWPFParagraph paragraph1 = DocumentUtils.addRegularParagraph(doc, null);
 
-        int roundedResult = (int) Math.round(Double.parseDouble(earthQuakeReportEntity.getEarthQuakeDisasterArea()) / 10000000.0)*10;
+        int roundedResult = (int) Math.round(Double.parseDouble(earthQuakeReportEntity.getEarthQuakeDisasterArea()) / 10000000.0) * 10;
 
         int deathMax = Integer.parseInt(earthQuakeReportEntity.getEarthQuakeDeathMax());
-        if (deathMax==0){
+        if (deathMax == 0) {
             String content1 = String.format("本次地震震中所在地区%s。" + "地震影响人口约%s-%s人。",
                     earthQuakeReportEntity.getEarthQuakePosition(),
                     earthQuakeReportEntity.getEarthQuakeInfluencePopulationMin(),
@@ -262,13 +207,12 @@ class CreateEarthQuakeReport {
             );
             DocumentUtils.addRegularRun(paragraph1, content1);
 
-        }
-        else {
+        } else {
             String content1 = String.format("本次地震震中所在地区%s。" +
                             "本次地震重灾区烈度预计超过%d度，重灾区面积约%d平方公里；地震影响人口约%s-%s人，预计伤亡人数约%s-%s人。",
                     earthQuakeReportEntity.getEarthQuakePosition(),
-                    (int)(earthQuakeReportEntity.getEarthQuakeMagnitude() + 2),
-                    roundedResult * ((int)earthQuakeReportEntity.getEarthQuakeSourceDepth()+3),
+                    (int) (earthQuakeReportEntity.getEarthQuakeMagnitude() + 2),
+                    roundedResult * ((int) earthQuakeReportEntity.getEarthQuakeSourceDepth() + 3),
                     earthQuakeReportEntity.getEarthQuakeInfluencePopulationMin(),
                     earthQuakeReportEntity.getEarthQuakeInfluencePopulationMax(),
                     earthQuakeReportEntity.getEarthQuakeDeathMin(),
@@ -279,7 +223,7 @@ class CreateEarthQuakeReport {
         DocumentUtils.insertImageWithCaption(doc,
                 earthQuakeReportEntity.getEarthQuakeInfluenceGraph(),
 //                "http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
-                ImageTypeEnum.JPG ,null, null, "图1：影响估计范围分布图", ImagePositionEnum.AFTER);
+                ImageTypeEnum.JPG, null, null, "图1：影响估计范围分布图", ImagePositionEnum.AFTER);
 
         XWPFParagraph xwpfParagraph = DocumentUtils.addRegularParagraph(doc, null);
         XWPFRun run = DocumentUtils.addRegularRun(xwpfParagraph, "1.震中附近活动断裂分布");
@@ -326,7 +270,7 @@ class CreateEarthQuakeReport {
 
         // 生成表格
         createTable(doc, earthQuakeReportEntity,
-                new String[]{ "序号", "医院名称", "地址", "医院等级", "总床位"});
+                new String[]{"序号", "医院名称", "地址", "医院等级", "总床位"});
     }
 
     /**
@@ -336,8 +280,7 @@ class CreateEarthQuakeReport {
      * @param earthQuakeReportEntity
      * @param headers
      */
-    private void createTable(XWPFDocument doc,
-                                               EarthQuakeReportEntity earthQuakeReportEntity, String[] headers) {
+    private void createTable(XWPFDocument doc, EarthQuakeReportEntity earthQuakeReportEntity, String[] headers) {
         int rows = earthQuakeReportEntity.getEarthQuakeHospital().size() + 1;
         int cols = headers.length;
         XWPFTable table = doc.createTable(rows, cols);
@@ -381,8 +324,8 @@ class CreateEarthQuakeReport {
     /**
      * 设置表格单元格内容
      *
-     * @param cell 表格单元格
-     * @param text 单元格文本
+     * @param cell     表格单元格
+     * @param text     单元格文本
      * @param isHeader 是否为表头单元格
      */
     private void setupTableCell(XWPFTableCell cell, String text, boolean isHeader) {
@@ -425,7 +368,7 @@ class CreateEarthQuakeReport {
                         earthQuakeReportEntity.getEarthQuakeEmergencyLevel()),
                 String.format("目前灾区灾情信息未知，据初步估计本次地震极震区为%1$s度。" +
                                 "建议由市抗震救灾指挥部提出%1$s级应急响应建议，经市委、市政府同意，由市政府宣布启动地震%1$s级应急响应。"
-                        + "在国务院、省抗震救灾指挥部的统一领导、指挥和协调下，市抗震救灾指挥部负责组织实施全市抗震救灾工作。",
+                                + "在国务院、省抗震救灾指挥部的统一领导、指挥和协调下，市抗震救灾指挥部负责组织实施全市抗震救灾工作。",
                         earthQuakeReportEntity.getEarthQuakeEmergencyLevel()),
                 "先期处置：",
                 "（1）市防震减灾服务中心迅速对地震影响进行评估，通报有关领导和部门,并立即向市应急管理局报告震情、预估烈度、灾情初步判断意见，提出抗震救灾工作建议。",
@@ -446,4 +389,7 @@ class CreateEarthQuakeReport {
             DocumentUtils.addRegularParagraph(doc, content);
         }
     }
+
 }
+
+
