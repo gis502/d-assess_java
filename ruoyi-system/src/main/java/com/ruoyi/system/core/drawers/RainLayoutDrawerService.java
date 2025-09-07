@@ -78,7 +78,7 @@ public class RainLayoutDrawerService {
         log.info("开始创建暴雨数据集...");
 
         // 处理超图中命名格式问题
-        String rainTime = dto.getOccurrenceTime().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String rainTime = dto.getOccurrenceTime().format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
         // 持续时间
         String duration = String.valueOf(dto.getDuration());
         // 降雨量
