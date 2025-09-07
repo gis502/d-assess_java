@@ -231,7 +231,7 @@ public class SeismicLayoutDrawerService {
                 .fileName(info.getPicName())
                 .fileExtension(BaseConstants.EXTENSION_TYPE)
                 .fileSize(v)
-                .sourceFile("")
+                .sourceFile(BaseConstants.HTTP_NGINX_PREFIX + outputImagePath)
                 .localSourceFile(outputImagePath)
                 .remark("")
                 .size(BaseConstants.SIZE)
