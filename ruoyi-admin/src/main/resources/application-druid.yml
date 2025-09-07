@@ -13,7 +13,7 @@ spring:
       slave:
         # 从数据源开关/默认关闭
         enabled: true
-        url: jdbc:postgresql://10.22.245.247:5432/xian20250822?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+        url: jdbc:postgresql://10.22.245.247:5432/xian0907?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
         username: postgres
         password: zhangsan
       # 初始连接数
