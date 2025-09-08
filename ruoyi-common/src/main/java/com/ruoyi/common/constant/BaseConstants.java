@@ -62,7 +62,7 @@ public class BaseConstants {
     public static final String REPORTS_PREFIX = "/home/output/seismic-disaster/reports/";
     public static final String STORM_PICTURE_PREFIX = "/home/output/storm-disaster/thematic/";
     public static final String STORM_REPORTS_PREFIX = "/home/output/storm-disaster/reports/";
-    public static final String HTTP_NGINX_PREFIX = "10.22.245.247:18008";
+    public static final String HTTP_NGINX_PREFIX = "10.22.245.247";
 
     public static final String OUTPUT_FILED = "图件下载失败";
     public static final String UNIT = "西安市应急管理局";
