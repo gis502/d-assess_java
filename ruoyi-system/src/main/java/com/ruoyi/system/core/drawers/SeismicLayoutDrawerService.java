@@ -193,7 +193,6 @@ public class SeismicLayoutDrawerService {
         // 获取所有布局对象
         LayoutElements elements = mapLayoutControl.getMapLayout().getElements();
 
-
         double pageWidth = mapLayoutControl.getMapLayout().getBounds().getWidth();   // 页面宽度（mm）
         double pageHeight = mapLayoutControl.getMapLayout().getBounds().getHeight(); // 页面高度（mm）
 
@@ -220,7 +219,7 @@ public class SeismicLayoutDrawerService {
                 .fileName(info.getPicName())
                 .fileExtension(BaseConstants.EXTENSION_TYPE)
                 .fileSize(v)
-                .sourceFile(BaseConstants.HTTP_NGINX_PREFIX + outputImagePath)
+                .sourceFile("")
                 .localSourceFile(outputImagePath)
                 .remark("")
                 .size(BaseConstants.SIZE)

@@ -86,7 +86,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
                 throw new ThematicReceiveException(BaseConstants.FILE_NOT_FOUND_ERROR);
             } else {
                 assessmentOutput.setLocalSourceFile(wordPath);
-                assessmentOutput.setSourceFile(BaseConstants.HTTP_NGINX_PREFIX + wordPath);
+                assessmentOutput.setSourceFile(wordPath);
             }
             // 将图件信息插入到结果表中
             assessmentOutputMapper.insert(assessmentOutput);

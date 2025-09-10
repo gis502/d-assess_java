@@ -89,9 +89,9 @@ spring:
         max-wait: -1ms
   # rabbitmq 配置
   rabbitmq:
-    host: 10.22.245.247
+    host: localhost
     port: 5672
-    username: XaYjglj
+    username: xiaodemo
     password: xa.Yjzh.Zhl
     #虚拟host 可以不设置,使用server默认host
     virtual-host: /xa/yjzh/zhl

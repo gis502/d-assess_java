@@ -194,7 +194,7 @@ public class RainLayoutDrawerService {
                 .fileName(info.getPicName())
                 .fileExtension(BaseConstants.EXTENSION_TYPE)
                 .fileSize(v)
-                .sourceFile(BaseConstants.HTTP_NGINX_PREFIX + outputImagePath)
+                .sourceFile(outputImagePath)
                 .localSourceFile(outputImagePath)
                 .remark("")
                 .size(BaseConstants.SIZE)
