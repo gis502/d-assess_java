@@ -216,7 +216,6 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
         }
         return assessmentOutputDTOS;
 
-
     }
 
     //计算报告所需要的参数

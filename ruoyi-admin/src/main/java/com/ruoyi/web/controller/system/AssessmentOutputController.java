@@ -46,7 +46,7 @@ public class AssessmentOutputController {
         }
     }
 
-    @ApiOperation("获取地震专题图接口")
+    @ApiOperation("获取暴雨专题图接口")
     @PostMapping("/rain/getMap")
     public Result<List<RainAssessmentOutputDTO>> getMap(@RequestBody RainParams eqParams) {
 
