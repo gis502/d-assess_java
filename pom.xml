@@ -237,7 +237,7 @@
                 <artifactId>analyst-spatialanalyst</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>D:/制图/supermap/jar/com.supermap.analyst.spatialanalyst.jar</systemPath>
+                <systemPath>D:/makemap/supermap/jar/com.supermap.analyst.spatialanalyst.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -245,7 +245,7 @@
                 <artifactId>data</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>D:/制图/supermap/jar/com.supermap.data.jar</systemPath>
+                <systemPath>D:/makemap/supermap/jar/com.supermap.data.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -253,7 +253,7 @@
                 <artifactId>layout</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>D:/制图/supermap/jar/com.supermap.layout.jar</systemPath>
+                <systemPath>D:/makemap/supermap/jar/com.supermap.layout.jar</systemPath>
 
             </dependency>
 
@@ -262,7 +262,7 @@
                 <artifactId>mapping</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>D:/制图/supermap/jar/com.supermap.mapping.jar</systemPath>
+                <systemPath>D:/makemap/supermap/jar/com.supermap.mapping.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -270,7 +270,7 @@
                 <artifactId>ui-controls</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>D:/制图/supermap/jar/com.supermap.ui.controls.jar</systemPath>
+                <systemPath>D:/makemap/supermap/jar/com.supermap.ui.controls.jar</systemPath>
             </dependency>
 
 
