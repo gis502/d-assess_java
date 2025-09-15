@@ -9,11 +9,15 @@ import com.ruoyi.common.enums.ImagePositionEnum;
 import com.ruoyi.common.enums.ImageTypeEnum;
 import com.ruoyi.common.exception.ThematicReceiveException;
 import com.ruoyi.common.utils.file.DocumentUtils;
+import com.ruoyi.system.core.rabbitmq.RabbitConfig;
 import com.ruoyi.system.domain.AssessmentOutput;
 import com.ruoyi.system.domain.EarthQuakeReportEntity;
+import com.ruoyi.system.domain.dto.AssessmentOutputDTO;
 import com.ruoyi.system.mapper.AssessmentOutputMapper;
 import com.ruoyi.system.service.IEarthQuakeService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +32,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
 
 
     @Resource
-    private AssessmentOutputMapper assessmentOutputMapper;
+    private RabbitTemplate rabbitTemplate;
     private static final String FONT_FANG_SONG = "仿宋_GB2312";
     private static final int TABLE_ROW_HEIGHT = 567;
     private static final int TABLE_FONT_SIZE = 12;
@@ -67,29 +72,20 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
     @DataSource(value = DataSourceType.MASTER)
     public void saveEarthQuakeReport(String wordPath, String wordName, String eqId, String eqqueueId) {
         try {
+
             // 设置图件产出信息
-            AssessmentOutput assessmentOutput = new AssessmentOutput();
-            assessmentOutput.setEqId(eqId);
-            assessmentOutput.setEqqueueId(eqqueueId);
-            assessmentOutput.setIsDeleted(0);    // 逻辑删除
-            assessmentOutput.setId(UUID.randomUUID().toString());    // 生成uuid
-            assessmentOutput.setCreateTime(LocalDateTime.now());     // 创建时间
-            assessmentOutput.setUpdateTime(LocalDateTime.now());     // 修改时间
-            assessmentOutput.setFileName(wordName);
-            assessmentOutput.setFileType(BaseConstants.WORD_TYPE);
-            assessmentOutput.setFileExtension(BaseConstants.REPORTS_EXTENSION_TYPE);
-            assessmentOutput.setType(BaseConstants.DOCUMENT_TYPE);
+            AssessmentOutputDTO outputDTO = AssessmentOutputDTO.builder()
+                    .eqId(eqId)
+                    .eqqueueId(eqqueueId)
+                    .fileName(wordName)
+                    .fileType(BaseConstants.WORD_TYPE)
+                    .fileExtension(BaseConstants.REPORTS_EXTENSION_TYPE)
+                    .type(BaseConstants.DOCUMENT_TYPE)
+                    .localSourceFile(wordPath)
+                    .build();
 
-            File originFile = new File(wordPath);
+            rabbitTemplate.convertAndSend(RabbitConfig.DISASTER_EXCHANGE, RabbitConfig.DISASTER_REPORT, outputDTO);
 
-            if (!originFile.exists()) {
-                throw new ThematicReceiveException(BaseConstants.FILE_NOT_FOUND_ERROR);
-            } else {
-                assessmentOutput.setLocalSourceFile(wordPath);
-                assessmentOutput.setSourceFile(wordPath);
-            }
-            // 将图件信息插入到结果表中
-            assessmentOutputMapper.insert(assessmentOutput);
         } catch (Exception ex) {
             ex.printStackTrace();
             // 抛出异常

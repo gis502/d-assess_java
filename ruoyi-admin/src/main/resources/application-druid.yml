@@ -62,7 +62,7 @@ spring:
 
 # 七牛云配置
 qiniu:
-  bucket: xi-an-thematic
-  url: http://t1arte4v9.hb-bkt.clouddn.com
+  bucket: xianthematic
+  url: http://t2lxmr8n3.hb-bkt.clouddn.com
   access-key: mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF
   secret-key: XEbOv-KOyYiNsXKzkLUFsU96h0BZYaQ-AdNYOp8H

@@ -61,11 +61,11 @@ public class QiniuOssUtil {
         try {
             //判断是否为恶意程序
             //通过流的方式把文件转换为BufferedImage对象,获取宽和高,只有图片才具有宽高属性
-            BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
-            if (bufferedImage == null || bufferedImage.getHeight() == 0 || bufferedImage.getWidth() == 0) {
-                return BaseConstants.UPLOAD_FAILED;
-            }
-            // 上传图片文件
+            //BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
+            //if (bufferedImage == null || bufferedImage.getHeight() == 0 || bufferedImage.getWidth() == 0) {
+            //    return BaseConstants.UPLOAD_FAILED;
+            //}
+            // 上传文件
             Response res = uploadManager.put(file.getInputStream(), objectName, token, null, null);
             if (!res.isOK()) {
                 throw new RuntimeException(BaseConstants.UPLOAD_FAILED + res);

@@ -79,7 +79,7 @@ public class RabbitConfig {
 
     @Bean
     public Binding bindingExchangeMessageOfAffected() {
-        return BindingBuilder.bind(seismicAffectedQueue()).to(exchange()).with(DISASTER_REPORT);
+        return BindingBuilder.bind(seismicAffectedQueue()).to(exchange()).with(SEISMIC_AFFECTED);
     }
 
     @Bean
