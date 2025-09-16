@@ -243,13 +243,13 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
         reportEntity.setEarthQuakeDeathMax(assessmentDTO.getDiePopMax());//地震预计伤亡人数最大值
         reportEntity.setEarthQuakeDeathMin(assessmentDTO.getDiePopMin());//地震预计伤亡人数最小值
         reportEntity.setEarthQuakeFaultZone(assessmentDTO.getFaultZone());//震中最近断裂带
-        //计算9级烈度区的长短轴
+        //计算高级烈度区的长短轴
         double magnitude = assessmentDTO.getMagnitude();
         int intensity = Integer.parseInt(assessmentDTO.getIntensity());
-        double semiMajorAxis1 = (Math.exp((3.04+1.27*magnitude-intensity)/0.92)-8.65)*100;
-        double semiMinorAxis1 = (Math.exp((2.57+1.23*magnitude-intensity)/0.86)-4.86)*100;
-        double semiMajorAxis2 = (Math.exp((4.04+1.27*magnitude-intensity)/0.92)-8.65)*100;
-        double semiMinorAxis2 = (Math.exp((3.57+1.23*magnitude-intensity)/0.86)-4.86)*100;
+        double semiMajorAxis1 = (Math.exp((3.04+1.27*magnitude-intensity)/0.92)-8.65)*150;
+        double semiMinorAxis1 = (Math.exp((2.57+1.23*magnitude-intensity)/0.86)-4.86)*150;
+        double semiMajorAxis2 = (Math.exp((4.04+1.27*magnitude-intensity)/0.92)-8.65)*150;
+        double semiMinorAxis2 = (Math.exp((3.57+1.23*magnitude-intensity)/0.86)-4.86)*150;
 
         List<Hospital> dbHospitals = hospitalMapper.selectHospitAffectPoints(
                 assessmentDTO.getLongitude(),
