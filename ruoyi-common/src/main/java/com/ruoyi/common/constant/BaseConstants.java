@@ -44,7 +44,7 @@ public class BaseConstants {
     public static final String XI_AN_MAP_DATASETS_NAME = "西安智慧应急多灾害链平台";
     public static final String XI_AN_SEISMIC_DATASETS_NAME = "西安项目地震数据源";   // 放置地震数据源
     public static final String XI_AN_STORM_DATASETS_NAME = "西安项目暴雨数据源";     // 放置暴雨数据源
-    public static final String XI_AN_RUPTURE_NAME = "西安市断层";
+    public static final String XI_AN_RUPTURE_NAME = "陕西省断层";
 
     public static final String UPLOAD_FAILED = "文件上传失败";
     public static final String FILE_NOT_FOUND_ERROR = "文件不存在";

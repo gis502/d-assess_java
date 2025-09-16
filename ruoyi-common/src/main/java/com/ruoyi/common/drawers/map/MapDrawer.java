@@ -447,8 +447,9 @@ public class MapDrawer {
      * @return: 返回长轴
      */
     private double calculateRa(double M, double Ia) {
-        return (Math.pow(10, (4.0293 + 1.3003 * M - Ia) / 3.6404) - 10) / 50;
+        return (Math.pow(10, (4.0293 + 1.3003 * M - Ia) / 3.6404) - 10) / 70;
     }
+
 
 
     /**
@@ -460,7 +461,7 @@ public class MapDrawer {
      * @return: 返回短轴
      */
     private double calculateRb(double M, double Ib) {
-        return (Math.pow(10, (2.3816 + 1.3003 * M - Ib) / 2.8573) - 5) / 50;
+        return (Math.pow(10, (2.3816 + 1.3003 * M - Ib) / 2.8573) - 5) / 70;
     }
 
 }
