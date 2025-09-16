@@ -259,7 +259,6 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
                 semiMajorAxis2,
                 semiMinorAxis2
         );
-        log.info("454564{}",dbHospitals);
         List<EarthQuakeReportEntity.Hospital> reportHospitals = new ArrayList<>();
         for (com.ruoyi.system.domain.Hospital dbHospital : dbHospitals) {
             // 创建报告内部类的Hospital对象（注意：必须通过外部类实例创建，因为是非静态内部类）

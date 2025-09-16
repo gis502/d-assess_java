@@ -298,7 +298,6 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
                     String levelStr = hospital.getHospitalLevel();
                     // 解析字符串为列表
                     List<String> levels = parseLevelsFromString(levelStr);
-                    System.out.println("levels: " + levels);
                     // 检查是否包含需要排除的等级
                     if (levels.isEmpty() || levels.size() < 2) {
                         return false;
@@ -307,7 +306,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
                 })
                 .collect(Collectors.toList());
 
-        log.info("筛选后的医院数据：{}", filteredHospitals);
+
 
         int rows = filteredHospitals.size() + 1;
         int cols = headers.length;
@@ -333,8 +332,15 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
             XWPFTableRow bodyRow = table.getRow(i);
             bodyRow.setHeight(TABLE_ROW_HEIGHT);
 
-            EarthQuakeReportEntity.Hospital hospitalData =
-                    earthQuakeReportEntity.getEarthQuakeHospital().get(i - 1);
+            EarthQuakeReportEntity.Hospital hospitalData = filteredHospitals.get(i - 1);
+
+            // 处理医院等级字符串，转换为逗号分隔的字符串
+            String levelStr = hospitalData.getHospitalLevel();
+            List<String> levelList = parseLevelsFromString(levelStr);
+            String displayLevel = "";
+            if (levelList != null && !levelList.isEmpty()) {
+                displayLevel = String.join("", levelList);
+            }
 
             // 序号列
             setupTableCell(bodyRow.getCell(0), String.valueOf(i), false);
@@ -343,7 +349,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
             // 位置列
             setupTableCell(bodyRow.getCell(2), hospitalData.getHospitalAddress(), false);
             // 等级列
-            setupTableCell(bodyRow.getCell(3), hospitalData.getHospitalLevel(), false);
+            setupTableCell(bodyRow.getCell(3), displayLevel, false);
             // 床位列
             setupTableCell(bodyRow.getCell(4), hospitalData.getHospitalBeds(), false);
         }
