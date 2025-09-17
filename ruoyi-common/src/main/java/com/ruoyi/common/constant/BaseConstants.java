@@ -48,7 +48,7 @@ public class BaseConstants {
 
     public static final String UPLOAD_FAILED = "文件上传失败";
     public static final String FILE_NOT_FOUND_ERROR = "文件不存在";
-    public static final int DPI = 600;  // 出图分辨率
+    public static final int DPI = 300;  // 出图分辨率
     public static final int COMPRESS = 100; // 压缩图片（0-100）100表示不压缩
     public static final String EXTENSION_TYPE = ".jpg";     // 出图照片类型
     public static final String REPORTS_EXTENSION_TYPE = ".docx";     // 出图照片类型
