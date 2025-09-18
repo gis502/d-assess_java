@@ -89,6 +89,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
                     .fileType(BaseConstants.WORD_TYPE)
                     .fileExtension(BaseConstants.REPORTS_EXTENSION_TYPE)
                     .type(BaseConstants.DOCUMENT_TYPE)
+                    .sourceFile(BaseConstants.HTTP_NGINX_PREFIX + wordPath)
                     .localSourceFile(wordPath)
                     .build();
 
@@ -201,11 +202,11 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
         XWPFParagraph paragraph1 = DocumentUtils.addRegularParagraph(doc, null);
 
         int roundedResult = (int) Math.round(Double.parseDouble(earthQuakeReportEntity.getEarthQuakeDisasterArea()) / 1000000.0);
-        int Area = roundedResult * ((int)earthQuakeReportEntity.getEarthQuakeSourceDepth()+3);
+        int Area = roundedResult * ((int) earthQuakeReportEntity.getEarthQuakeSourceDepth() + 3);
         int roundedToTen = (int) (Math.round(Area / 10.0) * 10);
 
         int deathMax = Integer.parseInt(earthQuakeReportEntity.getEarthQuakeDeathMax());
-        if (deathMax==0){
+        if (deathMax == 0) {
             String content1 = String.format("本次地震震中所在地区%s。" + "地震影响人口约%s-%s人。",
                     earthQuakeReportEntity.getEarthQuakePosition(),
                     earthQuakeReportEntity.getEarthQuakeInfluencePopulationMin(),
@@ -217,7 +218,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
             String content1 = String.format("本次地震震中所在地区%s。" +
                             "本次地震重灾区烈度预计超过%d度，重灾区面积约%d平方公里；地震影响人口约%s-%s人，预计伤亡人数约%s-%s人。",
                     earthQuakeReportEntity.getEarthQuakePosition(),
-                    (int)(earthQuakeReportEntity.getEarthQuakeMagnitude() + 2),
+                    (int) (earthQuakeReportEntity.getEarthQuakeMagnitude() + 2),
                     roundedToTen,
                     earthQuakeReportEntity.getEarthQuakeInfluencePopulationMin(),
                     earthQuakeReportEntity.getEarthQuakeInfluencePopulationMax(),
@@ -229,7 +230,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
         DocumentUtils.insertImageWithCaption(doc,
                 earthQuakeReportEntity.getEarthQuakeInfluenceGraph(),
                 //"http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
-                ImageTypeEnum.JPG ,null, null, "图1：影响估计范围分布图", ImagePositionEnum.AFTER);
+                ImageTypeEnum.JPG, null, null, "图1：影响估计范围分布图", ImagePositionEnum.AFTER);
 
         XWPFParagraph xwpfParagraph = DocumentUtils.addRegularParagraph(doc, null);
         XWPFRun run = DocumentUtils.addRegularRun(xwpfParagraph, "1.震中附近活动断裂分布");
@@ -253,7 +254,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
         run1.setFontSize(DocumentConfig.FONT_SIZE_FOUR);
         run1.setBold(true);
 
-        if(!earthQuakeReportEntity.getEarthQuakeHospital().isEmpty()){
+        if (!earthQuakeReportEntity.getEarthQuakeHospital().isEmpty()) {
             String cotent3 = String.format("八度区内的医院有%d个，其中一级及以上医院的相关信息如表格所示。",
                     earthQuakeReportEntity.getEarthQuakeHospital().size()
             );
@@ -277,7 +278,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
 
             // 生成表格
             createTable(doc, earthQuakeReportEntity,
-                    new String[]{ "序号", "医院名称", "地址", "医院等级", "总床位"});
+                    new String[]{"序号", "医院名称", "地址", "医院等级", "总床位"});
         }
 
     }
@@ -290,7 +291,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
      * @param headers
      */
     private void createTable(XWPFDocument doc,
-                                               EarthQuakeReportEntity earthQuakeReportEntity, String[] headers) {
+                             EarthQuakeReportEntity earthQuakeReportEntity, String[] headers) {
         log.info("生成表格数据");
         // 先筛选符合条件的医院数据（非未定等和非未定级）
         List<EarthQuakeReportEntity.Hospital> filteredHospitals = earthQuakeReportEntity.getEarthQuakeHospital().stream()
@@ -305,7 +306,6 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
                     return !(levels.get(0).contains("未定等") || levels.get(0).contains("未定级") || levels.get(1).contains("未定级") || levels.get(1).contains("未定等"));
                 })
                 .collect(Collectors.toList());
-
 
 
         int rows = filteredHospitals.size() + 1;
@@ -357,6 +357,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
 
     /**
      * 解析医院等级字符串
+     *
      * @param levelStr
      * @return
      */

@@ -33,8 +33,8 @@ import java.util.UUID;
 @Component
 public class ThematicReceiverListener {
 
-    @Resource
-    private QiniuOssUtil qiniuOssUtil;
+//    @Resource
+//    private QiniuOssUtil qiniuOssUtil;
     @Resource
     private AssessmentOutputMapper assessmentOutputMapper;
     @Resource
@@ -61,21 +61,21 @@ public class ThematicReceiverListener {
             }
 
             // 获取对应图片文件二进制流
-            MultipartFile file = new MockMultipartFile(originFile.getName(), originFile.getName(), "image/jpeg", new FileInputStream(originFile));
+//            MultipartFile file = new MockMultipartFile(originFile.getName(), originFile.getName(), "image/jpeg", new FileInputStream(originFile));
             // 将图片设置唯一Id
-            String imageUrl = outputDTO.getEqqueueId() + "_" + outputDTO.getFileName();
+//            String imageUrl = outputDTO.getEqqueueId() + "_" + outputDTO.getFileName();
 
             // 将图片上传到七牛云服务器
-            String qiniuUrl = qiniuOssUtil.upload(imageUrl, file);
+//            String qiniuUrl = qiniuOssUtil.upload(imageUrl, file);
             // 上传失败
-            if (StringUtils.isEmpty(qiniuUrl)) {
-                throw new ThematicReceiveException(BaseConstants.THEMATIC_MAP_ERROR);
-            }
-            log.info("{} 成功上传到七牛云服务器...", outputDTO.getFileName());
+//            if (StringUtils.isEmpty(qiniuUrl)) {
+//                throw new ThematicReceiveException(BaseConstants.THEMATIC_MAP_ERROR);
+//            }
+//            log.info("{} 成功上传到七牛云服务器...", outputDTO.getFileName());
             // 数据拷贝
             BeanUtils.copyProperties(outputDTO, assessmentOutput);
             // 修改存储路径
-            assessmentOutput.setSourceFile(qiniuUrl);
+//            assessmentOutput.setSourceFile(qiniuUrl);
             // 将图件信息插入到结果表中
             assessmentOutputMapper.insert(assessmentOutput);
             log.info("{} 成功保存到数据库...", assessmentOutput.getFileName());
@@ -86,6 +86,7 @@ public class ThematicReceiverListener {
             throw new ThematicReceiveException(BaseConstants.THEMATIC_MAP_ERROR);
         }
     }
+
     @RabbitListener(queues = "rain.map")
     public void receive(RainAssessmentOutputDTO outputDTO) {
         // 打印日志
@@ -105,21 +106,21 @@ public class ThematicReceiverListener {
             }
 
             // 获取对应图片文件二进制流
-            MultipartFile file = new MockMultipartFile(originFile.getName(), originFile.getName(), "image/jpeg", new FileInputStream(originFile));
+//            MultipartFile file = new MockMultipartFile(originFile.getName(), originFile.getName(), "image/jpeg", new FileInputStream(originFile));
             // 将图片设置唯一Id
-            String imageUrl = outputDTO.getRainQueueId() + "_" + outputDTO.getFileName();
+//            String imageUrl = outputDTO.getRainQueueId() + "_" + outputDTO.getFileName();
 
             // 将图片上传到七牛云服务器
-            String qiniuUrl = qiniuOssUtil.upload(imageUrl, file);
+//            String qiniuUrl = qiniuOssUtil.upload(imageUrl, file);
             // 上传失败
-            if (StringUtils.isEmpty(qiniuUrl)) {
-                throw new ThematicReceiveException(BaseConstants.THEMATIC_MAP_ERROR);
-            }
-            log.info("{} 成功上传到七牛云服务器...", outputDTO.getFileName());
+//            if (StringUtils.isEmpty(qiniuUrl)) {
+//                throw new ThematicReceiveException(BaseConstants.THEMATIC_MAP_ERROR);
+//            }
+//            log.info("{} 成功上传到七牛云服务器...", outputDTO.getFileName());
             // 数据拷贝
             BeanUtils.copyProperties(outputDTO, assessmentOutput);
             // 修改存储路径
-            assessmentOutput.setSourceFile(qiniuUrl);
+//            assessmentOutput.setSourceFile(qiniuUrl);
             // 将图件信息插入到结果表中
             rainAssessmentOutputMapper.insert(assessmentOutput);
             log.info("{} 成功保存到数据库...", assessmentOutput.getFileName());
