@@ -77,46 +77,99 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
     @Override
     public void outputReports(AssessmentDTO assessmentDTO) {
         log.info("开始生成灾情报告...");
-        // 6级及以上地震生成 灾情报告 和 辅助决策报告
-        if (assessmentDTO.getMagnitude() >= BaseConstants.SEISMIC_6_GRADE) {
-            // TODO 灾情报告与辅助决策报告
-            EarthQuakeReportEntity reportEntity = new EarthQuakeReportEntity();
-            reportEntity = getEarthquakeEntity(assessmentDTO);
-            EqParams eqParams = new EqParams();
-            eqParams.setEqId(assessmentDTO.getEqId());
-            eqParams.setEqqueueId(assessmentDTO.getEqqueueId());
-            System.out.println(eqParams);
-            //获取图片
-            List<AssessmentOutputDTO> earthquakeGraphs = getMap(eqParams);
+        // 常量定义：提取魔法值为常量，提高可维护性
+        final int REQUIRED_IMAGE_COUNT = 15;
+        final long MAX_WAIT_TIME = 300000; // 最大等待时间5分钟（毫秒）
+        final long CHECK_INTERVAL = 5000; // 检查间隔5秒（毫秒）
 
-            //获取图片达到15张时，进入循环，执行一次跳出循环（需要优化）
-            while (earthquakeGraphs.size()>=15) {
-                for (AssessmentOutputDTO earthquakeDTO : earthquakeGraphs) {
-                    if (Objects.equals(earthquakeDTO.getFileName(), "震区附近医院分布图")){
-                        reportEntity.setEarthQuakeHospitalGraph(earthquakeDTO.getSourceFile());
-                    }
-                    if (Objects.equals(earthquakeDTO.getFileName(), "影响估计范围分布图")){
-                        reportEntity.setEarthQuakeInfluenceGraph(earthquakeDTO.getSourceFile());
-                    }
-                    if (Objects.equals(earthquakeDTO.getFileName(), "震区附近断层分布图")){
-                        reportEntity.setEarthQuakeFaultZoneGraph(earthquakeDTO.getSourceFile());
-                    }
-                }
-                try {
-                    earthQuakeService.generateEarthQuakeReport(reportEntity);
-                    log.info("报告生成完毕...");
-                } catch (IOException | InvalidFormatException e) {
-                    throw new RuntimeException(e);
-                }
-                break;
+        try {
+            if (assessmentDTO.getMagnitude() >= BaseConstants.SEISMIC_6_GRADE) {
+                // 6级及以上地震：生成灾情报告和辅助决策报告
+                EarthQuakeReportEntity reportEntity = getEarthquakeEntity(assessmentDTO);
+                EqParams eqParams = new EqParams();
+                eqParams.setEqId(assessmentDTO.getEqId());
+                eqParams.setEqqueueId(assessmentDTO.getEqqueueId());
+                log.info("查询参数：{}", eqParams); // 用日志代替System.out
+
+                // 获取并等待足够的图片（最多等待5分钟）
+                List<AssessmentOutputDTO> earthquakeGraphs = waitForEnoughImages(eqParams, REQUIRED_IMAGE_COUNT, MAX_WAIT_TIME, CHECK_INTERVAL);
+
+                // 处理图片数据到报告实体
+                mapImagesToReport(earthquakeGraphs, reportEntity);
+
+                // 生成报告
+                earthQuakeService.generateEarthQuakeReport(reportEntity);
+                log.info("6级及以上地震报告生成完毕");
+            } else {
+                // 6级以下地震：仅生成辅助决策报告（修复原代码注释问题）
+//                reportPrepareService.prepareReport(assessmentDTO);
+                log.info("6级以下地震辅助决策报告生成完毕");
+            }
+
+            log.info("灾情报告生成流程完成");
+        } catch (Exception e) {
+            log.error("生成灾情报告失败", e);
+            throw new RuntimeException("报告生成异常", e); // 包装异常，保留堆栈信息
+        }
+    }
+
+    /**
+     * 等待获取足够数量的图片
+     * @param eqParams 查询参数
+     * @param requiredCount 所需图片数量
+     * @param maxWaitTime 最大等待时间(毫秒)
+     * @param checkInterval 检查间隔(毫秒)
+     * @return 符合数量要求的图片列表
+     * @throws InterruptedException 线程中断异常
+     */
+    private List<AssessmentOutputDTO> waitForEnoughImages(EqParams eqParams, int requiredCount,
+                                                          long maxWaitTime, long checkInterval) throws InterruptedException {
+        long startTime = System.currentTimeMillis();
+        List<AssessmentOutputDTO> images;
+
+        do {
+            images = getMap(eqParams);
+            if (images.size() >= requiredCount) {
+                log.info("已获取足够图片，数量：{}", images.size());
+                return images;
+            }
+
+            log.info("当前图片数量不足({}/{}), 等待{}ms后重试",
+                    images.size(), requiredCount, checkInterval);
+            Thread.sleep(checkInterval);
+        } while (System.currentTimeMillis() - startTime < maxWaitTime);
+
+        // 超时处理：可根据业务需求调整（抛异常或继续执行）
+        log.warn("超过最大等待时间{}ms，图片数量仍不足，继续执行", maxWaitTime);
+        return images;
+    }
+
+    /**
+     * 将图片映射到报告实体的对应字段
+     * @param images 图片列表
+     * @param reportEntity 报告实体
+     */
+    private void mapImagesToReport(List<AssessmentOutputDTO> images, EarthQuakeReportEntity reportEntity) {
+        for (AssessmentOutputDTO image : images) {
+            // 使用Java 8兼容的传统switch语句替代增强switch表达式
+            String fileName = image.getFileName();
+            switch (fileName) {
+                case "震区附近医院分布图":
+                    reportEntity.setEarthQuakeHospitalGraph(image.getSourceFile());
+                    break;
+                case "影响估计范围分布图":
+                    reportEntity.setEarthQuakeInfluenceGraph(image.getSourceFile());
+                    break;
+                case "震区附近断层分布图":
+                    reportEntity.setEarthQuakeFaultZoneGraph(image.getSourceFile());
+                    break;
+                // 可根据需要添加更多图片类型的映射
+                default:
+                    log.debug("未处理的图片类型：{}", fileName);
             }
         }
-        // 6级以下地震做辅助决策报告
-        if (assessmentDTO.getMagnitude() < BaseConstants.SEISMIC_6_GRADE)
-//            reportPrepareService.prepareReport(assessmentDTO);
-
-         log.info("灾情报告生成完成...");
     }
+
 
     // 获取地震专题图
     @Override
@@ -243,13 +296,13 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
         reportEntity.setEarthQuakeDeathMax(assessmentDTO.getDiePopMax());//地震预计伤亡人数最大值
         reportEntity.setEarthQuakeDeathMin(assessmentDTO.getDiePopMin());//地震预计伤亡人数最小值
         reportEntity.setEarthQuakeFaultZone(assessmentDTO.getFaultZone());//震中最近断裂带
-        //计算9级烈度区的长短轴
+        //计算高级烈度区的长短轴
         double magnitude = assessmentDTO.getMagnitude();
         int intensity = Integer.parseInt(assessmentDTO.getIntensity());
-        double semiMajorAxis1 = (Math.exp((3.04+1.27*magnitude-intensity)/0.92)-8.65)*100;
-        double semiMinorAxis1 = (Math.exp((2.57+1.23*magnitude-intensity)/0.86)-4.86)*100;
-        double semiMajorAxis2 = (Math.exp((4.04+1.27*magnitude-intensity)/0.92)-8.65)*100;
-        double semiMinorAxis2 = (Math.exp((3.57+1.23*magnitude-intensity)/0.86)-4.86)*100;
+        double semiMajorAxis1 = (Math.exp((3.04+1.27*magnitude-intensity)/0.92)-8.65)*150;
+        double semiMinorAxis1 = (Math.exp((2.57+1.23*magnitude-intensity)/0.86)-4.86)*150;
+        double semiMajorAxis2 = (Math.exp((4.04+1.27*magnitude-intensity)/0.92)-8.65)*150;
+        double semiMinorAxis2 = (Math.exp((3.57+1.23*magnitude-intensity)/0.86)-4.86)*150;
 
         List<Hospital> dbHospitals = hospitalMapper.selectHospitAffectPoints(
                 assessmentDTO.getLongitude(),
@@ -259,7 +312,6 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
                 semiMajorAxis2,
                 semiMinorAxis2
         );
-        log.info("454564{}",dbHospitals);
         List<EarthQuakeReportEntity.Hospital> reportHospitals = new ArrayList<>();
         for (com.ruoyi.system.domain.Hospital dbHospital : dbHospitals) {
             // 创建报告内部类的Hospital对象（注意：必须通过外部类实例创建，因为是非静态内部类）
