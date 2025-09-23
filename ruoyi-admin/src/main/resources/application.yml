@@ -90,8 +90,8 @@ spring:
   rabbitmq:
     host: 10.22.245.247
     port: 5672
-    username: xa.Yjzh.Zhl
-    password: 1234
+    username: XaYjglj
+    password: xa.Yjzh.Zhl
     #虚拟host 可以不设置,使用server默认host
     virtual-host: /xa/yjzh/zhl
     #消息确认配置项
