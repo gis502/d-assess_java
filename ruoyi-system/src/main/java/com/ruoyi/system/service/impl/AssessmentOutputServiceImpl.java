@@ -217,7 +217,7 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
     @Override
     public void outputMaps(RainAssessmentDTO assessmentDTO) {
         // 累计降雨量高于 30mm 触发专题图
-        if (Integer.parseInt(assessmentDTO.getRainfall()) > 30) {
+        if (Float.parseFloat(assessmentDTO.getRainfall()) > 30) {
             log.info("开始创建暴雨专题图...");
             rainLayoutDrawerService.createSeismicPictureInit(assessmentDTO);
             log.info("专题图创建完成...");
