@@ -38,9 +38,13 @@ public class EarthQuakeReportEntity {
     private String earthQuakeDeathMin;//地震预计伤亡人数最小值
     private String earthQuakeFaultZone;//震中最近断裂带
     private List<Hospital> earthQuakeHospital;//震中附近5km内的医院列表(名称/总床位)
+    private List<FireFighter> earthQuakeFireFighter;//震中附近100km内的消防队信息(名称/人数)
+    private List<StorePoint> earthQuakeStorePoint;// 震中附近100km内的救援物资信息
     private String earthQuakeInfluenceGraph;//地震影响估计范围分布图路径
     private String earthQuakeFaultZoneGraph;//地震震中附近断裂带图路径
     private String earthQuakeHospitalGraph;//地震震中附近医院分布图路径
+    private String earthQuakeFireFighterGraph;// 地震震中附近消防队分布图路径
+    private String earthQuakeStorePointGraph;// 地震震中附近救援物资分布图路径
 
     @Data
     public class Hospital {
@@ -48,6 +52,22 @@ public class EarthQuakeReportEntity {
         private String hospitalBeds;
         private String hospitalAddress;
         private String hospitalLevel;
+    }
+
+    @Data
+    public class FireFighter {
+        private String fireFighterName;
+        private String fireFighterType;
+        private String fireFighterAddress;
+        private String fireFighterNum;
+    }
+
+    @Data
+    public class StorePoint {
+        private String storePointName;
+        private String storePointAddress;
+        private String storePointDep;
+        private String storePointNum;
     }
 
     /*
@@ -59,6 +79,10 @@ public class EarthQuakeReportEntity {
      * 构造器初始化数据
      */
     public EarthQuakeReportEntity() {
+
         this.earthQuakeHospital = new ArrayList<>();
+        this.earthQuakeFireFighter = new ArrayList<>();
+        this.earthQuakeStorePoint = new ArrayList<>();
+
     }
 }

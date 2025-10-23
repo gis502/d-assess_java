@@ -71,7 +71,7 @@ public class RainLayoutDrawerService {
         String rainfall = String.valueOf(dto.getRainfall());
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddhhmmss"));
         // 创建暴雨中心点名称2022年西安突发 12 小时 502 mm 降雨量
-        String rainPointName = "R" + rainTime + dto.getPosition() + "发生" + duration + "小时" + rainfall + "降雨量";
+        String rainPointName = "R" + rainTime + dto.getPosition() + "发生" + duration + "小时" + rainfall.replace(".","") + "降雨量";
         // 设置保存的数据集
         String datasetsName = BaseConstants.XI_AN_STORM_DATASETS_NAME;
         // 设置震中位置

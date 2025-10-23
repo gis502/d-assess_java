@@ -237,7 +237,7 @@
                 <artifactId>analyst-spatialanalyst</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>D:/makemap/supermap/jar/com.supermap.analyst.spatialanalyst.jar</systemPath>
+                <systemPath>F:/Program Files/chaotujar/超图jar包/com.supermap.analyst.spatialanalyst.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -245,7 +245,7 @@
                 <artifactId>data</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>D:/makemap/supermap/jar/com.supermap.data.jar</systemPath>
+                <systemPath>F:/Program Files/chaotujar/超图jar包/com.supermap.data.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -253,7 +253,7 @@
                 <artifactId>layout</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>D:/makemap/supermap/jar/com.supermap.layout.jar</systemPath>
+                <systemPath>F:/Program Files/chaotujar/超图jar包/com.supermap.layout.jar</systemPath>
 
             </dependency>
 
@@ -262,7 +262,7 @@
                 <artifactId>mapping</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>D:/makemap/supermap/jar/com.supermap.mapping.jar</systemPath>
+                <systemPath>F:/Program Files/chaotujar/超图jar包/com.supermap.mapping.jar</systemPath>
             </dependency>
 
             <dependency>
@@ -270,17 +270,8 @@
                 <artifactId>ui-controls</artifactId>
                 <version>11.3.0</version>
                 <scope>system</scope>
-                <systemPath>D:/makemap/supermap/jar/com.supermap.ui.controls.jar</systemPath>
+                <systemPath>F:/Program Files/chaotujar/超图jar包/com.supermap.ui.controls.jar</systemPath>
             </dependency>
-
-
-<!--            <dependency>-->
-<!--                <groupId>com.supermap.analyst</groupId>-->
-<!--                <artifactId>supermap-analyst</artifactId>-->
-<!--                <version>11.3.0</version>-->
-<!--                <scope>system</scope>-->
-<!--                <systemPath>D:/超图jar包//com.supermap.analyst.spatialanalyst.jar</systemPath>-->
-<!--            </dependency>-->
 
             <dependency>
                 <groupId>com.qiniu</groupId>

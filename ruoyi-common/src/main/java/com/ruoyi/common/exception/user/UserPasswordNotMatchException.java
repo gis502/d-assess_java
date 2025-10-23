@@ -11,6 +11,6 @@ public class UserPasswordNotMatchException extends UserException
 
     public UserPasswordNotMatchException()
     {
-        super("user.password.not.match", null);
+        super("user.xianpd.not.match", null);
     }
 }

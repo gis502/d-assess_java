@@ -129,7 +129,9 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
             createEarthQuakeOverview(document, earthQuakeReportEntity);
             // 第二部分，风险评估
             createRiskAssessment(document, earthQuakeReportEntity);
-            // 第三部分，应急处置建议
+            // 第三部分，救援需求
+            createRescueNeed(document, earthQuakeReportEntity);
+            // 第四部分，应急处置建议
             createEmergencyResponseSuggestions(document, earthQuakeReportEntity);
             // 保存文档
             document.write(out);
@@ -228,7 +230,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
         }
         DocumentUtils.insertImageWithCaption(doc,
                 earthQuakeReportEntity.getEarthQuakeInfluenceGraph(),
-                //"http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
+//                "http://sv25gsrnh.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E4%BA%A4%E9%80%9A%E5%9B%BE?e=1755938078&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:vDr49kWfxDngsOQRyi92MGCVxS0=",
                 ImageTypeEnum.JPG ,null, null, "图1：影响估计范围分布图", ImagePositionEnum.AFTER);
 
         XWPFParagraph xwpfParagraph = DocumentUtils.addRegularParagraph(doc, null);
@@ -245,7 +247,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
 
         DocumentUtils.insertImageWithCaption(doc,
                 earthQuakeReportEntity.getEarthQuakeFaultZoneGraph(),
-                //"http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
+//                "http://sv25gsrnh.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E4%BA%A4%E9%80%9A%E5%9B%BE?e=1755938078&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:vDr49kWfxDngsOQRyi92MGCVxS0=",
                 ImageTypeEnum.JPG, null, null, "图2：震中附近活动断裂分布", ImagePositionEnum.AFTER);
 
         XWPFParagraph xwpfParagraph1 = DocumentUtils.addRegularParagraph(doc, null);
@@ -260,9 +262,10 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
             xwpfParagraph = DocumentUtils.addRegularParagraph(doc, cotent3);
             xwpfParagraph.setIndentationFirstLine(0);
 
+            log.info("医院{}",earthQuakeReportEntity.getEarthQuakeHospitalGraph());
             DocumentUtils.insertImageWithCaption(doc,
                     earthQuakeReportEntity.getEarthQuakeHospitalGraph(),
-                    //"http://t1arte4v9.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E9%99%84%E8%BF%91%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E5%88%86%E5%B8%83%E5%9B%BE?e=1755938687&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:i6Ni-UdI8wmPLErW4fK8aLYLbEo=",
+//                    "http://sv25gsrnh.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E4%BA%A4%E9%80%9A%E5%9B%BE?e=1755938078&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:vDr49kWfxDngsOQRyi92MGCVxS0=",
                     ImageTypeEnum.JPG, null, null, "图3：震中附近医院分布", ImagePositionEnum.AFTER);
 
 
@@ -271,7 +274,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
             tableTitleParagraph.setAlignment(ParagraphAlignment.CENTER);
             XWPFRun tableTitleRun = tableTitleParagraph.createRun();
 
-            tableTitleRun.setText("八度区内医院统计表");
+            tableTitleRun.setText("表1：八度区内医院统计表");
             tableTitleRun.setFontFamily(FONT_FANG_SONG);
             tableTitleRun.setFontSize(DocumentConfig.FONT_SIZE_SMALL_FOUR);
 
@@ -283,6 +286,166 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
     }
 
     /**
+     * 创建救援需求
+     *
+     * @param doc
+     * @param earthQuakeReportEntity
+     */
+    private void createRescueNeed(XWPFDocument doc, EarthQuakeReportEntity earthQuakeReportEntity){
+        DocumentUtils.addRegularParagraph(doc, "三、救援需求");
+        // 内容
+        XWPFParagraph xwpfParagraph = DocumentUtils.addRegularParagraph(doc, null);
+
+        String content3 = String.format("建议提前组织救援人员，开展救援。经系统计算，距离震中附件100公里范围内救援队伍有%d个如表2所示，震中附件救援队伍分布如图4所示。",
+                earthQuakeReportEntity.getEarthQuakeFireFighter().size()
+        );
+        xwpfParagraph = DocumentUtils.addRegularParagraph(doc, content3);
+        xwpfParagraph.setIndentationFirstLine(0);
+
+        // 设置表格标题
+        XWPFParagraph tableTitleParagraph = doc.createParagraph();
+        tableTitleParagraph.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun tableTitleRun = tableTitleParagraph.createRun();
+
+        tableTitleRun.setText("表2：救援队伍信息表");
+        tableTitleRun.setFontFamily(FONT_FANG_SONG);
+        tableTitleRun.setFontSize(DocumentConfig.FONT_SIZE_SMALL_FOUR);
+
+        // 生成表格
+        createTableRescueTeam(doc, earthQuakeReportEntity,
+                new String[]{ "序号", "队伍名称", "队伍类型", "详细地址", "总人数"});
+
+        log.info("23445555555{}",earthQuakeReportEntity.getEarthQuakeFireFighterGraph());
+        DocumentUtils.insertImageWithCaption(doc,
+                earthQuakeReportEntity.getEarthQuakeFireFighterGraph(),
+//                "http://sv25gsrnh.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E4%BA%A4%E9%80%9A%E5%9B%BE?e=1755938078&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:vDr49kWfxDngsOQRyi92MGCVxS0=",
+                ImageTypeEnum.JPG, null, null, "图4：震中附近救援队伍分布", ImagePositionEnum.AFTER);
+
+        String content4 = String.format("为快速安置灾情，建议紧急调集救援物资。经系统计算，距离震中附件100公里范围内救援物资有%d个如表3所示，震中附件救援物资分布如图5所示。",
+                earthQuakeReportEntity.getEarthQuakeStorePoint().size()
+        );
+        xwpfParagraph = DocumentUtils.addRegularParagraph(doc, content4);
+        xwpfParagraph.setIndentationFirstLine(0);
+        // 设置表格标题
+        XWPFParagraph tableTitleParagraph1 = doc.createParagraph();
+        tableTitleParagraph1.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun tableTitleRun1 = tableTitleParagraph1.createRun();
+
+        tableTitleRun1.setText("表3：救援物资信息表");
+        tableTitleRun1.setFontFamily(FONT_FANG_SONG);
+        tableTitleRun1.setFontSize(DocumentConfig.FONT_SIZE_SMALL_FOUR);
+
+        // 生成表格
+        createTableRescueMaterials(doc, earthQuakeReportEntity,
+                new String[]{ "序号", "储备库名称", "详细地址", "所属部门", "有效库容"});
+        log.info("55555555555{}",earthQuakeReportEntity.getEarthQuakeStorePointGraph());
+        DocumentUtils.insertImageWithCaption(doc,
+                earthQuakeReportEntity.getEarthQuakeStorePointGraph(),
+//                "http://sv25gsrnh.hb-bkt.clouddn.com/T2024060117164151180001_%E9%9C%87%E5%8C%BA%E4%BA%A4%E9%80%9A%E5%9B%BE?e=1755938078&token=mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF:vDr49kWfxDngsOQRyi92MGCVxS0=",
+                ImageTypeEnum.JPG, null, null, "图5：震中附近救援物资分布", ImagePositionEnum.AFTER);
+    }
+
+    /**
+     * 设置救援队伍表格数据
+     *
+     * @param doc
+     * @param earthQuakeReportEntity
+     * @param headers
+     */
+    private void createTableRescueTeam(XWPFDocument doc,EarthQuakeReportEntity earthQuakeReportEntity, String[] headers){
+        log.info("生成救援队伍表格信息");
+
+        List<EarthQuakeReportEntity.FireFighter> fireFighters = earthQuakeReportEntity.getEarthQuakeFireFighter();
+        int rows = fireFighters.size() + 1;
+        int cols = headers.length;
+        XWPFTable table = doc.createTable(rows, cols);
+
+        // 设置表格宽度
+        table.setWidth("100%");
+
+        // 设置表头
+        XWPFTableRow headerRow = table.getRow(0);
+        headerRow.setHeight(TABLE_ROW_HEIGHT);
+
+        for (int i = 0; i < cols; i++) {
+            XWPFTableCell cell = headerRow.getCell(i);
+            if (cell == null) {
+                cell = headerRow.createCell();
+            }
+            setupTableCell(cell, headers[i], true);
+        }
+
+        // 设置表格数据行
+        for (int i = 1; i < rows; i++) {
+            XWPFTableRow bodyRow = table.getRow(i);
+            bodyRow.setHeight(TABLE_ROW_HEIGHT);
+
+            EarthQuakeReportEntity.FireFighter fireFighterData = fireFighters.get(i - 1);
+
+            // 序号列
+            setupTableCell(bodyRow.getCell(0), String.valueOf(i), false);
+            // 救援队伍名称列
+            setupTableCell(bodyRow.getCell(1), fireFighterData.getFireFighterName(), true);
+            // 队伍类型列
+            setupTableCell(bodyRow.getCell(2), fireFighterData.getFireFighterType(), false);
+            // 详细地址列
+            setupTableCell(bodyRow.getCell(3), fireFighterData.getFireFighterAddress(), false);
+            // 总人数列
+            setupTableCell(bodyRow.getCell(4), fireFighterData.getFireFighterNum(), false);
+        }
+    }
+
+    /**
+     * 设置救援物资表格数据
+     *
+     * @param doc
+     * @param earthQuakeReportEntity
+     * @param headers
+     */
+    private void createTableRescueMaterials(XWPFDocument doc,EarthQuakeReportEntity earthQuakeReportEntity, String[] headers){
+        log.info("生成救援物资表格信息");
+
+        List<EarthQuakeReportEntity.StorePoint> storePoints = earthQuakeReportEntity.getEarthQuakeStorePoint();
+        int rows = storePoints.size() + 1;
+        int cols = headers.length;
+        XWPFTable table = doc.createTable(rows, cols);
+
+        // 设置表格宽度
+        table.setWidth("100%");
+
+        // 设置表头
+        XWPFTableRow headerRow = table.getRow(0);
+        headerRow.setHeight(TABLE_ROW_HEIGHT);
+
+        for (int i = 0; i < cols; i++) {
+            XWPFTableCell cell = headerRow.getCell(i);
+            if (cell == null) {
+                cell = headerRow.createCell();
+            }
+            setupTableCell(cell, headers[i], true);
+        }
+
+        // 设置表格数据行
+        for (int i = 1; i < rows; i++) {
+            XWPFTableRow bodyRow = table.getRow(i);
+            bodyRow.setHeight(TABLE_ROW_HEIGHT);
+
+            EarthQuakeReportEntity.StorePoint storePointData = storePoints.get(i - 1);
+
+            // 序号列
+            setupTableCell(bodyRow.getCell(0), String.valueOf(i), false);
+            // 救援物资名称列
+            setupTableCell(bodyRow.getCell(1), storePointData.getStorePointName(), true);
+            // 详细地址列
+            setupTableCell(bodyRow.getCell(2), storePointData.getStorePointAddress(), false);
+            // 所属部门列
+            setupTableCell(bodyRow.getCell(3), storePointData.getStorePointDep(), false);
+            // 有效库容列
+            setupTableCell(bodyRow.getCell(4), storePointData.getStorePointNum(), false);
+        }
+    }
+
+    /**
      * 设置表格数据
      *
      * @param doc
@@ -290,8 +453,8 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
      * @param headers
      */
     private void createTable(XWPFDocument doc,
-                                               EarthQuakeReportEntity earthQuakeReportEntity, String[] headers) {
-        log.info("生成表格数据");
+                             EarthQuakeReportEntity earthQuakeReportEntity, String[] headers) {
+        log.info("生成医院表格数据");
         // 先筛选符合条件的医院数据（非未定等和非未定级）
         List<EarthQuakeReportEntity.Hospital> filteredHospitals = earthQuakeReportEntity.getEarthQuakeHospital().stream()
                 .filter(hospital -> {
@@ -418,7 +581,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
      * @param earthQuakeReportEntity
      */
     private void createEmergencyResponseSuggestions(XWPFDocument doc, EarthQuakeReportEntity earthQuakeReportEntity) {
-        DocumentUtils.addRegularParagraph(doc, "三、应急处置建议");
+        DocumentUtils.addRegularParagraph(doc, "四、应急处置建议");
 
         // 段落内容数组
         String[] contents = {

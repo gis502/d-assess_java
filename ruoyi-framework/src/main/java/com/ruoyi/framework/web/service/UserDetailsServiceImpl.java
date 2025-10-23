@@ -46,7 +46,7 @@ public class UserDetailsServiceImpl implements UserDetailsService
         else if (UserStatus.DELETED.getCode().equals(user.getDelFlag()))
         {
             log.info("登录用户：{} 已被删除.", username);
-            throw new ServiceException(MessageUtils.message("user.password.delete"));
+            throw new ServiceException(MessageUtils.message("user.xianpd.delete"));
         }
         else if (UserStatus.DISABLE.getCode().equals(user.getStatus()))
         {
