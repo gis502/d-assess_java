@@ -20,9 +20,9 @@ import com.ruoyi.system.domain.dto.RainAssessmentDTO;
 import com.ruoyi.system.domain.dto.RainAssessmentOutputDTO;
 import com.ruoyi.system.domain.params.EqParams;
 import com.ruoyi.system.domain.params.RainParams;
-import com.ruoyi.system.mapper.AssessmentOutputMapper;
-import com.ruoyi.system.mapper.HospitalMapper;
-import com.ruoyi.system.mapper.RainAssessmentOutputMapper;
+import com.ruoyi.system.entity.FireFighter;
+import com.ruoyi.system.entity.StorePoints;
+import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.IAssessmentOutputService;
 import com.ruoyi.system.service.IEarthQuakeService;
 import lombok.extern.slf4j.Slf4j;
@@ -59,6 +59,10 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
     private HospitalMapper hospitalMapper;
     @Resource
     private IEarthQuakeService earthQuakeService;
+    @Resource
+    private FireFighterMapper fireFighterMapper;
+    @Resource
+    private StorePointsMapper storePointsMapper;
 
 
     // 调用地震图件出图
@@ -89,7 +93,7 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
                 EqParams eqParams = new EqParams();
                 eqParams.setEqId(assessmentDTO.getEqId());
                 eqParams.setEqqueueId(assessmentDTO.getEqqueueId());
-                log.info("查询参数：{}", eqParams); // 用日志代替System.out
+                log.info("查询参数：{}", eqParams);
 
                 // 获取并等待足够的图片（最多等待5分钟）
                 List<AssessmentOutputDTO> earthquakeGraphs = waitForEnoughImages(eqParams, REQUIRED_IMAGE_COUNT, MAX_WAIT_TIME, CHECK_INTERVAL);
@@ -162,6 +166,12 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
                     break;
                 case "震区附近断层分布图":
                     reportEntity.setEarthQuakeFaultZoneGraph(image.getSourceFile());
+                    break;
+                case "震区附近救援队伍分布图":
+                    reportEntity.setEarthQuakeFireFighterGraph(image.getSourceFile());
+                    break;
+                case "震区附近救援物资分布图":
+                    reportEntity.setEarthQuakeStorePointGraph(image.getSourceFile());
                     break;
                 // 可根据需要添加更多图片类型的映射
                 default:
@@ -312,6 +322,14 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
                 semiMajorAxis2,
                 semiMinorAxis2
         );
+        List<FireFighter> dbFireFighters = fireFighterMapper.selectFireFighterPoints(
+                assessmentDTO.getLongitude(),
+                assessmentDTO.getLatitude()
+        );
+        List<StorePoints> dbStorePoints = storePointsMapper.selectStorePoints(
+                assessmentDTO.getLongitude(),
+                assessmentDTO.getLatitude()
+        );
         List<EarthQuakeReportEntity.Hospital> reportHospitals = new ArrayList<>();
         for (com.ruoyi.system.domain.Hospital dbHospital : dbHospitals) {
             // 创建报告内部类的Hospital对象（注意：必须通过外部类实例创建，因为是非静态内部类）
@@ -325,8 +343,29 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
 
             // 将转换后的对象加入报告列表
             reportHospitals.add(reportHospital);
+        };
+        List<EarthQuakeReportEntity.FireFighter> reportFireFighters = new ArrayList<>();
+        for (com.ruoyi.system.entity.FireFighter dbFireFighter : dbFireFighters) {
+            EarthQuakeReportEntity.FireFighter reportFireFighter = reportEntity.new FireFighter();
+            reportFireFighter.setFireFighterName(dbFireFighter.getTeamName());
+            reportFireFighter.setFireFighterType(dbFireFighter.getTeamType());
+            reportFireFighter.setFireFighterAddress(dbFireFighter.getAddress());
+            reportFireFighter.setFireFighterNum(dbFireFighter.getTeamNum().toString());
+
+            reportFireFighters.add(reportFireFighter);
+        }
+        List<EarthQuakeReportEntity.StorePoint> reportStorePoints = new ArrayList<>();
+        for (com.ruoyi.system.entity.StorePoints dbStorePoint : dbStorePoints) {
+            EarthQuakeReportEntity.StorePoint reportStorePoint = reportEntity.new StorePoint();
+            reportStorePoint.setStorePointName(dbStorePoint.getName());
+            reportStorePoint.setStorePointAddress(dbStorePoint.getAddress());
+            reportStorePoint.setStorePointNum(dbStorePoint.getVolume().toString());
+            reportStorePoint.setStorePointDep(dbStorePoint.getDepartment());
+            reportStorePoints.add(reportStorePoint);
         }
         reportEntity.setEarthQuakeHospital(reportHospitals);
+        reportEntity.setEarthQuakeFireFighter(reportFireFighters);
+        reportEntity.setEarthQuakeStorePoint(reportStorePoints);
         if (reportEntity.getEarthQuakeMagnitude()>= 7.0){
             reportEntity.setEarthQuakeEmergencyLevel("一级");
         }else if (reportEntity.getEarthQuakeMagnitude()>= 6.0){

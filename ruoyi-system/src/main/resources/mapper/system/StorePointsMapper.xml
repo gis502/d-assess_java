@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StorePointsMapper">
+    <select id="selectStorePoints" resultType="com.ruoyi.system.entity.StorePoints">
+          <![CDATA[
+        SELECT
+            *,
+            lon AS longitude,
+            lat AS latitude,
+            ST_AsText(point) AS geomText,
+            -- 计算到震中距离（米）
+            ST_Distance(
+                    ST_Transform(point, 3857),
+                    ST_Transform(ST_SetSRID(ST_MakePoint(#{longitude}, #{latitude}), 4490), 3857)
+            ) AS distance_meters
+        FROM xian_store_points
+        WHERE
+            -- 筛选距离≤100公里（100000米）的记录
+            ST_Distance(
+                    ST_Transform(point, 3857),
+                    ST_Transform(ST_SetSRID(ST_MakePoint(#{longitude}, #{latitude}), 4490), 3857)
+            ) <= 50000
+        ORDER BY distance_meters ASC
+        ]]>
+    </select>
+</mapper>
