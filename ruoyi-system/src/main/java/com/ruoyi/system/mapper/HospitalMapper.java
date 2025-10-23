@@ -14,7 +14,7 @@ import java.util.List;
 public interface HospitalMapper extends BaseMapper<Hospital> {
 
     /**
-     * 查询椭圆范围内风险源
+     * 查询椭圆范围内医院
      * @param longitude 中心点经度
      * @param latitude 中心点纬度
      * @param semiMajorAxis1 内圈椭圆长轴
