@@ -68,13 +68,21 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 47.92.216.173
+    host: 10.22.245.246
     # 端口，默认为6379
-    port: 7655
+    port: 6379
     # 数据库索引
     database: 0
-    # 密码
-    password: zhangsan
+
+#    # 地址
+#    host: 47.92.216.173
+#    # 端口，默认为6379
+#    port: 7655
+#    # 数据库索引
+#    database: 0
+#    # 密码
+#    password: zhangsan
+
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -89,15 +97,25 @@ spring:
         max-wait: -1ms
   # rabbitmq 配置
   rabbitmq:
-    host: localhost
+#    host: localhost
+#    port: 5672
+#    username: xiaodemos
+#    password: 1234
+#    #虚拟host 可以不设置,使用server默认host
+#    virtual-host: /xiaodemos
+
+    host: 10.22.245.247
     port: 5672
-    username: xiaodemos
-    password: 1234
+    username: XaYjglj
+    password: xa.Yjzh.Zhl
     #虚拟host 可以不设置,使用server默认host
-    virtual-host: /xiaodemos
+    virtual-host: /xa/yjzh/zhl
+
     #消息确认配置项
     publisher-returns: true #确认消息已发送到队列(Queue)
     publisher-confirm-type: correlated
+
+
 
 # token配置
 token:
