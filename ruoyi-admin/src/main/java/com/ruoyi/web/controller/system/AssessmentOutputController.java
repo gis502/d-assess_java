@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.system;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.constant.BaseConstants;
 import com.ruoyi.common.utils.Result;
 import com.ruoyi.system.domain.dto.AssessmentDTO;
@@ -26,6 +27,7 @@ import java.util.List;
 @RestController
 @Api(tags = "产出结果控制类")
 @RequestMapping("/api/open")
+@Anonymous
 public class AssessmentOutputController {
 
     @Resource
@@ -33,6 +35,7 @@ public class AssessmentOutputController {
 
     @ApiOperation("获取地震专题图接口")
     @PostMapping("/eq/getMap")
+    @Anonymous
     public Result<List<AssessmentOutputDTO>> getMap(@RequestBody EqParams eqParams) {
 
         log.info("获取地震专题图参数{}", eqParams);
@@ -48,6 +51,7 @@ public class AssessmentOutputController {
 
     @ApiOperation("获取暴雨专题图接口")
     @PostMapping("/rain/getMap")
+    @Anonymous
     public Result<List<RainAssessmentOutputDTO>> getMap(@RequestBody RainParams eqParams) {
 
         log.info("获取地震专题图参数{}", eqParams);

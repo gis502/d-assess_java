@@ -7,7 +7,8 @@ ruoyi:
   # 版权年份
   copyrightYear: 2025
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
-  profile: D:/项目/日志/home/ruoyi/uploadPath
+  profile: /home/ruoyi/uploadPath
+#  profile: D:/ruoyi/uploadPath4
   # 获取ip地址开关
   addressEnabled: false
   # 验证码类型 math 数字计算 char 字符验证
@@ -18,7 +19,7 @@ server:
   # 服务器的HTTP端口，默认为8080
   port: 18008
   servlet:
-    # 应用的访问路径
+    # 应用的访问路径q
     context-path: /
   tomcat:
     # tomcat的URI编码
@@ -68,13 +69,12 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 47.92.216.173
+    host: 10.22.245.246
     # 端口，默认为6379
-    port: 7655
+    port: 6379
     # 数据库索引
     database: 0
-    # 密码
-    password: zhangsan
+
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -89,12 +89,12 @@ spring:
         max-wait: -1ms
   # rabbitmq 配置
   rabbitmq:
-    host: localhost
+    host: 10.22.245.247
     port: 5672
-    username: xiaodemo
-    password: 1234
+    username: XaYjglj
+    password: xa.Yjzh.Zhl
     #虚拟host 可以不设置,使用server默认host
-    virtual-host: /xiaodemos
+    virtual-host: /xa/yjzh/zhl
     #消息确认配置项
     publisher-returns: true #确认消息已发送到队列(Queue)
     publisher-confirm-type: correlated

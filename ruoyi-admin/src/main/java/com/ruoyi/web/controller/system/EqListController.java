@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.system;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.constant.BaseConstants;
 import com.ruoyi.common.exception.EqTriggerException;
 import com.ruoyi.common.utils.Result;
@@ -29,6 +30,7 @@ import java.io.IOException;
 @RestController
 @Api(tags = "历史地震控制类")
 @RequestMapping("/api/open/eq")
+@Anonymous
 public class EqListController {
 
     @Resource
@@ -37,6 +39,7 @@ public class EqListController {
 
     @ApiOperation("启动地震接口")
     @PostMapping("/trigger")
+    @Anonymous
     public Result trigger(@RequestBody TriggerDTO triggerDTO) {
 
         log.info("触发参数：{}", triggerDTO);
@@ -53,6 +56,7 @@ public class EqListController {
 
     @ApiOperation("地震重新评估接口")
     @PostMapping("reassessment")
+    @Anonymous
     public Result reassessment(@RequestBody ReassessmentDTO reassessmentDTO) {
 
         log.info("地震重新评估参数{}", reassessmentDTO);
@@ -69,6 +73,7 @@ public class EqListController {
 
     @ApiOperation("获取最新的单场地震信息")
     @GetMapping("currently")
+    @Anonymous
     public Result currently() {
         try {
             // 获取历史震表中最新地震信息

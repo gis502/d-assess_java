@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.system;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.utils.Result;
 import com.ruoyi.system.domain.dto.RainTriggerDTO;
 import com.ruoyi.system.service.IRainService;
@@ -24,6 +25,7 @@ import javax.annotation.Resource;
 @RestController
 @Api(tags = "暴雨控制类")
 @RequestMapping("/api/open/rain")
+@Anonymous
 public class RainListController {
 
 
@@ -34,6 +36,7 @@ public class RainListController {
 
     @ApiOperation("启动暴雨接口")
     @PostMapping("trigger")
+    @Anonymous
     public Result trigger(@RequestBody RainTriggerDTO triggerDTO){
 
         log.info("触发参数：{}", triggerDTO);
