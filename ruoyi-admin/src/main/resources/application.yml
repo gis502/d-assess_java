@@ -71,6 +71,7 @@ spring:
     host: 10.22.245.246
     # 端口，默认为6379
     port: 6379
+    password: zhangsan
     # 数据库索引
     database: 0
 

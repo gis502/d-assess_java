@@ -180,7 +180,7 @@ public class EarthQuakeReportServiceImpl implements IEarthQuakeService {
         XWPFParagraph paragraph = DocumentUtils.addRegularParagraph(doc, null);
 
 
-        String content = String.format("据地震台网测定，%s（北京时间）在%s（北纬%s，东经%s）发生%.1f级地震, 震源深度%.1f千米。",
+        String content = String.format("据地震台网测定，%s（北京时间）在%s（东经%s，北纬%s）发生%.1f级地震, 震源深度%.1f千米。",
                 earthQuakeReportEntity.getEarthQuakeTime().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日HH时mm分ss秒")),
                 earthQuakeReportEntity.getEarthQuakePosition(),
                 earthQuakeReportEntity.getEarthQuakeLon(),

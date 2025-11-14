@@ -348,7 +348,7 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
         for (com.ruoyi.system.entity.FireFighter dbFireFighter : dbFireFighters) {
             EarthQuakeReportEntity.FireFighter reportFireFighter = reportEntity.new FireFighter();
             reportFireFighter.setFireFighterName(dbFireFighter.getTeamName());
-            reportFireFighter.setFireFighterType(dbFireFighter.getTeamType());
+            reportFireFighter.setFireFighterType(removeBrackets(dbFireFighter.getTeamType()));
             reportFireFighter.setFireFighterAddress(dbFireFighter.getAddress());
             reportFireFighter.setFireFighterNum(dbFireFighter.getTeamNum().toString());
 
@@ -360,7 +360,7 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
             reportStorePoint.setStorePointName(dbStorePoint.getName());
             reportStorePoint.setStorePointAddress(dbStorePoint.getAddress());
             reportStorePoint.setStorePointNum(dbStorePoint.getVolume().toString());
-            reportStorePoint.setStorePointDep(dbStorePoint.getDepartment());
+            reportStorePoint.setStorePointDep(removeBrackets(dbStorePoint.getDepartment()));
             reportStorePoints.add(reportStorePoint);
         }
         reportEntity.setEarthQuakeHospital(reportHospitals);
@@ -379,4 +379,15 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
 
     }
 
+    // 去除数据库中括号
+    private String removeBrackets(String str) {
+        if (str == null) {
+            return null;
+        }
+        // 去除字符串开头和结尾的中括号
+        return str.replaceAll("^\\[|\\]$", "");
+    }
+
 }
+
+
