@@ -155,7 +155,6 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
      */
     private void mapImagesToReport(List<AssessmentOutputDTO> images, EarthQuakeReportEntity reportEntity) {
         for (AssessmentOutputDTO image : images) {
-            // 使用Java 8兼容的传统switch语句替代增强switch表达式
             String fileName = image.getFileName();
             switch (fileName) {
                 case "震区附近医院分布图":
