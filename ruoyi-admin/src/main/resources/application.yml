@@ -99,10 +99,10 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: xiaodemos
-    password: 1234
+    username: zzw
+    password: zzw0401
     #虚拟host 可以不设置,使用server默认host
-    virtual-host: /xiaodemos
+#    virtual-host: /xiaodemos
 
 #    host: 10.22.245.247
 #    port: 5672
