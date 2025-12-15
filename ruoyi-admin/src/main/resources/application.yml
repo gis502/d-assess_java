@@ -69,13 +69,13 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 10.22.245.246
+    host: 10.7.71.1
     # 端口，默认为6379
     port: 6379
     # 数据库索引
     database: 0
     # 密码
-    password: zhangsan
+    password:
 
     # 连接超时时间
     timeout: 10s
@@ -91,12 +91,12 @@ spring:
         max-wait: -1ms
   # rabbitmq 配置
   rabbitmq:
-    host: 10.22.245.247
+    host: 10.7.71.1
     port: 5672
-    username: XaYjglj
-    password: xa.Yjzh.Zhl
+    username: admin
+    password: RabbitMQ@123456
     #虚拟host 可以不设置,使用server默认host
-    virtual-host: /xa/yjzh/zhl
+    virtual-host: /
     #消息确认配置项
     publisher-returns: true #确认消息已发送到队列(Queue)
     publisher-confirm-type: correlated

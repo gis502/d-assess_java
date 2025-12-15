@@ -39,13 +39,15 @@ public class BaseConstants {
     public static final String PARSE_ERROR = "解析失败";
 
     // TODO 需要改成Linux路径
-    public static final String XI_AN_SEISMIC_WORKSPACE_PATH = "D:/专题图模板/地震专题图.smwu";
-    public static final String XI_AN_STORM_WORKSPACE_PATH = "D:/专题图模板/暴雨专题图.smwu";
-    public static final String PICTURE_PREFIX = "D:/项目/home/output/seismic-disaster/thematic/";
-    public static final String REPORTS_PREFIX = "D:/项目/home/output/seismic-disaster/reports/";
-    public static final String STORM_PICTURE_PREFIX = "D:/项目/home/output/storm-disaster/thematic/";
-    public static final String STORM_REPORTS_PREFIX = "D:/项目/home/output/storm-disaster/reports/";
-    public static final String HTTP_NGINX_PREFIX = "http://10.22.245.247:80";
+//    public static final String XI_AN_SEISMIC_WORKSPACE_PATH = "D:/专题图模板/地震专题图.smwu";
+//    public static final String XI_AN_STORM_WORKSPACE_PATH = "D:/专题图模板/暴雨专题图.smwu";
+    public static final String XI_AN_SEISMIC_WORKSPACE_PATH = "/home/zaihailian/workspace/地震专题图.smwu";
+    public static final String XI_AN_STORM_WORKSPACE_PATH = "/home/zaihailian/workspace/暴雨专题图.smwu";
+    public static final String PICTURE_PREFIX = "/home/zaihailian/output/seismic-disaster/thematic/";
+    public static final String REPORTS_PREFIX = "/home/zaihailian/output/seismic-disaster/reports/";
+    public static final String STORM_PICTURE_PREFIX = "/home/zaihailian/output/storm-disaster/thematic/";
+    public static final String STORM_REPORTS_PREFIX = "/home/zaihailian/output/storm-disaster/reports/";
+    public static final String HTTP_NGINX_PREFIX = "http://10.7.71.1:80";
 
     public static final String XI_AN_MAP_DATASETS_NAME = "西安智慧应急多灾害链平台";
     public static final String XI_AN_SEISMIC_DATASETS_NAME = "西安项目地震数据源";   // 放置地震数据源
