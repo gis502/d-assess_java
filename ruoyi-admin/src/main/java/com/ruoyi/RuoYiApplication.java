@@ -17,8 +17,7 @@ public class RuoYiApplication {
     public static void main(String[] args) {
 
         try{
-
-//            com.supermap.data.LibraryBinPath.setBinPath("/home/env/supermap/Bin");
+            com.supermap.data.LibraryBinPath.setBinPath("/home/zaihailian/supermap/Bin");
             SpringApplication.run(RuoYiApplication.class, args);
             System.out.println("" +
                     "(♥◠‿◠)ﾉﾞ  若依启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
