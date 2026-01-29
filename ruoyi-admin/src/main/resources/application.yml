@@ -74,14 +74,23 @@ spring:
 #    # 数据库索引
 #    database: 0
 
+#    # 地址
+#    host: 47.92.216.173
+#    # 端口，默认为6379
+#    port: 7655
+#    # 数据库索引
+#    database: 0
+#    # 密码
+#    password: zhangsan
+
     # 地址
-    host: 47.92.216.173
+    host: localhost
     # 端口，默认为6379
-    port: 7655
+    port: 6379
     # 数据库索引
     database: 0
     # 密码
-    password: zhangsan
+    password:
 
     # 连接超时时间
     timeout: 10s

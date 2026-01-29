@@ -17,18 +17,31 @@ spring:
 #        username: zaihailian
 #        password: Zhyj@2025
 
+#      # 主库数据源
+#      master:
+#        url: jdbc:postgresql://47.92.216.173:7654/assess_disaster?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+#        username: postgres
+#        password: zhangsan
+#      # 从库数据源
+#      slave:
+#        # 从数据源开关/默认关闭
+#        enabled: true
+#        url: jdbc:postgresql://47.92.216.173:7654/xian20250822?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+#        username: postgres
+#        password: zhangsan
+
       # 主库数据源
       master:
-        url: jdbc:postgresql://47.92.216.173:7654/assess_disaster?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+        url: jdbc:postgresql://localhost:5432/assess?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
         username: postgres
-        password: zhangsan
+        password: root
       # 从库数据源
       slave:
         # 从数据源开关/默认关闭
         enabled: true
-        url: jdbc:postgresql://47.92.216.173:7654/xian20250822?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
+        url: jdbc:postgresql://localhost:5432/xian1218?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
         username: postgres
-        password: zhangsan
+        password: root
       # 初始连接数
       initialSize: 5
       # 最小连接池数量
@@ -75,7 +88,7 @@ spring:
 
 # 七牛云配置
 qiniu:
-  bucket: xian-thematic-110
-  url: http://t4bi9tsot.hb-bkt.clouddn.com
-  access-key: mheaTe3xRCkChSjwfueGYzB32yi7yk2sj8pemjvF
-  secret-key: XEbOv-KOyYiNsXKzkLUFsU96h0BZYaQ-AdNYOp8H
+  bucket: xiana2
+  url: http://t7embs4k6.hn-bkt.clouddn.com
+  access-key: Q9BksTiS8zzIvcr9fs9tjxHXssps8oGKtxD7sFuR
+  secret-key: hCtdnXCFNsTK1AIkDeK7w4kEpNJxw8t49PKDz7H2

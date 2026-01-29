@@ -44,10 +44,11 @@ public class QiniuOssUtil {
         this.url = url;
 
         // 华南:zone2,华北:zone1
-        uploadManager = new UploadManager(new Configuration(Zone.zone1()));
+//        uploadManager = new UploadManager(new Configuration(Zone.zone1()));
+        uploadManager = new UploadManager(new Configuration(Zone.huanan()));
         auth = Auth.create(accessKey, secretKey);
         // 根据命名空间生成的上传token
-        bucketManager = new BucketManager(auth, new Configuration(Zone.zone1()));
+        bucketManager = new BucketManager(auth, new Configuration(Zone.huanan()));
         token = auth.uploadToken(bucket);
     }
 
