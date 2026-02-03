@@ -2,6 +2,7 @@ package com.ruoyi.system.domain.params;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author: xiaodemos
@@ -12,6 +13,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class RainParams {
 
     private String rainId;

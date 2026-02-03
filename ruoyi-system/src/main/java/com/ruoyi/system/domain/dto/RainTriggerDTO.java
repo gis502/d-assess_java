@@ -1,6 +1,8 @@
 package com.ruoyi.system.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
 
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RainTriggerDTO {
 
     private String position;    // 区县
@@ -21,4 +25,6 @@ public class RainTriggerDTO {
     private String duration;    // 已持续时间
     private String rainType;    // 暴雨类型
     private LocalDateTime occurrenceTime;   // 发生时间
+
+
 }

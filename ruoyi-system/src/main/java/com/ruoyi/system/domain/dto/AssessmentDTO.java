@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,8 @@ import java.util.List;
  */
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AssessmentDTO implements Serializable {
 
     private String eqId;    // 地震编码

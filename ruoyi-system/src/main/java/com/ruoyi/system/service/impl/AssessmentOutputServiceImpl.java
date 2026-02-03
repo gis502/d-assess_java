@@ -72,7 +72,7 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
         if (assessmentDTO.getMagnitude() >= BaseConstants.SEISMIC_6_GRADE) {
             log.info("开始创建地震专题图...");
             // 调用图件产出服务进行出图
-//            seismicLayoutDrawerService.createSeismicPictureInit(assessmentDTO);
+            seismicLayoutDrawerService.createSeismicPictureInit(assessmentDTO);
             log.info("专题图创建完成...");
         }
     }
@@ -226,7 +226,7 @@ public class AssessmentOutputServiceImpl implements IAssessmentOutputService {
     @Override
     public void outputMaps(RainAssessmentDTO assessmentDTO) {
         // 累计降雨量高于 30mm 触发专题图
-        if (Integer.parseInt(assessmentDTO.getRainfall()) > 30) {
+        if (Double.parseDouble(assessmentDTO.getRainfall()) > 30.0) {
             log.info("开始创建暴雨专题图...");
             rainLayoutDrawerService.createSeismicPictureInit(assessmentDTO);
             log.info("专题图创建完成...");

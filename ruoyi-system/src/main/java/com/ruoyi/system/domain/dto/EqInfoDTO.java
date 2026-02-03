@@ -1,18 +1,8 @@
 package com.ruoyi.system.domain.dto;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.ruoyi.system.handler.GeometryTypeHandler;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.locationtech.jts.geom.Geometry;
-import org.n52.jackson.datatype.jts.GeometryDeserializer;
-import org.n52.jackson.datatype.jts.GeometrySerializer;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
-
+import lombok.NoArgsConstructor;
 /**
  * @author: xiaodemos
  * @date: 2025-04-18 12:53
@@ -20,6 +10,8 @@ import java.time.LocalDateTime;
  */
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EqInfoDTO {
 
     private String eqId;             // 地震唯一标识符
