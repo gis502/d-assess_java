@@ -106,34 +106,19 @@ public class ThematicReceiverListener {
             File originFile = new File(outputDTO.getLocalSourceFile());
 
             if (!originFile.exists()) {
+                log.error("文件不存在：{}", outputDTO.getLocalSourceFile());
                 throw new ThematicReceiveException(BaseConstants.FILE_NOT_FOUND_ERROR);
             }
 
-            // 获取对应图片文件二进制流
-//            MultipartFile file = new MockMultipartFile(originFile.getName(), originFile.getName(), "image/jpeg", new FileInputStream(originFile));
-            // 将图片设置唯一Id
-//            String imageUrl = outputDTO.getRainQueueId() + "_" + outputDTO.getFileName();
-
-            // 将图片上传到七牛云服务器
-//            String qiniuUrl = qiniuOssUtil.upload(imageUrl, file);
-            // 上传失败
-//            if (StringUtils.isEmpty(qiniuUrl)) {
-//                throw new ThematicReceiveException(BaseConstants.THEMATIC_MAP_ERROR);
-//            }
-//            log.info("{} 成功上传到七牛云服务器...", outputDTO.getFileName());
-            // 数据拷贝
+            // 数据拷贝+存库逻辑（不变）
             BeanUtils.copyProperties(outputDTO, assessmentOutput);
-            // 修改存储路径
             assessmentOutput.setSourceFile(assessmentOutput.getSourceFile());
             log.info("开始存库...{}", assessmentOutput);
-            // 将图件信息插入到结果表中
             rainAssessmentOutputMapper.insert(assessmentOutput);
-            log.info("{} 成功保存到数据库...", assessmentOutput.getFileName());
+            log.info("{} 成功保存到数据库...", outputDTO.getFileName());
 
         } catch (Exception ex) {
-            log.info("存库失败...{}", ex.getMessage());
-
-            // 抛出异常
+            log.error("存库/处理失败...{}", ex.getMessage(), ex);
             throw new ThematicReceiveException(BaseConstants.THEMATIC_MAP_ERROR);
         }
     }
