@@ -11,7 +11,7 @@ spring:
 #        password: zhangsan
         url: jdbc:postgresql://10.22.245.138:54321/xianDCAccess?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
         username: zaihailian
-        password: Zhyj@2025
+        password: XAYJ@gis2603
 
       # 从库数据源
       slave:
@@ -22,7 +22,7 @@ spring:
 #        password: zhangsan
         url: jdbc:postgresql://10.22.245.138:54321/xianDC?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
         username: zaihailian
-        password: Zhyj@2025
+        password: XAYJ@gis2603
       # 初始连接数
       initialSize: 5
       # 最小连接池数量

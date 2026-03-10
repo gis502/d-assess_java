@@ -53,34 +53,21 @@ public class ThematicReceiverListener {
             // 设置图件产出信息
             AssessmentOutput assessmentOutput = new AssessmentOutput();
             assessmentOutput.setIsDeleted(0);    // 逻辑删除
-            assessmentOutput.setId(UUID.randomUUID().toString());    // 生成uuid
+            assessmentOutput.setId(UUID.randomUUID().toString());    // 生成 uuid
             assessmentOutput.setCreateTime(LocalDateTime.now());     // 创建时间
             assessmentOutput.setUpdateTime(LocalDateTime.now());     // 修改时间
 
-            File originFile = new File(outputDTO.getLocalSourceFile());
-
-            if (!originFile.exists()) {
-                throw new ThematicReceiveException(BaseConstants.FILE_NOT_FOUND_ERROR);
-            }
-
-            // 获取对应图片文件二进制流
-//            MultipartFile file = new MockMultipartFile(originFile.getName(), originFile.getName(), "image/jpeg", new FileInputStream(originFile));
-            // 将图片设置唯一Id
-//            String imageUrl = outputDTO.getEqqueueId() + "_" + outputDTO.getFileName();
-
-            // 将图片上传到七牛云服务器
-//            String qiniuUrl = qiniuOssUtil.upload(imageUrl, file);
-            // 上传失败
-//            if (StringUtils.isEmpty(qiniuUrl)) {
-//                throw new ThematicReceiveException(BaseConstants.THEMATIC_MAP_ERROR);
-//            }
-//            log.info("{} 成功上传到七牛云服务器...", outputDTO.getFileName());
             // 数据拷贝
             BeanUtils.copyProperties(outputDTO, assessmentOutput);
-            // 修改存储路径
-            assessmentOutput.setSourceFile(outputDTO.getSourceFile());
+            // 确保存储路径正确（使用 sourceFile 而不是 localSourceFile）
+            if (StringUtils.isNotEmpty(outputDTO.getSourceFile())) {
+                assessmentOutput.setSourceFile(outputDTO.getSourceFile());
+            } else {
+                // 如果 sourceFile 为空，使用 localSourceFile 作为备用
+                assessmentOutput.setSourceFile(outputDTO.getLocalSourceFile());
+            }
             // 将图件信息插入到结果表中
-            log.info("开始存库...{}", assessmentOutput);
+            log.info("开始存库...{}, 存储路径：{}", assessmentOutput, assessmentOutput.getSourceFile());
             assessmentOutputMapper.insert(assessmentOutput);
             log.info("{} 成功保存到数据库...", assessmentOutput.getFileName());
         } catch (Exception ex) {
@@ -99,21 +86,20 @@ public class ThematicReceiverListener {
             // 设置图件产出信息
             RainAssessmentOutput assessmentOutput = new RainAssessmentOutput();
             assessmentOutput.setIsDeleted(0);    // 逻辑删除
-            assessmentOutput.setId(UUID.randomUUID().toString());    // 生成uuid
+            assessmentOutput.setId(UUID.randomUUID().toString());    // 生成 uuid
             assessmentOutput.setCreateTime(LocalDateTime.now());     // 创建时间
             assessmentOutput.setUpdateTime(LocalDateTime.now());     // 修改时间
 
-            File originFile = new File(outputDTO.getLocalSourceFile());
-
-            if (!originFile.exists()) {
-                log.error("文件不存在：{}", outputDTO.getLocalSourceFile());
-                throw new ThematicReceiveException(BaseConstants.FILE_NOT_FOUND_ERROR);
-            }
-
-            // 数据拷贝+存库逻辑（不变）
+            // 数据拷贝+存库逻辑
             BeanUtils.copyProperties(outputDTO, assessmentOutput);
-            assessmentOutput.setSourceFile(assessmentOutput.getSourceFile());
-            log.info("开始存库...{}", assessmentOutput);
+            // 确保存储路径正确（使用 sourceFile 而不是 localSourceFile）
+            if (StringUtils.isNotEmpty(outputDTO.getSourceFile())) {
+                assessmentOutput.setSourceFile(outputDTO.getSourceFile());
+            } else {
+                // 如果 sourceFile 为空，使用 localSourceFile 作为备用
+                assessmentOutput.setSourceFile(outputDTO.getLocalSourceFile());
+            }
+            log.info("开始存库...{}, 存储路径：{}", assessmentOutput, assessmentOutput.getSourceFile());
             rainAssessmentOutputMapper.insert(assessmentOutput);
             log.info("{} 成功保存到数据库...", outputDTO.getFileName());
 
