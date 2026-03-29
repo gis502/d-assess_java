@@ -1,20 +1,18 @@
 package com.ruoyi.disaster.file.controller;
 
-import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.disaster.file.domain.DisasterFile;
 import com.ruoyi.disaster.file.domain.dto.DisasterInfoDTO;
+import com.ruoyi.disaster.file.domain.vo.DisasterFileVO;
 import com.ruoyi.disaster.file.service.IDisasterFileService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
  * 灾害文件管理 Controller
+ * 基于已有的 rain_list 和 xian_earthquake_list 表实现
  * 
  * @author ruoyi
  * @date 2026-03-29
@@ -49,12 +47,12 @@ public class DisasterFileController extends BaseController {
     public AjaxResult selectFilesByDisasterId(
             @RequestParam String disasterId,
             @RequestParam String disasterType) {
-        List<DisasterFile> list = disasterFileService.selectFilesByDisasterId(disasterId, disasterType);
+        List<DisasterFileVO> list = disasterFileService.selectFilesByDisasterId(disasterId, disasterType);
         return success(list);
     }
 
     /**
-     * 批量删除灾害文件（逻辑删除）
+     * 删除灾害记录（逻辑删除）
      * 只能删除一整场灾害的所有信息
      * 
      * @param disasterId 灾害 ID
@@ -62,10 +60,10 @@ public class DisasterFileController extends BaseController {
      * @return 结果
      */
     @DeleteMapping("/{disasterId}/{disasterType}")
-    public AjaxResult deleteFilesByDisasterId(
+    public AjaxResult deleteDisasterById(
             @PathVariable String disasterId,
             @PathVariable String disasterType) {
-        int result = disasterFileService.deleteFilesByDisasterId(disasterId, disasterType);
+        int result = disasterFileService.deleteDisasterById(disasterId, disasterType);
         return result > 0 ? success("删除成功") : error("删除失败");
     }
 }

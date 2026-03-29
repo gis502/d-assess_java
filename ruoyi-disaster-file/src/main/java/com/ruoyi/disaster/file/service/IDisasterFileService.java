@@ -1,7 +1,7 @@
 package com.ruoyi.disaster.file.service;
 
-import com.ruoyi.disaster.file.domain.DisasterFile;
 import com.ruoyi.disaster.file.domain.dto.DisasterInfoDTO;
+import com.ruoyi.disaster.file.domain.vo.DisasterFileVO;
 
 import java.util.List;
 
@@ -28,14 +28,14 @@ public interface IDisasterFileService {
      * @param disasterType 灾害类型
      * @return 文件列表
      */
-    List<DisasterFile> selectFilesByDisasterId(String disasterId, String disasterType);
+    List<DisasterFileVO> selectFilesByDisasterId(String disasterId, String disasterType);
 
     /**
-     * 批量删除灾害文件（逻辑删除）
+     * 删除灾害记录（逻辑删除）
      * 
      * @param disasterId 灾害 ID
      * @param disasterType 灾害类型
      * @return 结果
      */
-    int deleteFilesByDisasterId(String disasterId, String disasterType);
+    int deleteDisasterById(String disasterId, String disasterType);
 }

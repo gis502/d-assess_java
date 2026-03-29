@@ -2,22 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.disaster.file.mapper.DisasterFileMapper">
 
-    <resultMap type="com.ruoyi.disaster.file.domain.DisasterFile" id="DisasterFileResult">
-        <result property="fileId"    column="file_id"    />
-        <result property="disasterId"    column="disaster_id"    />
-        <result property="disasterType"    column="disaster_type"    />
-        <result property="fileName"    column="file_name"    />
-        <result property="filePath"    column="file_path"    />
-        <result property="localFilePath"    column="local_file_path"    />
-        <result property="fileSize"    column="file_size"    />
-        <result property="fileType"    column="file_type"    />
-        <result property="fileDescription"    column="file_description"    />
-        <result property="uploadBy"    column="upload_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="isDeleted"    column="is_deleted"    />
-    </resultMap>
-
     <resultMap type="com.ruoyi.disaster.file.domain.dto.DisasterInfoDTO" id="DisasterInfoDTOResult">
         <result property="disasterId"    column="disaster_id"    />
         <result property="disasterName"    column="disaster_name"    />
@@ -25,6 +9,26 @@
         <result property="occurrenceTime"    column="occurrence_time"    />
         <result property="position"    column="position"    />
         <result property="extraInfo"    column="extra_info"    />
+    </resultMap>
+
+    <resultMap type="com.ruoyi.disaster.file.domain.vo.DisasterFileVO" id="DisasterFileVOResult">
+        <result property="id"    column="id"    />
+        <result property="disasterId"    column="disaster_id"    />
+        <result property="disasterType"    column="disaster_type"    />
+        <result property="queueId"    column="queue_id"    />
+        <result property="code"    column="code"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="fileExtension"    column="file_extension"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="sourceFile"    column="source_file"    />
+        <result property="localSourceFile"    column="local_source_file"    />
+        <result property="remark"    column="remark"    />
+        <result property="size"    column="size"    />
+        <result property="type"    column="type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
     </resultMap>
 
     <!-- 查询灾害列表 -->
@@ -46,7 +50,7 @@
                 rl.position,
                 rl.rainfall AS extra_info
             FROM rain_list rl
-            WHERE rl.is_deleted = 0 OR rl.is_deleted IS NULL
+            WHERE (rl.is_deleted = 0 OR rl.is_deleted IS NULL)
             
             UNION ALL
             
@@ -59,7 +63,7 @@
                 xel.position,
                 xel.magnitude AS extra_info
             FROM xian_earthquake_list xel
-            WHERE xel.is_deleted = 0 OR xel.is_deleted IS NULL
+            WHERE (xel.is_deleted = 0 OR xel.is_deleted IS NULL)
         ) AS all_disasters
         <where>
             <if test="disasterType != null and disasterType != ''">
@@ -69,41 +73,74 @@
         ORDER BY occurrence_time DESC
     </select>
 
-    <!-- 根据灾害 ID 和类型查询文件列表 -->
-    <select id="selectFilesByDisasterId" resultMap="DisasterFileResult">
-        SELECT 
-            file_id,
-            disaster_id,
-            disaster_type,
-            file_name,
-            file_path,
-            local_file_path,
-            file_size,
-            file_type,
-            file_description,
-            upload_by,
-            create_time,
-            update_time,
-            is_deleted
-        FROM disaster_files
-        WHERE is_deleted = 0 OR is_deleted IS NULL
-        <if test="disasterId != null and disasterId != ''">
-            AND disaster_id = #{disasterId}
+    <!-- 根据灾害 ID 和类型查询文件列表（暴雨） -->
+    <select id="selectFilesByDisasterId" resultMap="DisasterFileVOResult">
+        <if test="disasterType == 'rain'">
+            SELECT 
+                rao.id,
+                rao.rain_id AS disaster_id,
+                'rain' AS disaster_type,
+                rao.rain_queue_id AS queue_id,
+                rao.code,
+                rao.file_type,
+                rao.file_name,
+                rao.file_extension,
+                rao.file_size,
+                rao.source_file,
+                rao.local_source_file,
+                rao.remark,
+                rao.size,
+                rao.type,
+                rao.create_time,
+                rao.update_time,
+                rao.is_deleted
+            FROM rain_assessment_output rao
+            WHERE rao.rain_id = #{disasterId}
+              AND (rao.is_deleted = 0 OR rao.is_deleted IS NULL)
+            ORDER BY rao.create_time DESC
         </if>
-        <if test="disasterType != null and disasterType != ''">
-            AND disaster_type = #{disasterType}
+        <if test="disasterType == 'earthquake'">
+            SELECT 
+                ao.id,
+                ao.eq_id AS disaster_id,
+                'earthquake' AS disaster_type,
+                ao.eqqueue_id AS queue_id,
+                ao.code,
+                ao.file_type,
+                ao.file_name,
+                ao.file_extension,
+                ao.file_size,
+                ao.source_file,
+                ao.local_source_file,
+                ao.remark,
+                ao.size,
+                ao.type,
+                ao.create_time,
+                ao.update_time,
+                ao.is_deleted
+            FROM assessment_output ao
+            WHERE ao.eq_id = #{disasterId}
+              AND (ao.is_deleted = 0 OR ao.is_deleted IS NULL)
+            ORDER BY ao.create_time DESC
         </if>
-        ORDER BY create_time DESC
     </select>
 
-    <!-- 批量删除灾害文件（逻辑删除） -->
-    <update id="deleteFilesByDisasterId">
-        UPDATE disaster_files
-        SET is_deleted = 1,
-            update_time = NOW()
-        WHERE disaster_id = #{disasterId}
-          AND disaster_type = #{disasterType}
-          AND (is_deleted = 0 OR is_deleted IS NULL)
+    <!-- 删除灾害文件记录（逻辑删除） -->
+    <update id="deleteDisasterById">
+        <if test="disasterType == 'rain'">
+            UPDATE rain_assessment_output
+            SET is_deleted = 1,
+                update_time = NOW()
+            WHERE rain_id = #{disasterId}
+              AND (is_deleted = 0 OR is_deleted IS NULL)
+        </if>
+        <if test="disasterType == 'earthquake'">
+            UPDATE assessment_output
+            SET is_deleted = 1,
+                update_time = NOW()
+            WHERE eq_id = #{disasterId}
+              AND (is_deleted = 0 OR is_deleted IS NULL)
+        </if>
     </update>
 
 </mapper>
