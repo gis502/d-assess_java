@@ -218,13 +218,6 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
-            <!-- 灾害文件管理-->
-            <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-disaster-file</artifactId>
-                <version>${ruoyi.version}</version>
-            </dependency>
-
             <!--rabbitmq-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -305,7 +298,6 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
-        <module>ruoyi-disaster-file</module>
     </modules>
     <packaging>pom</packaging>
 
