@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.disaster.file.mapper.DisasterFileMapper">
+
+    <resultMap type="com.ruoyi.disaster.file.domain.DisasterFile" id="DisasterFileResult">
+        <result property="fileId"    column="file_id"    />
+        <result property="disasterId"    column="disaster_id"    />
+        <result property="disasterType"    column="disaster_type"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="filePath"    column="file_path"    />
+        <result property="localFilePath"    column="local_file_path"    />
+        <result property="fileSize"    column="file_size"    />
+        <result property="fileType"    column="file_type"    />
+        <result property="fileDescription"    column="file_description"    />
+        <result property="uploadBy"    column="upload_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="isDeleted"    column="is_deleted"    />
+    </resultMap>
+
+    <resultMap type="com.ruoyi.disaster.file.domain.dto.DisasterInfoDTO" id="DisasterInfoDTOResult">
+        <result property="disasterId"    column="disaster_id"    />
+        <result property="disasterName"    column="disaster_name"    />
+        <result property="disasterType"    column="disaster_type"    />
+        <result property="occurrenceTime"    column="occurrence_time"    />
+        <result property="position"    column="position"    />
+        <result property="extraInfo"    column="extra_info"    />
+    </resultMap>
+
+    <!-- 查询灾害列表 -->
+    <select id="selectDisasterList" resultMap="DisasterInfoDTOResult">
+        SELECT 
+            disaster_id,
+            disaster_name,
+            disaster_type,
+            occurrence_time,
+            position,
+            extra_info
+        FROM (
+            <!-- 暴雨数据 -->
+            SELECT 
+                rl.rain_id AS disaster_id,
+                rl.disaster_name,
+                'rain' AS disaster_type,
+                rl.occurrence_time,
+                rl.position,
+                rl.rainfall AS extra_info
+            FROM rain_list rl
+            WHERE rl.is_deleted = 0 OR rl.is_deleted IS NULL
+            
+            UNION ALL
+            
+            <!-- 地震数据 -->
+            SELECT 
+                CAST(xel.disaster_id AS VARCHAR) AS disaster_id,
+                xel.disaster_name,
+                'earthquake' AS disaster_type,
+                xel.occurrence_time,
+                xel.position,
+                xel.magnitude AS extra_info
+            FROM xian_earthquake_list xel
+            WHERE xel.is_deleted = 0 OR xel.is_deleted IS NULL
+        ) AS all_disasters
+        <where>
+            <if test="disasterType != null and disasterType != ''">
+                AND disaster_type = #{disasterType}
+            </if>
+        </where>
+        ORDER BY occurrence_time DESC
+    </select>
+
+    <!-- 根据灾害 ID 和类型查询文件列表 -->
+    <select id="selectFilesByDisasterId" resultMap="DisasterFileResult">
+        SELECT 
+            file_id,
+            disaster_id,
+            disaster_type,
+            file_name,
+            file_path,
+            local_file_path,
+            file_size,
+            file_type,
+            file_description,
+            upload_by,
+            create_time,
+            update_time,
+            is_deleted
+        FROM disaster_files
+        WHERE is_deleted = 0 OR is_deleted IS NULL
+        <if test="disasterId != null and disasterId != ''">
+            AND disaster_id = #{disasterId}
+        </if>
+        <if test="disasterType != null and disasterType != ''">
+            AND disaster_type = #{disasterType}
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 批量删除灾害文件（逻辑删除） -->
+    <update id="deleteFilesByDisasterId">
+        UPDATE disaster_files
+        SET is_deleted = 1,
+            update_time = NOW()
+        WHERE disaster_id = #{disasterId}
+          AND disaster_type = #{disasterType}
+          AND (is_deleted = 0 OR is_deleted IS NULL)
+    </update>
+
+</mapper>
