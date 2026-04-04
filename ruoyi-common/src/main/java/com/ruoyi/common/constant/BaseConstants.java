@@ -41,10 +41,10 @@ public class BaseConstants {
     // TODO 需要改成Linux路径
     public static final String XI_AN_SEISMIC_WORKSPACE_PATH = "/home/env/supermap/workspace/地震专题图.smwu";
     public static final String XI_AN_STORM_WORKSPACE_PATH = "/home/env/supermap/workspace/暴雨专题图.smwu";
-    public static final String PICTURE_PREFIX = "/home/output/seismic-disaster/thematic/";
-    public static final String REPORTS_PREFIX = "/home/output/seismic-disaster/reports/";
-    public static final String STORM_PICTURE_PREFIX = "/home/output/storm-disaster/thematic/";
-    public static final String STORM_REPORTS_PREFIX = "/home/output/storm-disaster/reports/";
+    public static final String PICTURE_PREFIX = "/data/output/seismic-disaster/thematic/";
+    public static final String REPORTS_PREFIX = "/data/output/seismic-disaster/reports/";
+    public static final String STORM_PICTURE_PREFIX = "/data/output/storm-disaster/thematic/";
+    public static final String STORM_REPORTS_PREFIX = "/data/output/storm-disaster/reports/";
     public static final String HTTP_NGINX_PREFIX = "http://10.22.245.247";
 
     public static final String XI_AN_MAP_DATASETS_NAME = "西安智慧应急多灾害链平台";
