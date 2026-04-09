@@ -311,9 +311,9 @@ public class LayoutsDrawer {
         GeoRectangle rectangle = new GeoRectangle();
         // 设置矩形的位置和大小，这里以左上角坐标和宽高为例
         rectangle.setWidth(700);
-        rectangle.setHeight(300);
+        rectangle.setHeight(200);
 
-        rectangle.offset(404, 2248);
+        rectangle.offset(404, 2300);
 
         // 设置矩形框背景、线条颜色
         GeoStyle style = new GeoStyle();
@@ -353,19 +353,19 @@ public class LayoutsDrawer {
         elements.addNew(addrGeoText);
 
         // 震级文本对象
-        TextPart intensityText = new TextPart();
-        intensityText.setText("已持续：" + duration + "小时");
-        intensityText.offset(100, 2165);
+//        TextPart intensityText = new TextPart();
+//        intensityText.setText("已持续：" + duration + "小时");
+//        intensityText.offset(100, 2165);
 
-        GeoText intensityGeoText = new GeoText(intensityText);
+//        GeoText intensityGeoText = new GeoText(intensityText);
 
-        TextStyle intensityTextStyle = new TextStyle();
-        intensityTextStyle.setFontName("微软雅黑");
-        intensityTextStyle.setForeColor(new Color(0, 0, 0));
-        intensityTextStyle.setFontHeight(5);
-        intensityGeoText.setTextStyle(intensityTextStyle);
-
-        elements.addNew(intensityGeoText);
+//        TextStyle intensityTextStyle = new TextStyle();
+//        intensityTextStyle.setFontName("微软雅黑");
+//        intensityTextStyle.setForeColor(new Color(0, 0, 0));
+//        intensityTextStyle.setFontHeight(5);
+//        intensityGeoText.setTextStyle(intensityTextStyle);
+//
+//        elements.addNew(intensityGeoText);
     }
 
 }
